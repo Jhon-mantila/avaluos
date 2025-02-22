@@ -27,8 +27,8 @@ class AvaluosController extends Controller
 
         // Aplicar búsqueda si hay un término
         if ($search) {
-            $query->where('nombre', 'LIKE', "%{$search}%")
-                  ->orWhere('descripcion', 'LIKE', "%{$search}%")
+            $query->where('numero_avaluo', 'LIKE', "%{$search}%")
+                  ->orWhere('estado', 'LIKE', "%{$search}%")
                   ->orWhereHas('cliente', function ($q) use ($search) {
                       $q->where('nombre', 'LIKE', "%{$search}%");
                   });
@@ -41,6 +41,14 @@ class AvaluosController extends Controller
         return Inertia::render('Avaluos/Index', [
             'avaluos' => $avaluos,
             'filters' => $request->only(['search']),
+        ]);
+    }
+
+        public function show($id)
+    {
+        $avaluo = Avaluos::with('cliente')->findOrFail($id);
+        return Inertia::render('Avaluos/Show', [
+            'avaluo' => $avaluo,
         ]);
     }
 

@@ -15,7 +15,6 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->string('numero_avaluo')->unique()->nullable(false);
             $table->string('estado')->nullable();
-            $table->string('estado')->nullable();
             $table->string('tipo_avaluo')->nullable();
             $table->string('direccion')->nullable();
             $table->string('ciudad')->nullable();

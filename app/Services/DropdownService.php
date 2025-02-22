@@ -11,6 +11,10 @@ class DropdownService
             'Comercial' => 'Comercial',
             'Industrial' => 'Industrial',
             'Terreno' => 'Terreno',
+            'Catastral' => 'Catastral',
+            'Rural' => 'Rural',
+            'Urbano' => 'Urbano',
+            'Apartamento' => 'Apartamento',
         ];
     }
 
@@ -20,6 +24,7 @@ class DropdownService
             'Nuevo' => 'Nuevo',
             'Pendiente' => 'Pendiente',
             'En Proceso' => 'En Proceso',
+            'Sin Asignar' => 'Sin Asignar',
             'Completado' => 'Completado',
             'Cancelado' => 'Cancelado',
         ];

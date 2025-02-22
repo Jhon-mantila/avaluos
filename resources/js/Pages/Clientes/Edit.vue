@@ -9,6 +9,11 @@
             <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
                 <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                     <div class="p-6 text-gray-900">
+                        <div class="flex items-center justify-between mb-4">
+                            <a :href="referer" class="inline-flex items-center px-4 py-2 bg-gray-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150">
+                                Regresar
+                            </a>
+                        </div>
                         <form @submit.prevent="submit">
                             <div class="mb-4">
                                 <label for="nombre" class="block text-sm font-medium text-gray-700">Nombre</label>
@@ -57,6 +62,9 @@ const form = useForm({
     telefono: props.cliente.telefono || '',
     ciudad: props.cliente.ciudad || '',
 });
+
+// Determinar la URL de referencia
+const referer = ref(document.referrer.includes('clientes') ? document.referrer : route('clientes.index'));
 
 const submit = () => {
     //form.put(route('clientes.update', props.cliente.id));

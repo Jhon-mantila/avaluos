@@ -10,6 +10,12 @@
             <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
                 <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                     <div class="p-6 text-gray-900">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-semibold leading-tight text-gray-800">Información del Cliente</h3>
+                            <a :href="route('clientes.edit', cliente.id)" class="inline-flex items-center px-4 py-2 bg-blue-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 active:bg-blue-900 focus:outline-none focus:border-blue-900 focus:ring ring-blue-300 disabled:opacity-25 transition ease-in-out duration-150">
+                                Editar
+                            </a>
+                        </div>
                         <div class="mb-4">
                             <label class="block text-sm font-medium text-gray-700">Nombre</label>
                             <p class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">{{ cliente.nombre }}</p>
@@ -33,7 +39,7 @@
                             <img :src="`/storage/${cliente.logo}`" alt="Logo del Cliente" class="mt-1 block w-full max-w-xs border-gray-300 rounded-md shadow-sm">
                         </div>
                         <div class="flex items-center justify-between mt-4">
-                            <a :href="route('clientes.index')" class="inline-flex items-center px-4 py-2 bg-gray-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150">
+                            <a :href="referer" class="inline-flex items-center px-4 py-2 bg-gray-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150">
                                 Regresar
                             </a>
                         </div>
@@ -50,7 +56,7 @@
                                 </thead>
                                 <tbody>
                                     <tr v-for="avaluo in avaluos.data" :key="avaluo.id">
-                                        <td class="px-4 py-2 text-left border-b"><a :href="route('avaluos.show', avaluo.id)" class="text-blue-500 hover:text-blue-700" target="_blank">{{ avaluo.numero_avaluo }}</a></td>
+                                        <td class="px-4 py-2 text-left border-b"><a :href="route('avaluos.show', avaluo.id)" class="text-blue-500 hover:text-blue-700">{{ avaluo.numero_avaluo }}</a></td>
                                         <td class="px-4 py-2 text-left border-b">{{ avaluo.tipo_avaluo }}</td>
                                         <td class="px-4 py-2 text-left border-b">{{ formatDate(avaluo.updated_at) }}</td>
                                     </tr>
@@ -68,7 +74,7 @@
 </template>
 
 <script setup>
-import { defineProps, onMounted } from 'vue';
+import { defineProps, onMounted, ref } from 'vue';
 import { formatDate } from '@/Utils/dateUtils'; // Importar la función desde el archivo de utilidades
 
 import AppLayout from '@/Layouts/AppLayout.vue';
@@ -84,6 +90,9 @@ onMounted(() => {
     console.log('Cliente:', props.cliente);
     console.log('Avaluos:', props.avaluos);
 });
+
+// Determinar la URL de referencia
+const referer = ref(document.referrer.includes('avaluos') ? document.referrer : route('clientes.index'));
 </script>
 
 <style scoped>

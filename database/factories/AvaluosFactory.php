@@ -21,8 +21,8 @@ class AvaluosFactory extends Factory
             'id' =>  (string) Uuid::uuid4(),
             'numero_avaluo' => $this->faker->randomNumber(5), // Genera un número aleatorio de 5 dígitos
             'cliente_id' => \App\Models\Clientes::factory(), // Relación con el modelo Clientes, pero si se crean 10 avaluos realaciona 10 clientes y los crea nuevos
-            'estado' => $this->faker->randomElement(['Nuevo', 'Pendiente', 'Finalizado', 'Proceso', 'Sin Asignar']),//$this->faker->word, // Genera una palabra aleatoria
-            'tipo_avaluo' => $this->faker->randomElement(['Comercial', 'Catastral', 'Rural', 'Urbano', 'Apartamento']),//$this->faker->word, // Genera una palabra aleatoria
+            'estado' => $this->faker->randomElement(['Nuevo', 'Pendiente', 'Completado', 'En Proceso', 'Sin Asignar', 'Cancelado']),//$this->faker->word, // Genera una palabra aleatoria
+            'tipo_avaluo' => $this->faker->randomElement(['Comercial', 'Catastral', 'Rural', 'Urbano', 'Apartamento', 'Residencial','Industrial', 'Terreno']),//$this->faker->word, // Genera una palabra aleatoria
             'direccion' => $this->faker->address, // Genera una dirección aleatoria
             'ciudad' => $this->faker->city, // Genera una ciudad aleatoria
             'departamento' => $this->faker->state, // Genera un departamento aleatorio

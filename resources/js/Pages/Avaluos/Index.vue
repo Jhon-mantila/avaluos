@@ -42,8 +42,8 @@
                                 </thead>
                                 <tbody>
                                     <tr v-for="avaluo in avaluos.data" :key="avaluo.id">
-                                        <td class="px-4 py-2">{{ avaluo.numero_avaluo }}</td>
-                                        <td class="px-4 py-2 text-blue-500 hover:text-blue-700"><a :href="route('clientes.show', avaluo.cliente_id)" target="_blank">{{ avaluo.cliente.nombre }}</a></td>
+                                        <td class="px-4 py-2 text-blue-500 hover:text-blue-700"><a :href="route('avaluos.show', avaluo.id)">{{ avaluo.numero_avaluo }}</a></td>
+                                        <td class="px-4 py-2 text-blue-500 hover:text-blue-700"><a :href="route('clientes.show', avaluo.cliente_id)">{{ avaluo.cliente.nombre }}</a></td>
                                         <td class="px-4 py-2">{{ avaluo.estado }}</td>
                                         <td class="px-4 py-2">{{ formatDate(avaluo.updated_at) }}</td>
                                         <td class="px-4 py-2">{{ formatDate(avaluo.created_at) }}</td>
