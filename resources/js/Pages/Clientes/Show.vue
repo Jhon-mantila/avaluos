@@ -50,7 +50,7 @@
                                 </thead>
                                 <tbody>
                                     <tr v-for="avaluo in avaluos.data" :key="avaluo.id">
-                                        <td class="px-4 py-2 text-left border-b">{{ avaluo.numero_avaluo }}</td>
+                                        <td class="px-4 py-2 text-left border-b"><a :href="route('avaluos.show', avaluo.id)" class="text-blue-500 hover:text-blue-700" target="_blank">{{ avaluo.numero_avaluo }}</a></td>
                                         <td class="px-4 py-2 text-left border-b">{{ avaluo.tipo_avaluo }}</td>
                                         <td class="px-4 py-2 text-left border-b">{{ formatDate(avaluo.updated_at) }}</td>
                                     </tr>

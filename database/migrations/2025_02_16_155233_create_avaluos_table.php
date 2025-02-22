@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('avaluos', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('numero_avaluo')->nullable();
+            $table->string('numero_avaluo')->unique()->nullable(false);
+            $table->string('estado')->nullable();
             $table->string('estado')->nullable();
             $table->string('tipo_avaluo')->nullable();
             $table->string('direccion')->nullable();

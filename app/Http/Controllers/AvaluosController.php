@@ -4,12 +4,19 @@ namespace App\Http\Controllers;
 use App\Models\Avaluos;
 use App\Models\Clientes;
 use Inertia\Inertia;
-
+use App\Services\DropdownService;
 use Illuminate\Http\Request;
 
 class AvaluosController extends Controller
 {
     //
+    protected $dropdownService;
+
+    public function __construct(DropdownService $dropdownService)
+    {
+        $this->dropdownService = $dropdownService;
+    }
+
     public function index(Request $request)
     {
         // Obtener el término de búsqueda
@@ -39,18 +46,38 @@ class AvaluosController extends Controller
 
     public function create()
     {
+        $list_estados = $this->dropdownService->list_estados();
+        $list_tipos_avaluos = $this->dropdownService->list_tipos_avaluos();
+
         $clientes = Clientes::all();
         return Inertia::render('Avaluos/Create', [
             'clientes' => $clientes,
+            'estados' => $list_estados,
+            'tiposAvaluo' => $list_tipos_avaluos,
         ]);
     }
 
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'numero_avaluo' => 'required|string|max:255',
+            'numero_avaluo' => 'required|string|max:255|unique:avaluos,numero_avaluo',
+            'tipo_avaluo' => 'required|string|max:255',
+            'direccion' => 'required|string|max:255',
+            'ciudad' => 'nullable|string|max:255',
+            'departamento' => 'nullable|string|max:255',
+            'area' => 'nullable|numeric',
+            'valor_comercial_estimado' => 'nullable|numeric',
+            'observaciones' => 'nullable|string',
             'cliente_id' => 'required|exists:clientes,id',
             'estado' => 'required|string|max:255',
+        ], [
+            'numero_avaluo.unique' => 'El número de avalúo ya existe. Por favor, elija un número diferente.',
+            'cliente_id.required' => 'El cliente es requerido.',
+            'direccion.required' => 'La dirección es requeida.',
+            'numero_avaluo.required' => 'El número de avalúo es requerido.',
+            'tipo_avaluo.required' => 'El tipo de avalúo es requerido.',
+            'area.numeric' => 'El área es númerico.',
+            'estado.required' => 'El estado es requerido.',
         ]);
 
         Avaluos::create($validatedData);

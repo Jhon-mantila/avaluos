@@ -10,9 +10,11 @@
                 <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                     <div class="p-6 text-gray-900">
                         <form @submit.prevent="submit">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div class="mb-4">
                                 <label for="numero_avaluo" class="block text-sm font-medium text-gray-700">Número de Avalúo</label>
-                                <input type="text" v-model="form.numero_avaluo" id="numero_avaluo" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" required>
+                                <input type="text" v-model="form.numero_avaluo" id="numero_avaluo" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                                <span v-if="errors.numero_avaluo" class="text-red-500 text-sm">{{ errors.numero_avaluo }}</span>
                             </div>
                             <div class="mb-4">
                                 <label for="cliente_id" class="block text-sm font-medium text-gray-700">Cliente</label>
@@ -24,11 +26,58 @@
                                     @input="updateClienteId"
                                     class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
                                 />
+                                <span v-if="errors.cliente_id" class="text-red-500 text-sm">{{ errors.cliente_id }}</span>
                             </div>
                             <div class="mb-4">
                                 <label for="estado" class="block text-sm font-medium text-gray-700">Estado</label>
-                                <input type="text" v-model="form.estado" id="estado" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" required>
+                                    <v-select
+                                        v-model="form.estado"
+                                        :options="estados"
+                                        placeholder="Seleccionar estado..."
+                                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                                    />
+                                <span v-if="errors.estado" class="text-red-500 text-sm">{{ errors.estado }}</span>
                             </div>
+                            <div class="mb-4">
+                                <label for="tipo_avaluo" class="block text-sm font-medium text-gray-700">Tipo de Avalúo</label>
+                                <v-select
+                                        v-model="form.tipo_avaluo"
+                                        :options="tiposAvaluo"
+                                        placeholder="Seleccionar tipo de avalúo..."
+                                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                                    />
+                                <span v-if="errors.tipo_avaluo" class="text-red-500 text-sm">{{ errors.tipo_avaluo }}</span>
+                            </div>
+                            <div class="mb-4">
+                                <label for="direccion" class="block text-sm font-medium text-gray-700">Dirección</label>
+                                <input type="text" v-model="form.direccion" id="direccion" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" >
+                                <span v-if="errors.direccion" class="text-red-500 text-sm">{{ errors.direccion }}</span>
+                            </div>
+                            <div class="mb-4">
+                                <label for="ciudad" class="block text-sm font-medium text-gray-700">Ciudad</label>
+                                <input type="text" v-model="form.ciudad" id="ciudad" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" >
+                                <span v-if="errors.ciudad" class="text-red-500 text-sm">{{ errors.ciudad }}</span>
+                            </div>
+                            <div class="mb-4">
+                                <label for="departamento" class="block text-sm font-medium text-gray-700">Departamento</label>
+                                <input type="text" v-model="form.departamento" id="departamento" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" >
+                                <span v-if="errors.departamento" class="text-red-500 text-sm">{{ errors.departamento }}</span>
+                            </div>
+                            <div class="mb-4">
+                                <label for="area" class="block text-sm font-medium text-gray-700">Área</label>
+                                <input type="number" v-model="form.area" id="area" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" >
+                            </div>
+                            <div class="mb-4">
+                                <label for="valor_comercial_estimado" class="block text-sm font-medium text-gray-700">Valor Comercial</label>
+                                <input type="number" v-model="form.valor_comercial_estimado" id="valor_comercial_estimado" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" >
+                                <span v-if="errors.valor_comercial_estimado" class="text-red-500 text-sm">{{ errors.valor_comercial_estimado }}</span>
+                            </div>
+                            <div class="mb-4">
+                                <label for="observaciones" class="block text-sm font-medium text-gray-700">Observaciones</label>
+                                <textarea v-model="form.observaciones" id="observaciones" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" ></textarea>
+                                <span v-if="errors.observaciones" class="text-red-500 text-sm">{{ errors.observaciones }}</span>
+                            </div>
+                        </div>
                             <div class="flex items-center justify-between mt-4">
                                 <button type="submit" class="inline-flex items-center px-4 py-2 bg-blue-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 active:bg-blue-900 focus:outline-none focus:border-blue-900 focus:ring ring-blue-300 disabled:opacity-25 transition ease-in-out duration-150">
                                     Guardar
@@ -47,7 +96,7 @@
 
 <script setup>
 import { ref, onMounted, watch } from 'vue';
-import { useForm } from '@inertiajs/vue3';
+import { useForm, usePage } from '@inertiajs/vue3';
 import axios from 'axios';
 import { useToast } from 'vue-toastification';
 import AppLayout from '@/Layouts/AppLayout.vue';
@@ -55,15 +104,27 @@ import vSelect from 'vue-select';
 import 'vue-select/dist/vue-select.css';
 
 const toast = useToast();
-
+const { props } = usePage();
+//const estados = ref([]);
+const estados = ref(Object.keys(props.estados).map(key => ({ label: props.estados[key], value: key })));
+const tiposAvaluo = ref(Object.keys(props.tiposAvaluo).map(key => ({ label: props.tiposAvaluo[key], value: key })));
+console.log('Estados:', props.estados);
 const form = useForm({
     numero_avaluo: '',
+    tipo_avaluo: '',
+    direccion: '',
+    ciudad: '',
+    departamento: '',
+    area: '',
+    valor_comercial_estimado: '',
+    observaciones: '',
     cliente_id: '',
     estado: '',
 });
-
+const errors = ref({});
 const clientes = ref([]);
 const selectedCliente = ref(null);
+//const tiposAvaluo = ref(props.tiposAvaluo);
 
 onMounted(() => {
     // Fetch clients from the server
@@ -97,10 +158,22 @@ const updateClienteId = (cliente) => {
 };
 
 const submit = () => {
+    // Extraer los valores de estado y tipo_avaluo antes de enviar el formulario
+    form.estado = form.estado.value;
+    form.tipo_avaluo = form.tipo_avaluo.value;
+
+    console.log('Form data:', form);
     form.post(route('avaluos.store'), {
         onSuccess: () => {
             form.reset();
             toast.success('Avalúo creado correctamente.');
+           
+        },
+        onError: (error) => {
+            console.error('Error creating avaluo:', error);
+            errors.value = error;
+
+
         }
     });
 };
