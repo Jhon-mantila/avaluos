@@ -24,11 +24,11 @@ class InformacionVisita extends Model
 
     ];
 
-    public function visitadores(){
+    public function visitador(){
         return $this->belongsTo(Visitadores::class);
     }
 
-    public function avaluos(){
+    public function avaluo(){
         return $this->belongsTo(Avaluos::class);
     }
 
