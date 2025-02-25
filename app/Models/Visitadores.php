@@ -22,10 +22,10 @@ class Visitadores extends Model
     ];
 
     public function user(){
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
-    protected function informacion_visita(){
-        return $this->hasMany(InformacionVisita::class);
+    public function informacionVisitas(){
+        return $this->hasMany(InformacionVisita::class, 'visitador_id');
     }
 }

@@ -29,7 +29,7 @@ class InformacionVisita extends Model
     }
 
     public function avaluo(){
-        return $this->belongsTo(Avaluos::class);
+        return $this->belongsTo(Avaluos::class, 'avaluo_id');
     }
 
     protected function registro_fotograficos(){

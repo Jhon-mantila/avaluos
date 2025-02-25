@@ -62,6 +62,37 @@
                                 Regresar
                             </a>
                         </div>
+
+                        <div class="mt-8">
+                            <h3 class="text-lg font-semibold leading-tight text-gray-800">Visitas</h3>
+                            <div v-if="informacionVisitas.data.length">
+                                <table class="min-w-full divide-y divide-gray-200">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre del Visitador</th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Celular</th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ciudad</th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha de Visita</th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Observaciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="bg-white divide-y divide-gray-200">
+                                        <tr v-for="visita in informacionVisitas.data" :key="visita.id">
+                                            <td class="px-6 py-4 whitespace-nowrap">{{ visita.visitador?.user?.name || 'N/A' }}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap">{{ visita.celular }}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap">{{ visita.ciudad }}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap">{{ visita.fecha_visita }}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap">{{ visita.observaciones }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <Pagination :links="informacionVisitas.links" class="mt-4" />
+                            </div>
+                            <div v-else>
+                                <p>No hay visitas registradas para este avalúo.</p>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -70,13 +101,19 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { usePage } from '@inertiajs/vue3';
 import AppLayout from '@/Layouts/AppLayout.vue';
-
+import Pagination from '@/Components/Pagination.vue';
 const { props } = usePage();
 const avaluo = ref(props.avaluo);
+const informacionVisitas = ref(props.informacionVisitas);
 
+// Imprimir la data de cliente y avaluos en la consola
+onMounted(() => {
+    console.log('Avaluos:', props.avaluo);
+    console.log('informacionVisitas:', props.informacionVisitas);
+});
 // Determinar la URL de referencia
 const referer = ref(document.referrer.includes('clientes') ? document.referrer : route('avaluos.index'));
 </script>

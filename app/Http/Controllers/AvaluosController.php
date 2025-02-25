@@ -46,9 +46,14 @@ class AvaluosController extends Controller
 
         public function show($id)
     {
-        $avaluo = Avaluos::with('cliente')->findOrFail($id);
+        $avaluo = Avaluos::with(['cliente', 'informacionVisitas.visitador.user'])->findOrFail($id);
+
+        $informacionVisitas = $avaluo->informacionVisitas()->with('visitador.user')->paginate(5);
+        
+        //dd($informacionVisitas);
         return Inertia::render('Avaluos/Show', [
             'avaluo' => $avaluo,
+            'informacionVisitas' => $informacionVisitas,
         ]);
     }
 
