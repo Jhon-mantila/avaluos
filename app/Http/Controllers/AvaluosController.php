@@ -92,4 +92,49 @@ class AvaluosController extends Controller
 
         return redirect()->route('avaluos.index')->with('success', 'Avalúo creado correctamente.');
     }
+
+    public function edit($id)
+    {
+        $avaluo = Avaluos::findOrFail($id);
+        $list_estados = $this->dropdownService->list_estados();
+        $list_tipos_avaluos = $this->dropdownService->list_tipos_avaluos();
+        $clientes = Clientes::all();
+
+        return Inertia::render('Avaluos/Edit', [
+            'avaluo' => $avaluo,
+            'clientes' => $clientes,
+            'estados' => $list_estados,
+            'tiposAvaluo' => $list_tipos_avaluos,
+        ]);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $avaluo = Avaluos::findOrFail($id);
+
+        $validatedData = $request->validate([
+            'numero_avaluo' => 'required|string|max:255|unique:avaluos,numero_avaluo,' . $id,
+            'tipo_avaluo' => 'required|string|max:255',
+            'direccion' => 'required|string|max:255',
+            'ciudad' => 'nullable|string|max:255',
+            'departamento' => 'nullable|string|max:255',
+            'area' => 'nullable|numeric',
+            'valor_comercial_estimado' => 'nullable|numeric',
+            'observaciones' => 'nullable|string',
+            'cliente_id' => 'required|exists:clientes,id',
+            'estado' => 'required|string|max:255',
+        ], [
+            'numero_avaluo.unique' => 'El número de avalúo ya existe. Por favor, elija un número diferente.',
+            'cliente_id.required' => 'El cliente es requerido.',
+            'direccion.required' => 'La dirección es requeida.',
+            'numero_avaluo.required' => 'El número de avalúo es requerido.',
+            'tipo_avaluo.required' => 'El tipo de avalúo es requerido.',
+            'area.numeric' => 'El área es númerico.',
+            'estado.required' => 'El estado es requerido.',
+        ]);
+
+        $avaluo->update($validatedData);
+
+        return redirect()->route('avaluos.index')->with('success', 'Avalúo actualizado correctamente.');
+    }
 }

@@ -9,6 +9,12 @@
             <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
                 <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                     <div class="p-6 text-gray-900">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-semibold leading-tight text-gray-800">Información del Avalúo</h3>
+                            <a :href="route('avaluos.edit', avaluo.id)" class="inline-flex items-center px-4 py-2 bg-blue-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 active:bg-blue-900 focus:outline-none focus:border-blue-900 focus:ring ring-blue-300 disabled:opacity-25 transition ease-in-out duration-150">
+                                Editar
+                            </a>
+                        </div>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div class="mb-4">
                                 <label class="block text-sm font-medium text-gray-700">Número de Avalúo</label>
