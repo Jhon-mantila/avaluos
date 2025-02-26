@@ -36,4 +36,13 @@ class InformacionVisitaController extends Controller
             'filters' => $request->only(['search']),
         ]);
     }
+
+    public function show($id)
+    {
+        $visita = InformacionVisita::with(['avaluo', 'visitador.user'])->findOrFail($id);
+
+        return Inertia::render('InformacionVisitas/Show', [
+            'visita' => $visita,
+        ]);
+    }
 }

@@ -42,9 +42,9 @@
                                 </thead>
                                 <tbody>
                                     <tr v-for="visita in informacionVisitas.data" :key="visita.id">
-                                        <td class="px-4 py-2">{{ visita.incremental_id }}</td>
+                                        <td class="px-4 py-2"><a :href="route('informacion-visita.show', visita.id)" class="text-blue-500 hover:text-blue-700">{{ visita.incremental_id }}</a></td>
                                         <td class="px-4 py-2 text-blue-500 hover:text-blue-700"><a :href="route('avaluos.show', visita.avaluo_id)">{{ visita.avaluo.numero_avaluo }}</a></td>
-                                        <td class="px-4 py-2">{{ visita.visitador.user.name }}</td>
+                                        <td class="px-4 py-2 text-blue-500 hover:text-blue-700"><a :href="route('visitadores.show', visita.visitador_id)">{{ visita.visitador.user.name }}</a></td>
                                         <td class="px-4 py-2">{{ visita.ciudad }}</td>
                                         <td class="px-4 py-2">{{ formatDate(visita.fecha_visita) }}</td>
                                         <td class="px-4 py-2">{{ formatDate(visita.created_at) }}</td>

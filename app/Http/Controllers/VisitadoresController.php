@@ -63,6 +63,11 @@ class VisitadoresController extends Controller
     public function show(string $id)
     {
         //
+        $visitador = Visitadores::with('user')->findOrFail($id);
+
+        return Inertia::render('Visitadores/Show', [
+            'visitador' => $visitador,
+        ]);
     }
 
     /**

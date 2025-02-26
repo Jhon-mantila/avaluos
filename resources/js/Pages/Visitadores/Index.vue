@@ -37,7 +37,7 @@
                                 </thead>
                                 <tbody>
                                 <tr v-for="visitador in visitadores.data" :key="visitador.id">
-                                    <td>{{ visitador.user.name }}</td> <!-- Nombre del usuario -->
+                                    <td><a :href="route('visitadores.show', visitador.id)" class="text-blue-500 hover:text-blue-700">{{ visitador.user.name }}</a></td> <!-- Nombre del usuario -->
                                     <td>{{ visitador.user.email }}</td> <!-- Email del usuario -->
                                     <td>{{ visitador.ciudad }}</td> <!-- Ciudad del visitador -->
                                     <td>{{ visitador.active ? 'Sí' : 'No' }}</td> <!-- Estado activo -->
