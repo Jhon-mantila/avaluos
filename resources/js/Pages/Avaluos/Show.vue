@@ -115,7 +115,8 @@ onMounted(() => {
     console.log('informacionVisitas:', props.informacionVisitas);
 });
 // Determinar la URL de referencia
-const referer = ref(document.referrer.includes('clientes') ? document.referrer : route('avaluos.index'));
+//const referer = ref(document.referrer.includes('clientes') ? document.referrer : route('avaluos.index'));
+const referer = ref(document.referrer.includes('clientes') || document.referrer.includes('informacion-visita') ? document.referrer : route('avaluos.index'));
 </script>
 
 <style scoped>

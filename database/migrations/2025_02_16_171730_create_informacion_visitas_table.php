@@ -12,7 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('informacion_visitas', function (Blueprint $table) {
-            $table->uuid('id')->primary();
+            $table->uuid('id')->primary(); // Clave primaria UUID
+            $table->bigInteger('incremental_id')->unsigned()->unique(); // Será autoincremental luego
             $table->uuid('avaluo_id');
             $table->foreign('avaluo_id')->references('id')->on('avaluos');
             $table->uuid('visitador_id');
@@ -24,6 +25,7 @@ return new class extends Migration
             $table->text('observaciones')->nullable();
             $table->timestamps();
         });
+        DB::statement('ALTER TABLE informacion_visitas MODIFY COLUMN incremental_id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT;');
     }
 
     /**

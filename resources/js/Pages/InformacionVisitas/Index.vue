@@ -31,9 +31,9 @@
                             <table class="w-full mt-4">
                                 <thead>
                                     <tr>
+                                        <th class="px-4 py-2">No. Visita</th>
                                         <th class="px-4 py-2">Número Avalúo</th>
                                         <th class="px-4 py-2">Nombre del Visitador</th>
-                                        <th class="px-4 py-2">Celular</th>
                                         <th class="px-4 py-2">Ciudad</th>
                                         <th class="px-4 py-2">Fecha de Visita</th>
                                         <th class="px-4 py-2">Fecha de Creación</th>
@@ -42,9 +42,9 @@
                                 </thead>
                                 <tbody>
                                     <tr v-for="visita in informacionVisitas.data" :key="visita.id">
+                                        <td class="px-4 py-2">{{ visita.incremental_id }}</td>
                                         <td class="px-4 py-2 text-blue-500 hover:text-blue-700"><a :href="route('avaluos.show', visita.avaluo_id)">{{ visita.avaluo.numero_avaluo }}</a></td>
                                         <td class="px-4 py-2">{{ visita.visitador.user.name }}</td>
-                                        <td class="px-4 py-2">{{ visita.celular }}</td>
                                         <td class="px-4 py-2">{{ visita.ciudad }}</td>
                                         <td class="px-4 py-2">{{ formatDate(visita.fecha_visita) }}</td>
                                         <td class="px-4 py-2">{{ formatDate(visita.created_at) }}</td>

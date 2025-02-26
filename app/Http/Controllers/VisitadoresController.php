@@ -18,7 +18,8 @@ class VisitadoresController extends Controller
 
         // Consulta base con la relación `user`
         $query = Visitadores::with('user');
-
+        // Ordenar los resultados en orden descendente por la columna 'created_at'
+        $query->orderBy('created_at', 'desc');
         // Aplicar búsqueda si hay un término
         if ($search) {
             $query->whereHas('user', function ($q) use ($search) {

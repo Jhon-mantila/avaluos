@@ -14,7 +14,8 @@ class InformacionVisitaController extends Controller
 
         // Consulta base con las relaciones `avaluo` y `visitador.user`
         $query = InformacionVisita::with(['avaluo', 'visitador.user']);
-
+        // Ordenar los resultados en orden descendente por la columna 'created_at'
+        $query->orderBy('created_at', 'desc');
         // Aplicar búsqueda si hay un término
         if ($search) {
             $query->whereHas('avaluo', function ($q) use ($search) {
