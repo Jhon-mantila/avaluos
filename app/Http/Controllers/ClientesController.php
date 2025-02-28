@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use App\Models\Clientes;
 use Inertia\Inertia;
@@ -49,16 +49,38 @@ class ClientesController extends Controller
 
     public function update(Request $request, $id)
     {
-        $cliente = Clientes::findOrFail($id);
-        $cliente->update($request->validate([
-            'nombre' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
-            'telefono' => 'required|string|max:255',
-            'ciudad' => 'required|string|max:255',
-            'updated_at' => date("Y-m-d H:i:s"),
-        ]));
+    // Encontrar el cliente
+    $cliente = Clientes::findOrFail($id);
 
-        return redirect()->route('clientes.index')->with('success', 'Cliente actualizado correctamente.');
+    // Validar los datos del formulario
+    $validatedData = $request->validate([
+        'nombre' => 'required|string|max:255',
+        'email' => 'required|email|max:255',
+        'telefono' => 'required|string|max:255',
+        'ciudad' => 'required|string|max:255',
+        'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+    ]);
+
+    // Actualizar los campos del cliente (excepto el logo)
+    $cliente->update($validatedData);
+
+    // Manejar el archivo de logo
+    if ($request->hasFile('logo')) {
+        // Eliminar el logo anterior si existe
+        if ($cliente->logo) {
+            Storage::delete('public/' . $cliente->logo);
+        }
+
+        // Crear una carpeta con el ID del cliente
+        $folder = 'logos/' . $cliente->id;
+        // Guardar el archivo en la carpeta creada
+        $path = $request->file('logo')->store($folder, 'public');
+        // Actualizar el cliente con la ruta del logo
+        $cliente->update(['logo' => $path]);
+    }
+
+    // Redireccionar con un mensaje de éxito
+    return redirect()->route('clientes.index')->with('success', 'Cliente actualizado correctamente.');
     }
 
     public function create()
@@ -73,7 +95,7 @@ class ClientesController extends Controller
             'email' => 'required|email|max:255',
             'telefono' => 'required|string|max:255',
             'ciudad' => 'required|string|max:255',
-            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
         // Crear el cliente sin el logo primero para obtener el ID
