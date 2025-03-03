@@ -5,10 +5,18 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use App\Models\Clientes;
 use Inertia\Inertia;
+use App\Services\DropdownService;
 
 class ClientesController extends Controller
 {
     //
+    protected $dropdownService;
+
+    public function __construct(DropdownService $dropdownService)
+    {
+        $this->dropdownService = $dropdownService;
+    }
+
     public function index(Request $request)
     {
         // Obtener el término de búsqueda
@@ -42,8 +50,10 @@ class ClientesController extends Controller
     public function edit($id)
     {
         $cliente = Clientes::findOrFail($id);
+        $list_tipo_documento = $this->dropdownService->list_tipo_documento();
         return Inertia::render('Clientes/Edit', [
             'cliente' => $cliente,
+            'tipo_documento' => $list_tipo_documento,
         ]);
     }
 
@@ -55,10 +65,19 @@ class ClientesController extends Controller
     // Validar los datos del formulario
     $validatedData = $request->validate([
         'nombre' => 'required|string|max:255',
+        'tipo_documento' => 'required|string|max:255',
+        'documento' => 'required|string|max:255|unique:clientes,documento,' . $id,
         'email' => 'required|email|max:255',
         'telefono' => 'required|string|max:255',
         'ciudad' => 'required|string|max:255',
         'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+    ], [
+        'nombre.required' => 'El nombre es requerido.',
+        'tipo_documento.required' => 'El tipo de documento es requerido.',
+        'documento.required' => 'El documento es requerido.',
+        'documento.unique' => 'El número de documento ya existe. Por favor, elija un número diferente.',
+        'email.required' => 'El email es requerido.',
+        'telefono.required' => 'El teléfono es requerido',
     ]);
 
     // Actualizar los campos del cliente (excepto el logo)
@@ -85,13 +104,18 @@ class ClientesController extends Controller
 
     public function create()
     {
-        return Inertia::render('Clientes/Create');
+        $list_tipo_documento = $this->dropdownService->list_tipo_documento();
+        return Inertia::render('Clientes/Create', [
+            'tipo_documento' => $list_tipo_documento,
+        ]);
     }
 
     public function store(Request $request)
     {
         $validatedData = $request->validate([
             'nombre' => 'required|string|max:255',
+            'tipo_documento' => 'required|string|max:255',
+            'documento' => 'required|string|max:255',
             'email' => 'required|email|max:255',
             'telefono' => 'required|string|max:255',
             'ciudad' => 'required|string|max:255',

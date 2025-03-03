@@ -31,6 +31,8 @@ class ClientesFactory extends Factory
             //
             'id' =>  (string) Uuid::uuid4(),
             'nombre' => fake()->name(),
+            'tipo_documento' => fake()->randomElement(['Nit', 'CC', 'CE', 'Pasaporte']), // Selecciona un elemento aleatorio de la lista
+            'documento' => fake()->unique()->randomNumber(9), // Genera un número aleatorio de 9 dígitos
             //'logo' => fake()->imageUrl(200, 200, 'business'), // Imagen de 200x200 píxeles de la categoría "business"
             'logo' => !empty($files) ? Storage::url($files[array_rand($files)]) : null,
             'email' => $this->faker->unique()->safeEmail, // Genera un correo electrónico aleatorio

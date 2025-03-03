@@ -12,19 +12,32 @@
                         <form @submit.prevent="submit"  enctype="multipart/form-data">
                             <div class="mb-4">
                                 <label for="nombre" class="block text-sm font-medium text-gray-700">Nombre</label>
-                                <input type="text" v-model="form.nombre" id="nombre" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" required>
+                                <input type="text" v-model="form.nombre" id="nombre" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                            </div>
+                            <div class="mb-4">
+                                <label for="tipo_documento" class="block text-sm font-medium text-gray-700">Tipo Documento</label>
+                                <v-select
+                                        v-model="selectedTipoDodumento"
+                                        :options="tipo_documentos"
+                                        placeholder="Seleccionar Tipo de Documento..."
+                                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                                    />
+                            </div>
+                            <div class="mb-4">
+                                <label for="documento" class="block text-sm font-medium text-gray-700">Documento</label>
+                                <input type="text" v-model="form.documento" id="documento" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
                             </div>
                             <div class="mb-4">
                                 <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-                                <input type="email" v-model="form.email" id="email" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" required>
+                                <input type="email" v-model="form.email" id="email" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
                             </div>
                             <div class="mb-4">
                                 <label for="telefono" class="block text-sm font-medium text-gray-700">Teléfono</label>
-                                <input type="text" v-model="form.telefono" id="telefono" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" required>
+                                <input type="text" v-model="form.telefono" id="telefono" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
                             </div>
                             <div class="mb-4">
                                 <label for="ciudad" class="block text-sm font-medium text-gray-700">Ciudad</label>
-                                <input type="text" v-model="form.ciudad" id="ciudad" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" required>
+                                <input type="text" v-model="form.ciudad" id="ciudad" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
                             </div>
                             <div class="mb-4">
                                 <label for="logo" class="block text-sm font-medium text-gray-700">Logo</label>
@@ -48,27 +61,36 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import axios from 'axios';
 import { useForm } from '@inertiajs/vue3';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import { useToast } from 'vue-toastification';
+import vSelect from 'vue-select';
+import 'vue-select/dist/vue-select.css';
 
 const props = defineProps({
     cliente: Object,
+    tipo_documento: {
+        type: Object,
+        required: true,
+        default: () => ({})
+    }
 });
-
+const tipo_documentos = ref(Object.keys(props.tipo_documento).map(key => ({ label: props.tipo_documento[key], value: key })));
 const toast = useToast();
-
+console.log('Cliente:', props.cliente);
 const form = ref({
     nombre: props.cliente.nombre || '',
+    tipo_documento: props.cliente.tipo_documento || '',
+    documento: props.cliente.documento || '',
     email: props.cliente.email || '',
     telefono: props.cliente.telefono || '',
     ciudad: props.cliente.ciudad || '',
     logo: props.cliente.logo ? `/storage/${props.cliente.logo}` : null,
     logo_file: null, // Añadir logo_file al formulario
 });
-
+const selectedTipoDodumento = ref(tipo_documentos.value.find(tipo_documento => tipo_documento.value === form.value.tipo_documento));
 const handleFileChange2 = (e) => {
     console.log('Cambio de archivo:', e.target.files);
     const file = e.target.files[0];
@@ -79,7 +101,10 @@ const handleFileChange2 = (e) => {
     }
 };
 
-
+watch(selectedTipoDodumento, (newValue, oldValue) => {
+    console.log('selectedTipoDocuemtno cambió de:', oldValue, 'a:', newValue);
+    form.tipo_documento = newValue ? newValue.value : '';
+});
 // Determinar la URL de referencia
 const referer = ref(document.referrer.includes('clientes') ? document.referrer : route('clientes.index'));
 
@@ -88,6 +113,8 @@ const submit = async () => {
     const formData = new FormData();
     formData.append('_method', 'PUT'); // Simula una solicitud PUT
     formData.append('nombre', form.value.nombre);
+    formData.append('tipo_documento', form.value.tipo_documento);
+    formData.append('documento', form.value.documento);
     formData.append('email', form.value.email);
     formData.append('telefono', form.value.telefono);
     formData.append('ciudad', form.value.ciudad);

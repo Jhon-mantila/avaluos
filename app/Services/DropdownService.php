@@ -4,6 +4,16 @@ namespace App\Services;
 
 class DropdownService
 {
+    public function list_tipo_documento()
+    {
+        return [
+            'Nit' => 'Nit',
+            'CC' => 'Cédula de Ciudadanía',
+            'CE' => 'Cédula de extranjería',
+            'Pasaporte' => 'Pasaporte',
+        ];
+    }
+
     public function list_tipos_avaluos()
     {
         return [

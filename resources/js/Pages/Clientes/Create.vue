@@ -16,8 +16,22 @@
                                 <input type="text" v-model="form.nombre" id="nombre" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" required>
                             </div>
                             <div class="mb-4">
+                                <label for="tipo_documento" class="block text-sm font-medium text-gray-700">Tipo Documento</label>
+                                    <v-select
+                                        v-model="form.tipo_documento"
+                                        :options="tipo_documentos"
+                                        placeholder="Seleccionar tipo documento.."
+                                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                                    />
+                                
+                            </div>
+                            <div class="mb-4">
+                                <label for="documento" class="block text-sm font-medium text-gray-700">Documento</label>
+                                <input type="text" v-model="form.documento" id="documento" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                            </div>
+                            <div class="mb-4">
                                 <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-                                <input type="email" v-model="form.email" id="email" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" required>
+                                <input type="email" v-model="form.email" id="email" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
                             </div>
                             <div class="mb-4">
                                 <label for="telefono" class="block text-sm font-medium text-gray-700">Teléfono</label>
@@ -49,14 +63,20 @@
 
 <script setup>
 import { ref } from 'vue';
-import { useForm } from '@inertiajs/vue3';
+import { useForm, usePage } from '@inertiajs/vue3';
 import { useToast } from 'vue-toastification';
 import AppLayout from '@/Layouts/AppLayout.vue';
+import vSelect from 'vue-select';
+import 'vue-select/dist/vue-select.css';
 
 const toast = useToast();
-
+const { props } = usePage();
+console.log(props);
+const tipo_documentos = ref(Object.keys(props.tipo_documento).map(key => ({ label: props.tipo_documento[key], value: key })));
 const form = useForm({
     nombre: '',
+    tipo_documento: '',
+    documento: '',
     email: '',
     telefono: '',
     ciudad: '',
@@ -68,11 +88,16 @@ const handleFileChange = (event) => {
 };
 
 const submit = () => {
+    // Extraer los valores de estado y tipo_avaluo antes de enviar el formulario
+    form.tipo_documento = form.tipo_documento.value;
     form.post(route('clientes.store'), {
         onSuccess: () => {
             form.reset();
             toast.success('Cliente creado correctamente.');
-        }
+        },
+        onError: () => {
+            toast.error('Ocurrió un error al crear el cliente.');
+        },
     });
 };
 </script>
