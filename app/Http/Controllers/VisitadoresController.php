@@ -46,7 +46,8 @@ class VisitadoresController extends Controller
      */
     public function create()
     {
-        //
+        // Obtener los datos necesarios para la vista de creación
+        return inertia('Visitadores/Create');
     }
 
     /**
@@ -54,7 +55,20 @@ class VisitadoresController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // Validar los datos del formulario
+        $validatedData = $request->validate([
+            'user_id' => 'exists:users,id',
+            'telefono' => 'required|string|max:15',
+            'ciudad' => 'required|string|max:255',
+            'departamento' => 'required|string|max:255',
+            'cobertura' => 'required|string|max:255',
+            'active' => 'boolean',
+        ]);
+
+        // Crear un nuevo visitador
+        Visitadores::create($validatedData);
+
+        return redirect()->route('visitadores.index')->with('success', 'Visitador creado correctamente.');
     }
 
     /**

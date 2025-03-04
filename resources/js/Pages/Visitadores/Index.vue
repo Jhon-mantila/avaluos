@@ -12,6 +12,14 @@
             <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
                         <div>
+                            <div class="flex justify-between mb-4">
+                            <div>
+                                <span class="text-lg font-semibold">Total de Visitadores: {{ visitadores.total }}</span>
+                            </div>
+                            <a :href="route('visitadores.create')" class="inline-flex items-center px-4 py-2 bg-blue-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 active:bg-blue-900 focus:outline-none focus:border-blue-900 focus:ring ring-blue-300 disabled:opacity-25 transition ease-in-out duration-150">
+                                Crear Visitador
+                            </a>
+                        </div>
                             <!-- Barra de búsqueda -->
                             <div class="mb-4 w-full">
                                 <input
