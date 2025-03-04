@@ -36,8 +36,9 @@
                                         <th class="px-4 py-2">Nombre del Visitador</th>
                                         <th class="px-4 py-2">Ciudad</th>
                                         <th class="px-4 py-2">Fecha de Visita</th>
-                                        <th class="px-4 py-2">Fecha de Creación</th>
                                         <th class="px-4 py-2">Fecha de Modificación</th>
+                                        <th class="px-4 py-2">Fecha de Creación</th>
+                                        <th class="px-4 py-2">Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -47,8 +48,12 @@
                                         <td class="px-4 py-2 text-blue-500 hover:text-blue-700"><a :href="route('visitadores.show', visita.visitador_id)">{{ visita.visitador.user.name }}</a></td>
                                         <td class="px-4 py-2">{{ visita.ciudad }}</td>
                                         <td class="px-4 py-2">{{ formatDate(visita.fecha_visita) }}</td>
-                                        <td class="px-4 py-2">{{ formatDate(visita.created_at) }}</td>
                                         <td class="px-4 py-2">{{ formatDate(visita.updated_at) }}</td>
+                                        <td class="px-4 py-2">{{ formatDate(visita.created_at) }}</td>
+                                        <td class="px-4 py-2">
+                                            <a :href="route('informacion-visita.edit', visita.id)" class="text-blue-500 hover:text-blue-700">Editar</a>
+                                        </td>
+                                        
                                     </tr>
                                 </tbody>
                             </table>
@@ -66,7 +71,7 @@
 <script setup>
 import { ref, watch, onMounted } from 'vue';
 import { router } from '@inertiajs/vue3';
-import { formatDate } from '@/Utils/dateUtils'; // Importar la función desde el archivo de utilidades
+import { formatDate, formatDateOnly } from '@/Utils/dateUtils'; // Importar la función desde el archivo de utilidades
 import AppLayout from '@/Layouts/AppLayout.vue';
 import Pagination from '@/Components/Pagination.vue';
 

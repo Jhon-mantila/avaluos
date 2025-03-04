@@ -1,8 +1,8 @@
 <template>
-    <AppLayout title="Crear Información de Visita">
+    <AppLayout title="Editar Información de Visita">
         <template #header>
             <h2 class="text-xl font-semibold leading-tight text-gray-800">
-                Crear Información de Visita
+                Editar Información de Visita
             </h2>
         </template>
         <div class="py-12">
@@ -90,13 +90,13 @@ const toast = useToast();
 const { props } = usePage();
 
 const form = useForm({
-    avaluo_id: '',
-    visitador_id: '',
-    celular: '',
-    direccion: '',
-    ciudad: '',
-    fecha_visita: '',
-    observaciones: '',
+    avaluo_id: props.informacionVisita.avaluo_id || '',
+    visitador_id: props.informacionVisita.visitador_id || '',
+    celular: props.informacionVisita.celular || '',
+    direccion: props.informacionVisita.direccion || '',
+    ciudad: props.informacionVisita.ciudad || '',
+    fecha_visita: props.informacionVisita.fecha_visita || '',
+    observaciones: props.informacionVisita.observaciones || '',
 });
 
 const errors = ref({});
@@ -113,6 +113,7 @@ onMounted(() => {
             id: avaluo.id,
             nombre: avaluo.numero_avaluo
         }));
+        selectedAvaluo.value = avaluos.value.find(avaluo => avaluo.id === form.avaluo_id);
     }).catch(error => {
         console.error('Error fetching avaluos:', error);
     });
@@ -124,6 +125,7 @@ onMounted(() => {
             id: visitador.id,
             nombre: visitador.user.name
         }));
+        selectedVisitador.value = visitadores.value.find(visitador => visitador.id === form.visitador_id);
     }).catch(error => {
         console.error('Error fetching visitadores:', error);
     });
@@ -161,13 +163,12 @@ const updateVisitadorId = (visitador) => {
 
 const submit = () => {
     console.log('Form data:', form);
-    form.post(route('informacion-visita.store'), {
+    form.put(route('informacion-visita.update', props.informacionVisita.id), {
         onSuccess: () => {
-            form.reset();
-            toast.success('Información de visita creada correctamente.');
+            toast.success('Información de visita actualizada correctamente.');
         },
         onError: (error) => {
-            console.error('Error creating informacion visita:', error);
+            console.error('Error updating informacion visita:', error);
             errors.value = error;
         }
     });

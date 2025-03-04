@@ -70,4 +70,32 @@ class InformacionVisitaController extends Controller
 
         return redirect()->route('informacion-visita.index')->with('success', 'Información de visita creada correctamente.');
     }
+
+    public function edit($id)
+    {
+        $informacionVisita = InformacionVisita::findOrFail($id);
+        return inertia('InformacionVisitas/Edit', [
+            'informacionVisita' => $informacionVisita,
+        ]);
+    }
+
+    public function update(Request $request, $id)
+    {
+        // Validar los datos del formulario
+        $validatedData = $request->validate([
+            'avaluo_id' => 'required|exists:avaluos,id',
+            'visitador_id' => 'required|exists:visitadores,id',
+            'celular' => 'required|string|max:15',
+            'direccion' => 'required|string|max:255',
+            'ciudad' => 'required|string|max:255',
+            'fecha_visita' => 'required|date',
+            'observaciones' => 'nullable|string|max:255',
+        ]);
+
+        // Actualizar la información de visita
+        $informacionVisita = InformacionVisita::findOrFail($id);
+        $informacionVisita->update($validatedData);
+
+        return redirect()->route('informacion-visita.index')->with('success', 'Información de visita actualizada correctamente.');
+    }
 }
