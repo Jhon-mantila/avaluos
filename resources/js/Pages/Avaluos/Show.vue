@@ -22,7 +22,7 @@
                             </div>
                             <div class="mb-4">
                                 <label class="block text-sm font-medium text-gray-700">Cliente</label>
-                                <p class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">{{ avaluo.cliente.nombre }}</p>
+                                <p class="mt-1 block w-full border-gray-300 rounded-md shadow-sm text-blue-500 hover:text-blue-700"><a :href="route('clientes.show', avaluo.cliente_id)">{{ avaluo.cliente.nombre }}</a></p>
                             </div>
                             <div class="mb-4">
                                 <label class="block text-sm font-medium text-gray-700">Estado</label>
@@ -69,6 +69,7 @@
                                 <table class="min-w-full divide-y divide-gray-200">
                                     <thead class="bg-gray-50">
                                         <tr>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No. Vista</th>
                                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre del Visitador</th>
                                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Celular</th>
                                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ciudad</th>
@@ -78,7 +79,8 @@
                                     </thead>
                                     <tbody class="bg-white divide-y divide-gray-200">
                                         <tr v-for="visita in informacionVisitas.data" :key="visita.id">
-                                            <td class="px-6 py-4 whitespace-nowrap">{{ visita.visitador?.user?.name || 'N/A' }}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap"><a :href="route('informacion-visita.show', visita.id)" class="text-blue-500 hover:text-blue-700">{{ visita.incremental_id }}</a></td>
+                                            <td class="px-6 py-4 whitespace-nowrap"><a :href="route('visitadores.show', visita.visitador_id)" class="text-blue-500 hover:text-blue-700">{{ visita.visitador?.user?.name || 'N/A' }}</a></td>
                                             <td class="px-6 py-4 whitespace-nowrap">{{ visita.celular }}</td>
                                             <td class="px-6 py-4 whitespace-nowrap">{{ visita.ciudad }}</td>
                                             <td class="px-6 py-4 whitespace-nowrap">{{ visita.fecha_visita }}</td>

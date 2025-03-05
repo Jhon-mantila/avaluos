@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Visitadores;
+use App\Models\InformacionVisita;
 use Inertia\Inertia;
 
 class VisitadoresController extends Controller
@@ -78,9 +79,10 @@ class VisitadoresController extends Controller
     {
         //
         $visitador = Visitadores::with('user')->findOrFail($id);
-
+        $visitas = InformacionVisita::where('visitador_id', $id)->with('avaluo')->paginate(5);
         return Inertia::render('Visitadores/Show', [
             'visitador' => $visitador,
+            'visitas' => $visitas,
         ]);
     }
 
