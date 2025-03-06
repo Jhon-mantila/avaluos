@@ -11,14 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('registro_fotograficos', function (Blueprint $table) {
+        Schema::create('plantillas', function (Blueprint $table) {
             $table->uuid('id')->primary();
+            $table->string('nombre_plantilla')->nullable();
             $table->uuid('informacion_visita_id');
             $table->foreign('informacion_visita_id')->references('id')->on('informacion_visitas');
-            $table->string('foto')->nullable();
-            $table->text('descripcion')->nullable();
-            $table->string('tipo_foto')->nullable();
-            $table->integer('orden')->nullable();
+            $table->uuid('user_id');
             $table->timestamps();
         });
     }
@@ -28,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('registro_fotograficos');
+        Schema::dropIfExists('plantillas');
     }
 };

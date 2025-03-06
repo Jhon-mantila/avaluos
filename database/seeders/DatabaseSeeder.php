@@ -7,7 +7,7 @@ use App\Models\Visitadores;
 use App\Models\Clientes;
 use App\Models\Avaluos;
 use App\Models\InformacionVisita;
-use App\Models\RegistroFotograficos;
+
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -30,9 +30,6 @@ class DatabaseSeeder extends Seeder
         Avaluos::factory()->count(1)->create();
         InformacionVisita::factory()->count(10)->create();
         $informacionVisita = \App\Models\InformacionVisita::factory()->create();
-        RegistroFotograficos::factory()->count(10)->create([
-            'informacion_visita_id' => $informacionVisita->id,
-        ]);
     
     }
 }

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Visitadores;
 use App\Models\InformacionVisita;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Auth;
 
 class VisitadoresController extends Controller
 {
@@ -30,6 +31,9 @@ class VisitadoresController extends Controller
             ->orWhere('ciudad', 'LIKE', "%{$search}%");
         }
 
+        $id = Auth::id(); // Obtiene solo el ID del usuario autenticado
+        $user = Auth::user(); // Obtiene todos los datos del usuario autenticado
+        //dd($id, $user );
         // Paginar los resultados
         //$visitadores = $query->paginate(10);
         // Paginar los resultados y conservar el parámetro de búsqueda
