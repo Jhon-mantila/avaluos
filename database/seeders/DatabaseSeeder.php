@@ -7,6 +7,7 @@ use App\Models\Visitadores;
 use App\Models\Clientes;
 use App\Models\Avaluos;
 use App\Models\InformacionVisita;
+use App\Models\Plantilla;
 
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -19,7 +20,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        \App\Models\User::factory()->create();
+        $user = \App\Models\User::factory()->create();
         /*User::factory()->create([
             'name' => 'Test User',
             'email' => 'test@example.com',
@@ -30,6 +31,10 @@ class DatabaseSeeder extends Seeder
         Avaluos::factory()->count(1)->create();
         InformacionVisita::factory()->count(10)->create();
         $informacionVisita = \App\Models\InformacionVisita::factory()->create();
+        Plantilla::factory()->count(5)->create([
+            'informacion_visita_id' => $informacionVisita->id,
+            'user_id' => $user->id,
+        ]);
     
     }
 }

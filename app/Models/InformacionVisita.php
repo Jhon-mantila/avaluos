@@ -31,8 +31,8 @@ class InformacionVisita extends Model
     public function avaluo(){
         return $this->belongsTo(Avaluos::class, 'avaluo_id');
     }
-
-    protected function registro_fotograficos(){
-        return $this->hasMany(RegistroFotograficos::class);
+    
+    public function plantilla(){
+        return $this->hasMany(Plantilla::class, 'plantilla_id');
     }
 }

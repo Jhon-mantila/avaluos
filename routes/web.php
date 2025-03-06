@@ -7,6 +7,7 @@ use App\Http\Controllers\VisitadoresController;
 use App\Http\Controllers\ClientesController;
 use App\Http\Controllers\AvaluosController;
 use App\Http\Controllers\InformacionVisitaController;
+use App\Http\Controllers\PlantillaController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -32,3 +33,4 @@ Route::resource('visitadores', VisitadoresController::class)->middleware(['auth'
 Route::resource('clientes', ClientesController::class)->middleware(['auth', 'verified']);
 Route::resource('avaluos', AvaluosController::class)->middleware(['auth', 'verified']);
 Route::resource('informacion-visita', InformacionVisitaController::class)->middleware(['auth', 'verified']);
+Route::resource('plantillas', PlantillaController::class)->middleware(['auth', 'verified']);
