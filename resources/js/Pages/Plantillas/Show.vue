@@ -38,6 +38,35 @@
                                 Crear
                             </button>
                         </div>
+        <!-- Subpanel para mostrar imágenes -->
+        <div class="mt-8">
+            <h3 class="text-lg font-semibold leading-tight text-gray-800 mb-4">Imágenes</h3>
+            <div class="overflow-x-auto">
+                <table class="min-w-full border border-gray-300">
+                <thead>
+                    <tr class="bg-gray-100">
+                    <th class="border px-4 py-2 text-left">Imagen</th>
+                    <th class="border px-4 py-2 text-left">Título</th>
+                    <th class="border px-4 py-2 text-left">Orden</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <draggable :list="imagenes" item-key="id" tag="tbody" @end="updateOrder">
+                    <template #item="{ element }">
+                        <tr class="border hover:bg-gray-50 cursor-grab">
+                        <td class="border px-4 py-2">
+                            <img :src="`/storage/${element.imagen}`" :alt="element.title" class="w-24 h-24 object-cover rounded" />
+                        </td>
+                        <td class="border px-4 py-2">{{ element.title }}</td>
+                        <td class="border px-4 py-2">{{ element.orden }}</td>
+                        </tr>
+                    </template>
+                    </draggable>
+                </tbody>
+                </table>
+            </div>
+        </div>
+                        
                     </div>
                 </div>
             </div>
@@ -58,6 +87,8 @@
                 </div>
             </div>
         </div>
+
+
     </AppLayout>
 </template>
 
@@ -67,15 +98,18 @@ import { usePage } from '@inertiajs/vue3';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import { formatDate } from '@/Utils/dateUtils'; // Importar la función desde el archivo de utilidades
 import axios from 'axios';
+import draggable from 'vuedraggable';
 
 const { props } = usePage();
 const plantilla = ref(props.plantilla);
 const showModal = ref(false);
 const selectedFiles = ref([]);
+const imagenes = ref([]);
 
 // Imprimir la data de la plantilla en la consola
 onMounted(() => {
     console.log('Plantilla:', props.plantilla);
+    fetchImages();
 });
 const handleFileUpload = (event) => {
     selectedFiles.value = Array.from(event.target.files);
@@ -113,6 +147,62 @@ const uploadImages = () => {
     });
 
     showModal.value = false;
+};
+
+const fetchImages = () => {
+    axios.get(`/api/plantillas/${plantilla.value.id}/imagenes`)
+        .then(response => {
+            console.log('Imágenes:', response.data);
+            if (Array.isArray(response.data)) {
+                imagenes.value = response.data.map((img, index) => ({
+                    ...img,
+                    orden: img.orden ?? index + 1 // Asegurar que `order` exista
+                }));
+            } else {
+                console.error('Error: La respuesta no es un array:', response.data);
+                imagenes.value = [];
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching images:', error);
+            imagenes.value = []; // Asegura que siempre sea un array
+        });
+};
+
+const updateOrder = () => {
+    if (!imagenes.value || imagenes.value.length === 0) {
+        console.warn("No hay imágenes para actualizar el orden.");
+        return;
+    }
+
+    const orders = imagenes.value.map((imagen, index) => ({
+        id: imagen.id,
+        order: index + 1 // Asegura que siempre haya un número de orden
+    }));
+
+    axios.post('/api/imagenes/update-order', { orders })
+        .then(response => {
+            console.log('Orden actualizado:', response.data);
+        })
+        .catch(error => {
+            console.error('Error updating order:', error);
+        });
+};
+
+const editImage = (imagen) => {
+    // Aquí puedes manejar la lógica para editar la imagen
+    console.log('Editar imagen:', imagen);
+};
+
+const deleteImage = (id) => {
+    axios.delete(`/api/imagenes/${id}`)
+        .then(response => {
+            console.log('Imagen eliminada:', response.data);
+            fetchImages();
+        })
+        .catch(error => {
+            console.error('Error eliminando imagen:', error);
+        });
 };
 </script>
 
