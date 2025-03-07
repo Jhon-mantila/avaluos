@@ -22,4 +22,8 @@ class Plantilla extends Model
     public function informacionVisita(){
         return $this->belongsTo(InformacionVisita::class, 'informacion_visita_id');
     }
+
+    public function registroFotografico(){
+        return $this->belongsTo(RegistroFotografico::class);
+    }
 }

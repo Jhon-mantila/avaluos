@@ -8,7 +8,7 @@ use App\Models\Clientes;
 use App\Models\Avaluos;
 use App\Models\InformacionVisita;
 use App\Models\Plantilla;
-
+use App\Models\RegistroFotografico;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -35,6 +35,10 @@ class DatabaseSeeder extends Seeder
             'informacion_visita_id' => $informacionVisita->id,
             'user_id' => $user->id,
         ]);
+        /*RegistroFotografico::factory()->count(5)->create([
+            'plantilla_id' => \App\Models\Plantilla::inRandomOrder()->first()->id,
+            'user_id' => $user->id,
+        ]);*/
     
     }
 }

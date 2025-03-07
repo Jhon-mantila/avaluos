@@ -11,6 +11,7 @@ class RegistroFotografico extends Model
     /** @use HasFactory<\Database\Factories\RegistroFotograficoFactory> */
     use HasFactory;
     use HasUuids; // para visualizar bien los id creados con uuid
+    protected $table = 'registros_fotograficos';
 
     protected $fillable = [
         'id',
@@ -24,5 +25,7 @@ class RegistroFotografico extends Model
         'user_id',
     ];
 
-
+    public function plantilla(){
+        return $this->hasMany(Plantilla::class, 'plantilla_id');
+    }
 }
