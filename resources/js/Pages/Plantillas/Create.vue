@@ -21,7 +21,7 @@
                                     <v-select
                                         v-model="selectedInformacionVisita"
                                         :options="informacionVisitas"
-                                        label="nombre"
+                                        label="numero_avaluo"
                                         placeholder="Seleccionar información de visita..."
                                         @input="updateInformacionVisitaId"
                                         class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
@@ -71,9 +71,11 @@ onMounted(() => {
         //console.log('Clientes:', response.data);
         //clientes.value = response.data;
         console.log('Información de visitas recibida:', response.data);
-        informacionVisitas.value = response.data.map(informacion_visita => ({
-            id: informacion_visita.id,
-            nombre: informacion_visita.incremental_id
+        informacionVisitas.value = response.data
+            .filter(informacion_visita => informacion_visita.avaluo) // Filtrar solo los que tienen avaluo
+            .map(informacion_visita => ({
+                id: informacion_visita.id,
+                numero_avaluo: informacion_visita.avaluo.numero_avaluo
         }));
     }).catch(error => {
         console.error('Error fetching clients:', error);

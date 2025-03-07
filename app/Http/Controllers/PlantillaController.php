@@ -52,4 +52,13 @@ class PlantillaController extends Controller
 
         return redirect()->route('plantillas.index')->with('success', 'Plantilla creada correctamente.');
     }
+
+    public function show($id)
+    {
+        $plantilla = Plantilla::with(['informacionVisita.avaluo'])->findOrFail($id);
+
+        return Inertia::render('Plantillas/Show', [
+            'plantilla' => $plantilla,
+        ]);
+    }
 }

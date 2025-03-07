@@ -13,7 +13,9 @@ class InformacionVisitaController extends Controller
      */
     public function index()
     {
-        $informacionVisitas = InformacionVisita::all();
+        $informacionVisitas = InformacionVisita::with(['avaluo' => function($query) {
+            $query->whereNotIn('estado', ['Completado', 'Cancelado']);
+        }])->get();
         return response()->json($informacionVisitas);
     }
 

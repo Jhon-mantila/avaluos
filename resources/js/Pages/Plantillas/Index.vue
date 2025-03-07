@@ -40,12 +40,11 @@
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
                                 <tr v-for="plantilla in plantillas.data" :key="plantilla.id">
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ plantilla.nombre_plantilla }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap"><a :href="route('plantillas.show', plantilla.id)" class="text-blue-500 hover:text-blue-700">{{ plantilla.nombre_plantilla }}</a></td>
                                     <td class="px-6 py-4 whitespace-nowrap">{{ formatDate(plantilla.created_at) }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap">{{ plantilla.informacion_visita.direccion }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap">{{ plantilla.informacion_visita.avaluo.numero_avaluo }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <a :href="route('plantillas.show', plantilla.id)" class="text-blue-500 hover:text-blue-700">Ver</a>
                                         <a :href="route('plantillas.edit', plantilla.id)" class="ml-4 text-blue-500 hover:text-blue-700">Editar</a>
                                     </td>
                                 </tr>
