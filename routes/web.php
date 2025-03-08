@@ -8,6 +8,7 @@ use App\Http\Controllers\ClientesController;
 use App\Http\Controllers\AvaluosController;
 use App\Http\Controllers\InformacionVisitaController;
 use App\Http\Controllers\PlantillaController;
+use App\Http\Controllers\PDFController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -34,3 +35,4 @@ Route::resource('clientes', ClientesController::class)->middleware(['auth', 'ver
 Route::resource('avaluos', AvaluosController::class)->middleware(['auth', 'verified']);
 Route::resource('informacion-visita', InformacionVisitaController::class)->middleware(['auth', 'verified']);
 Route::resource('plantillas', PlantillaController::class)->middleware(['auth', 'verified']);
+Route::get('/plantillas/{id}/pdf', [PDFController::class, 'generarPDF']);

@@ -180,6 +180,7 @@ const updateOrder = () => {
         order: index + 1 // Asegura que siempre haya un número de orden
     }));
 
+    console.log('Orden de imágenes:', orders);
     axios.post('/api/imagenes/update-order', { orders })
         .then(response => {
             console.log('Orden actualizado:', response.data);

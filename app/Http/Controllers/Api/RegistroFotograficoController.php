@@ -63,7 +63,7 @@ class RegistroFotograficoController extends Controller
         ]);
 
         foreach ($request->orders as $order) {
-            RegistroFotografico::where('id', $order['id'])->update(['order' => $order['order']]);
+            RegistroFotografico::where('id', $order['id'])->update(['orden' => $order['order']]);
         }
 
         return response()->json(['message' => 'Orden actualizado correctamente']);
