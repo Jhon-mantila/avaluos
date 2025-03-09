@@ -21,6 +21,7 @@ Route::get('/users', [UserController::class, 'index']);
 Route::get('/informacion-visitas', [InformacionVisitaController::class, 'index']);
 
 Route::post('/registros-fotograficos', [RegistroFotograficoController::class, 'store']);
+Route::get('/plantillas/{id}/imagenes', [PlantillaController::class, 'getImages']);
+Route::post('/imagenes/update/{id}', [RegistroFotograficoController::class, 'update']);
 Route::post('/imagenes/update-order', [RegistroFotograficoController::class, 'updateOrder']);
 Route::delete('/imagenes/{id}', [RegistroFotograficoController::class, 'destroy']);
-Route::get('/plantillas/{id}/imagenes', [PlantillaController::class, 'getImages']);
