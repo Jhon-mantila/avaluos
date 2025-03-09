@@ -84,7 +84,16 @@ class RegistroFotograficoController extends Controller
         // Si se subió una nueva imagen
         if ($request->hasFile('image')) {
             // Eliminar la imagen anterior
-            Storage::delete("public/{$imagen->imagen}");
+            //Storage::delete("public/{$imagen->imagen}");
+
+            $rutaImagen = public_path("storage/{$imagen->imagen}");
+
+            if (file_exists($rutaImagen)) {
+                unlink($rutaImagen);
+                //Log::info("🗑️ Imagen eliminada con unlink: {$rutaImagen}");
+            } else {
+                Log::warning("⚠️ Archivo no encontrado en public_path: {$rutaImagen}");
+            }
 
             // Guardar la nueva imagen
             $folder = 'images/' . $imagen->plantilla_id;
@@ -109,9 +118,29 @@ class RegistroFotograficoController extends Controller
     public function destroy($id)
     {
         $registro = RegistroFotografico::findOrFail($id);
-        Storage::delete(str_replace('/storage', 'public', $registro->url));
-        $registro->delete();
 
+        // Si no se encuentra, registrar el error
+        if (!$registro) {
+            Log::error("❌ Error: No se encontró el registro con ID: {$id}");
+            return response()->json(['error' => 'Registro no encontrado'], 404);
+        }
+
+        // Log para verificar qué ruta se está almacenando en la base de datos
+        Log::info("📌 Imagen almacenada en la BD: {$registro->imagen}");
+        
+        $rutaImagen = public_path("storage/{$registro->imagen}");
+
+        if (file_exists($rutaImagen)) {
+            unlink($rutaImagen);
+            //Log::info("🗑️ Imagen eliminada con unlink: {$rutaImagen}");
+        } else {
+            Log::warning("⚠️ Archivo no encontrado en public_path: {$rutaImagen}");
+        }
+    
+    
+        // Eliminar el registro de la base de datos
+        $registro->delete();
+    
         return response()->json(['message' => 'Imagen eliminada correctamente']);
     }
 }

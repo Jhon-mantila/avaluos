@@ -16,7 +16,7 @@
                             </div>
                             <div class="mb-4">
                                 <label class="block text-sm font-medium text-gray-700">Número de Avalúo</label>
-                                <p class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">{{ plantilla.informacion_visita.avaluo.numero_avaluo }}</p>
+                                <p class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"><a :href="route('avaluos.show', plantilla.informacion_visita.avaluo.id)" class="text-blue-500 hover:text-blue-700">{{ plantilla.informacion_visita.avaluo.numero_avaluo }}</a></p>
                             </div>
                             <div class="mb-4">
                                 <label class="block text-sm font-medium text-gray-700">Dirección de Visita</label>

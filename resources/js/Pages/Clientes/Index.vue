@@ -43,11 +43,11 @@
                             </thead>
                             <tbody>
                                 <tr v-for="cliente in clientes.data" :key="cliente.id">
-                                <td class="px-4 py-2"><a :href="route('clientes.show', cliente.id)" class="text-blue-500 hover:text-blue-700">{{ cliente.nombre }}</a></td>
-                                <td class="px-4 py-2">{{ cliente.email }}</td>
-                                <td class="px-4 py-2">{{ cliente.telefono }}</td>
-                                <td class="px-4 py-2">{{ formatDate(cliente.updated_at) }}</td>
-                                <td class="px-4 py-2">{{ formatDate(cliente.created_at) }}</td>
+                                <td class="px-4 py-2 whitespace-nowrap"><a :href="route('clientes.show', cliente.id)" class="text-blue-500 hover:text-blue-700">{{ cliente.nombre }}</a></td>
+                                <td class="px-4 py-2 whitespace-nowrap">{{ cliente.email }}</td>
+                                <td class="px-4 py-2 whitespace-nowrap">{{ cliente.telefono }}</td>
+                                <td class="px-4 py-2 whitespace-nowrap">{{ formatDate(cliente.updated_at) }}</td>
+                                <td class="px-4 py-2 whitespace-nowrap">{{ formatDate(cliente.created_at) }}</td>
 
                                 <td class="px-4 py-2">
                                     <a :href="route('clientes.edit', cliente.id)" class="text-blue-500 hover:text-blue-700">Editar</a>

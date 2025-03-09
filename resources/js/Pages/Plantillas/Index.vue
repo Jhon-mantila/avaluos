@@ -32,20 +32,23 @@
                             <thead>
                                 <tr>
                                     <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre Plantilla</th>
-                                    <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha de Creación</th>
-                                    <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Información Visita</th>
                                     <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Avalúo</th>
+                                    <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Información Visita</th>
+                                    <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha de Creación</th>
                                     <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
                                 <tr v-for="plantilla in plantillas.data" :key="plantilla.id">
-                                    <td class="px-6 py-4 whitespace-nowrap"><a :href="route('plantillas.show', plantilla.id)" class="text-blue-500 hover:text-blue-700">{{ plantilla.nombre_plantilla }}</a></td>
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ formatDate(plantilla.created_at) }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ plantilla.informacion_visita.direccion }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ plantilla.informacion_visita.avaluo.numero_avaluo }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
+                                    <td class="px-4 py-2 whitespace-nowrap"><a :href="route('plantillas.show', plantilla.id)" class="text-blue-500 hover:text-blue-700">{{ plantilla.nombre_plantilla }}</a></td>
+                                    <td class="px-4 py-2 whitespace-nowrap"><a :href="route('avaluos.show', plantilla.informacion_visita.avaluo.id)" class="text-blue-500 hover:text-blue-700">{{ plantilla.informacion_visita.avaluo.numero_avaluo }}</a></td>
+                                    <td class="px-4 py-2 whitespace-nowrap">{{ plantilla.informacion_visita.direccion }}</td>
+                                    <td class="px-4 py-2 whitespace-nowrap">{{ formatDate(plantilla.created_at) }}</td>
+                                    <td class="px-4 py-2 whitespace-nowrap">
                                         <a :href="route('plantillas.edit', plantilla.id)" class="ml-4 text-blue-500 hover:text-blue-700">Editar</a>
+                                        <a v-if="plantilla.informacion_visita.avaluo.estado  === 'Completado'" :href="`/plantillas/${plantilla.id}/pdf`" target="_blank" class="inline-flex items-center px-4 py-2 bg-blue-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 active:bg-blue-900 focus:outline-none focus:border-blue-900 focus:ring ring-blue-300 disabled:opacity-25 transition ease-in-out duration-150 ml-4">
+                                            PDF
+                                        </a>
                                     </td>
                                 </tr>
                             </tbody>

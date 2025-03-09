@@ -45,13 +45,13 @@
                                 </thead>
                                 <tbody>
                                 <tr v-for="visitador in visitadores.data" :key="visitador.id">
-                                    <td><a :href="route('visitadores.show', visitador.id)" class="text-blue-500 hover:text-blue-700">{{ visitador.user.name }}</a></td> <!-- Nombre del usuario -->
-                                    <td>{{ visitador.user.email }}</td> <!-- Email del usuario -->
-                                    <td>{{ visitador.ciudad }}</td> <!-- Ciudad del visitador -->
-                                    <td>{{ visitador.active ? 'Sí' : 'No' }}</td> <!-- Estado activo -->
+                                    <td class="px-4 py-2 whitespace-nowrap"><a :href="route('visitadores.show', visitador.id)" class="text-blue-500 hover:text-blue-700">{{ visitador.user.name }}</a></td> <!-- Nombre del usuario -->
+                                    <td class="px-4 py-2 whitespace-nowrap">{{ visitador.user.email }}</td> <!-- Email del usuario -->
+                                    <td class="px-4 py-2 whitespace-nowrap">{{ visitador.ciudad }}</td> <!-- Ciudad del visitador -->
+                                    <td class="px-4 py-2 whitespace-nowrap">{{ visitador.active ? 'Sí' : 'No' }}</td> <!-- Estado activo -->
                                     <td class="px-4 py-2">{{ formatDate(visitador.updated_at) }}</td>
                                     <td class="px-4 py-2">{{ formatDate(visitador.created_at) }}</td>
-                                    <td>
+                                    <td class="px-4 py-2 whitespace-nowrap">
                                     <a :href="`/visitadores/${visitador.id}/edit`">Editar</a>
                                     <button @click="deleteVisitador(visitador.id)">Eliminar</button>
                                     </td>
