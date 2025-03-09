@@ -52,8 +52,7 @@
                                     <td class="px-4 py-2">{{ formatDate(visitador.updated_at) }}</td>
                                     <td class="px-4 py-2">{{ formatDate(visitador.created_at) }}</td>
                                     <td class="px-4 py-2 whitespace-nowrap">
-                                    <a :href="`/visitadores/${visitador.id}/edit`">Editar</a>
-                                    <button @click="deleteVisitador(visitador.id)">Eliminar</button>
+                                    <a :href="route('visitadores.edit', visitador.id)" class="text-blue-500 hover:text-blue-700">Editar</a>
                                     </td>
                                 </tr>
                                 </tbody>

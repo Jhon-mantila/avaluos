@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Visitadores;
 use App\Models\InformacionVisita;
+use App\Models\User;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 
@@ -90,20 +91,28 @@ class VisitadoresController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function edit($id)
     {
-        //
+        $visitador = Visitadores::with('user')->findOrFail($id);
+        $users = User::all();
+        return Inertia::render('Visitadores/Edit', [
+            'visitador' => $visitador,
+            'users' => $users,
+        ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'ciudad' => 'required|string|max:255',
+            'active' => 'required|boolean',
+        ]);
+
+        $visitador = Visitadores::findOrFail($id);
+        $visitador->update($request->all());
+
+        return redirect()->route('visitadores.index')->with('success', 'Visitador actualizado correctamente.');
     }
 
     /**
