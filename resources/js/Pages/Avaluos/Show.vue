@@ -107,6 +107,7 @@ import { ref, onMounted } from 'vue';
 import { usePage } from '@inertiajs/vue3';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import Pagination from '@/Components/Pagination.vue';
+
 const { props } = usePage();
 const avaluo = ref(props.avaluo);
 const informacionVisitas = ref(props.informacionVisitas);
@@ -118,7 +119,9 @@ onMounted(() => {
 });
 // Determinar la URL de referencia
 //const referer = ref(document.referrer.includes('clientes') ? document.referrer : route('avaluos.index'));
-const referer = ref(document.referrer.includes('clientes') || document.referrer.includes('informacion-visita') ? document.referrer : route('avaluos.index'));
+const referer = ref(document.referrer.includes('clientes') || document.referrer.includes('informacion-visita') || document.referrer.includes('plantillas') || document.referrer.includes('visitadores') ? document.referrer : route('avaluos.index'));
+console.log('Referer:', referer.value);
+
 </script>
 
 <style scoped>

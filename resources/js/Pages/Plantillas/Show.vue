@@ -59,6 +59,7 @@
                                         <!-- Información -->
                                         <div class="mt-3 text-center">
                                             <p class="font-semibold text-gray-800">{{ element.title }}</p>
+                                            <p class="font-semibold text-gray-800">{{ element.orden }}</p>
                                         </div>
                                         <div class="flex justify-start space-x-4">
                                         <button @click="openEditModal(element)" class="btn btn-blue">Editar</button>

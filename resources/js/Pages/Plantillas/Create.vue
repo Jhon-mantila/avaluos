@@ -25,7 +25,8 @@
                                         placeholder="Seleccionar información de visita..."
                                         @input="updateInformacionVisitaId"
                                         class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
-                                    />
+                                        :appendToBody="true"
+                                        />
                                     <span v-if="errors.informacion_visita_id" class="text-red-500 text-sm">{{ errors.informacion_visita_id }}</span>
                                 </div>
                             </div>
@@ -120,4 +121,5 @@ const submit = () => {
 .text-red-500 {
     color: #f56565;
 }
+
 </style>
