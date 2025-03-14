@@ -173,7 +173,11 @@ const logout = () => {
                                         <div class="block px-4 py-2 text-xs text-gray-400">
                                             Manage Account
                                         </div>
-
+                                        <template v-if="userRole === 'admin'">
+                                            <DropdownLink :href="route('users.index')">
+                                                Usuarios
+                                            </DropdownLink>
+                                        </template>
                                         <DropdownLink :href="route('profile.show')">
                                             Profile
                                         </DropdownLink>

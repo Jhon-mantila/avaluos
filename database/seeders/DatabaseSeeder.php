@@ -20,6 +20,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+
+
         $user = \App\Models\User::factory()->create();
         /*User::factory()->create([
             'name' => 'Test User',
@@ -39,6 +41,9 @@ class DatabaseSeeder extends Seeder
             'plantilla_id' => \App\Models\Plantilla::inRandomOrder()->first()->id,
             'user_id' => $user->id,
         ]);*/
+        //php artisan db:seed --class=RolesAndPermissionsSeeder
+        // Llamar al seeder de roles y permisos
+        $this->call(RolesAndPermissionsSeeder::class);
     
     }
 }

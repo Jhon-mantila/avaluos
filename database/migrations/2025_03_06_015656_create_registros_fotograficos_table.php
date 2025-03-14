@@ -19,9 +19,6 @@ return new class extends Migration
             $table->text('title')->nullable();
             $table->string('tipo')->nullable();
             $table->integer('orden')->nullable();
-            $table->string('pagina')->nullable();
-            $table->string('posicion')->nullable();
-            $table->uuid('user_id');
             $table->timestamps();
         });
     }
