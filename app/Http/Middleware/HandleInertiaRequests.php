@@ -4,6 +4,8 @@ namespace App\Http\Middleware;
 
 use Illuminate\Http\Request;
 use Inertia\Middleware;
+use Inertia\Inertia;
+use Spatie\Permission\Models\Role;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -36,7 +38,14 @@ class HandleInertiaRequests extends Middleware
     public function share(Request $request): array
     {
         return array_merge(parent::share($request), [
-            //
+            'auth' => [
+                'user' => $request->user() ? [
+                    'id' => $request->user()->id,
+                    'name' => $request->user()->name,
+                    'role' => $request->user()->roles->pluck('name')->first(), // 🔹 Obtiene el primer rol
+                    'permissions' => $request->user()->getAllPermissions()->pluck('name'), // 🔹 Lista de permisos
+                ] : null,
+            ],
         ]);
     }
 }

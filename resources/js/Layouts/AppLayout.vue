@@ -7,12 +7,16 @@ import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
+import { inject } from 'vue';
+
 
 defineProps({
     title: String,
 });
-
+// Variables reactivas
 const showingNavigationDropdown = ref(false);
+const userRole = inject('$userRole');
+const userPermissions = inject('$userPermissions');
 
 const switchToTeam = (team) => {
     router.put(route('current-team.update'), {
@@ -52,31 +56,38 @@ const logout = () => {
                                     Dashboard
                                 </NavLink>
                             </div>
-                            <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink :href="route('visitadores.index')" :active="route().current('visitadores.index')">
-                                    Visitadores 
-                                </NavLink>
-                            </div>
-                            <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink :href="route('clientes.index')" :active="route().current('clientes.index')">
-                                    Clientes 
-                                </NavLink>
-                            </div>
-                            <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink :href="route('avaluos.index')" :active="route().current('avaluos.index')">
-                                    Avalúos 
-                                </NavLink>
-                            </div>
-                            <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink :href="route('informacion-visita.index')" :active="route().current('informacion-visita.index')">
-                                    Información Visitas 
-                                </NavLink>
-                            </div>
-                            <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink :href="route('plantillas.index')" :active="route().current('plantillas.index')">
-                                    Plantillas
-                                </NavLink>
-                            </div>
+                            <!-- ✅ Opciones solo para Admin -->
+                            <template v-if="userRole === 'admin'">
+                                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                                    <NavLink :href="route('visitadores.index')" :active="route().current('visitadores.index')">
+                                        Visitadores 
+                                    </NavLink>
+                                </div>
+                                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                                    <NavLink :href="route('clientes.index')" :active="route().current('clientes.index')">
+                                        Clientes 
+                                    </NavLink>
+                                </div>
+                                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                                    <NavLink :href="route('avaluos.index')" :active="route().current('avaluos.index')">
+                                        Avalúos 
+                                    </NavLink>
+                                </div>
+                            </template>
+
+                            <!-- ✅ Opciones para Visitadores -->
+                            <template v-if="userRole === 'visitador' || userRole === 'admin'">  
+                                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                                    <NavLink :href="route('informacion-visita.index')" :active="route().current('informacion-visita.index')">
+                                        Información Visitas 
+                                    </NavLink>
+                                </div>
+                                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                                    <NavLink :href="route('plantillas.index')" :active="route().current('plantillas.index')">
+                                        Plantillas
+                                    </NavLink>
+                                </div>
+                            </template>
                         </div>
 
                         <div class="hidden sm:flex sm:items-center sm:ms-6">
@@ -312,3 +323,4 @@ const logout = () => {
         </div>
     </div>
 </template>
+

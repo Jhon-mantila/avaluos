@@ -13,6 +13,15 @@ use Inertia\Response;
 
 class ProfileController extends Controller
 {
+
+    public function user()
+    {
+        $user = Auth::user();
+        return response()->json([
+            'role' => $user->roles->pluck('name')[0],
+            'permissions' => $user->getPermissionNames()
+        ]);
+    }
     /**
      * Display the user's profile form.
      */

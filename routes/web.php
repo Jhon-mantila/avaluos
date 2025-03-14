@@ -30,9 +30,79 @@ Route::middleware([
 });
 
 
-Route::resource('visitadores', VisitadoresController::class)->middleware(['auth', 'verified']);
+Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
+    Route::get('/debug-role', function () {
+        return response()->json([
+            'usuario' => auth()->user(),
+            'roles' => auth()->user()->getRoleNames(),
+            'tiene_admin' => auth()->user()->hasRole('admin'),
+        ]);
+    });
+});
+
+/*Route::resource('visitadores', VisitadoresController::class)->middleware(['auth', 'verified']);
 Route::resource('clientes', ClientesController::class)->middleware(['auth', 'verified']);
 Route::resource('avaluos', AvaluosController::class)->middleware(['auth', 'verified']);
 Route::resource('informacion-visita', InformacionVisitaController::class)->middleware(['auth', 'verified']);
 Route::resource('plantillas', PlantillaController::class)->middleware(['auth', 'verified']);
-Route::get('/plantillas/{id}/pdf', [PDFController::class, 'generarPDF']);
+Route::get('/plantillas/{id}/pdf', [PDFController::class, 'generarPDF']);*/
+
+// Rutas para administradores
+
+/*Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
+    Route::resource('visitadores', VisitadoresController::class);
+    Route::resource('clientes', ClientesController::class);
+    Route::resource('avaluos', AvaluosController::class);
+    Route::resource('informacion-visita', InformacionVisitaController::class);
+    Route::resource('plantillas', PlantillaController::class);
+    Route::get('/plantillas/{id}/pdf', [PDFController::class, 'generarPDF']);
+});*/
+
+/*Route::middleware(['auth', 'verified'])->group(function () {
+    Route::resource('visitadores', VisitadoresController::class)->middleware('role:admin');
+    Route::resource('clientes', ClientesController::class)->middleware('role:admin');
+    Route::resource('avaluos', AvaluosController::class)->middleware('role:admin');
+    Route::resource('informacion-visita', InformacionVisitaController::class)->middleware('role:admin');
+    Route::resource('plantillas', PlantillaController::class)->middleware('role:admin');
+    Route::get('/plantillas/{id}/pdf', [PDFController::class, 'generarPDF'])->middleware('role:admin');
+});*/
+/*Route::middleware(['auth', 'verified', 'role_or_permission:admin'])->group(function () {
+    Route::resource('visitadores', VisitadoresController::class);
+    Route::resource('clientes', ClientesController::class);
+    Route::resource('avaluos', AvaluosController::class);
+    Route::resource('informacion-visita', InformacionVisitaController::class);
+    Route::resource('plantillas', PlantillaController::class);
+    Route::get('/plantillas/{id}/pdf', [PDFController::class, 'generarPDF']);
+});
+
+// Rutas para visitadores
+Route::middleware(['auth', 'verified', 'role_or_permission:visitador'])->group(function () {
+    Route::get('/', function () {
+        return Inertia::render('Welcome', [
+            'canLogin' => Route::has('login'),
+            'canRegister' => Route::has('register'),
+            'laravelVersion' => Application::VERSION,
+            'phpVersion' => PHP_VERSION,
+        ]);
+    });
+    Route::resource('informacion-visita', InformacionVisitaController::class);
+    Route::resource('plantillas', PlantillaController::class);
+    Route::get('/plantillas/{id}/pdf', [PDFController::class, 'generarPDF']);
+});*/
+
+// Rutas para administradores
+Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
+    Route::resource('visitadores', VisitadoresController::class);
+    Route::resource('clientes', ClientesController::class);
+    Route::resource('avaluos', AvaluosController::class);
+    Route::resource('informacion-visita', InformacionVisitaController::class);
+    Route::resource('plantillas', PlantillaController::class);
+    Route::get('/plantillas/{id}/pdf', [PDFController::class, 'generarPDF']);
+});
+
+// Rutas para visitadores
+Route::middleware(['auth', 'verified', 'role_or_permission:visitador|informacion-visita.index|plantillas.index'])->group(function () {
+    Route::resource('informacion-visita', InformacionVisitaController::class);
+    Route::resource('plantillas', PlantillaController::class);
+    Route::get('/plantillas/{id}/pdf', [PDFController::class, 'generarPDF']);
+});
