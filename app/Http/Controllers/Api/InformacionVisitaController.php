@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\InformacionVisita;
+use Illuminate\Support\Facades\Auth;
 
 class InformacionVisitaController extends Controller
 {
@@ -13,9 +14,27 @@ class InformacionVisitaController extends Controller
      */
     public function index()
     {
-        $informacionVisitas = InformacionVisita::with(['avaluo' => function($query) {
-            $query->whereNotIn('estado', ['Completado', 'Cancelado']);
-        }])->get();
+        // Obtener el usuario autenticado
+        $user = Auth::user();
+
+        // Verificar el rol del usuario
+        if ($user->hasRole('admin')) {
+            // Si es admin, devolver todas las visitas
+            $informacionVisitas = InformacionVisita::with(['avaluo' => function($query) {
+                $query->whereNotIn('estado', ['Completado', 'Cancelado']);
+            }])->get();
+        } elseif ($user->hasRole('visitador')) {
+            // Si es visitador, devolver solo las visitas relacionadas con el usuario logueado
+            $informacionVisitas = InformacionVisita::with(['avaluo' => function($query) {
+                $query->whereNotIn('estado', ['Completado', 'Cancelado']);
+            }])->whereHas('visitador.user', function ($query) use ($user) {
+                $query->where('id', $user->id);
+            })->get();
+        } else {
+            // Si no tiene ninguno de los roles, devolver un error 403
+            return response()->json(['error' => 'No autorizado'], 403);
+        }
+
         return response()->json($informacionVisitas);
     }
 

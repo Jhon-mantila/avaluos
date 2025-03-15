@@ -16,7 +16,7 @@ class User extends Authenticatable
     use HasApiTokens;
 
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory;
+    use HasFactory, HasApiTokens;
     use HasProfilePhoto;
     use Notifiable;
     use TwoFactorAuthenticatable;

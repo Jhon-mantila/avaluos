@@ -84,7 +84,7 @@ const props = defineProps({
 // Imprimir la data de informacionVisitas en la consola
 onMounted(() => {
     console.log(props.informacionVisitas);
-    console.log(props.informacionVisitas.data[0].visitador.user.name);
+    //console.log(props.informacionVisitas.data[0].visitador.user.name);
     /*// Imprimir el número del avalúo y el nombre del visitador
     props.informacionVisitas.data.forEach(visita => {
     console.log(`Número Avalúo: ${visita.avaluo.numero_avaluo}, Nombre del Visitador: ${visita.visitador.user.name}`);

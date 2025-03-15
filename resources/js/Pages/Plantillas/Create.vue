@@ -67,6 +67,16 @@ const informacionVisitas = ref([]);
 const selectedInformacionVisita = ref(null);
 
 onMounted(() => {
+
+    const token = localStorage.getItem('auth_token'); // Obtener el token guardado
+
+    if (!token) {
+        console.error('❌ No hay token de autenticación. El usuario debe iniciar sesión.');
+        return;
+    }
+
+    // Configurar axios con el token
+    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     // Fetch clients from the server
     axios.get('/api/informacion-visitas').then(response => {
         //console.log('Clientes:', response.data);

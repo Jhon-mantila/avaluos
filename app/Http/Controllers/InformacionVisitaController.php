@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 use App\Models\InformacionVisita;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Auth;
+
 class InformacionVisitaController extends Controller
 {
     //
@@ -14,6 +16,14 @@ class InformacionVisitaController extends Controller
 
         // Consulta base con las relaciones `avaluo` y `visitador.user`
         $query = InformacionVisita::with(['avaluo', 'visitador.user']);
+
+        // Filtrar por rol de usuario
+        if (Auth::user()->hasRole('visitador')) {
+            $query->whereHas('visitador.user', function ($q) {
+                $q->where('id', Auth::id());
+            });
+        }
+
         // Ordenar los resultados en orden descendente por la columna 'created_at'
         $query->orderBy('created_at', 'desc');
         // Aplicar búsqueda si hay un término

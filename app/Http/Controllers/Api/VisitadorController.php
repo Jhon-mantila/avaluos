@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Visitadores;
+use Illuminate\Support\Facades\Auth;
 
 class VisitadorController extends Controller
 {
@@ -13,8 +14,37 @@ class VisitadorController extends Controller
      */
     public function index()
     {
-        $visitadores = Visitadores::with('user')->where('active', 1)->get();
+
+        /*$visitadores = Visitadores::with('user')->where('active', 1)->get();
+        return response()->json($visitadores);*/
+
+        // Obtener el usuario autenticado
+        $user = Auth::user();
+
+        // Verificar si el usuario está autenticado
+        if (!$user) {
+            return response()->json(['message' => 'No autenticado'], 401);
+        }
+
+        // Si el usuario es "admin", devuelve todos los visitadores
+        if ($user->hasRole('admin')) {
+            $visitadores = Visitadores::with('user')->where('active', 1)->get();
+        } 
+        // Si el usuario es "visitador", filtrar por su ID
+        elseif ($user->hasRole('visitador')) {
+            $visitadores = Visitadores::with('user')
+                ->where('active', 1)
+                ->where('user_id', $user->id) // Filtrar por el ID del usuario autenticado
+                ->get();
+        } 
+        // Si el usuario no tiene un rol válido, retorna un error
+        else {
+            return response()->json(['message' => 'No tienes permisos para ver esta información'], 403);
+        }
+
+        // Retornar los visitadores encontrados
         return response()->json($visitadores);
+
     }
 
     /**
