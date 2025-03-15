@@ -106,6 +106,16 @@ const selectedAvaluo = ref(null);
 const selectedVisitador = ref(null);
 
 onMounted(() => {
+
+    const token = localStorage.getItem('auth_token'); // Obtener el token guardado
+
+    if (!token) {
+        console.error('❌ No hay token de autenticación. El usuario debe iniciar sesión.');
+        return;
+    }
+
+    // Configurar axios con el token
+    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     // Fetch avaluos from the server
     axios.get('/api/avaluos').then(response => {
         console.log('Avaluos recibidos:', response.data);
