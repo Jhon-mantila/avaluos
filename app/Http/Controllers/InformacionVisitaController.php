@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Models\InformacionVisita;
+use App\Models\Visitadores;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
@@ -67,13 +68,24 @@ class InformacionVisitaController extends Controller
         // Validar los datos del formulario
         $validatedData = $request->validate([
             'avaluo_id' => 'required|exists:avaluos,id',
-            'visitador_id' => 'required|exists:visitadores,id',
             'celular' => 'required|string|max:15',
             'direccion' => 'required|string|max:255',
             'ciudad' => 'required|string|max:255',
             'fecha_visita' => 'required|date',
             'observaciones' => 'nullable|string|max:255',
         ]);
+
+        // Asignar el visitador_id si el usuario autenticado tiene el rol de visitador
+        if (Auth::user()->hasRole('visitador')) {
+            $visitador = Visitadores::where('user_id', Auth::id())->firstOrFail();
+            $validatedData['visitador_id'] = $visitador->id;
+        } else {
+            // Validar el visitador_id si el usuario no es un visitador
+            $request->validate([
+                'visitador_id' => 'required|exists:visitadores,id',
+            ]);
+            $validatedData['visitador_id'] = $request->visitador_id;
+        }
 
         // Crear una nueva información de visita
         InformacionVisita::create($validatedData);

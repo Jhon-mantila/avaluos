@@ -15,6 +15,12 @@ class PlantillaController extends Controller
 
         // Consulta base
         $query = Plantilla::with(['informacionVisita.avaluo']); // Incluir la relación con la información de la visita y el avalúo;
+
+        // Filtrar por rol de usuario
+        if (Auth::user()->hasRole('visitador')) {
+            $query->where('user_id', Auth::id());
+        }
+        
         // Ordenar los resultados en orden descendente por la columna 'created_at'
         $query->orderBy('created_at', 'desc');
         // Aplicar búsqueda si hay un término

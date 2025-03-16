@@ -23,7 +23,7 @@
                                     />
                                     <span v-if="errors.avaluo_id" class="text-red-500 text-sm">{{ errors.avaluo_id }}</span>
                                 </div>
-                                <div class="mb-4">
+                                <div class="mb-4" v-if="userRole === 'admin'">
                                     <label for="visitador_id" class="block text-sm font-medium text-gray-700">Visitador</label>
                                     <v-select
                                         v-model="selectedVisitador"
@@ -85,9 +85,12 @@ import { useToast } from 'vue-toastification';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import vSelect from 'vue-select';
 import 'vue-select/dist/vue-select.css';
+import { inject } from 'vue';
 
 const toast = useToast();
 const { props } = usePage();
+const userRole = inject('$userRole');
+const userPermissions = inject('$userPermissions');
 
 const form = useForm({
     avaluo_id: props.informacionVisita.avaluo_id || '',
