@@ -53,8 +53,8 @@ class CustomPDF extends TCPDF {
         $this->Line(10, 287, 200, 287); // Línea horizontal final del marco
 
         // 🔹 Configurar fuente y texto del footer
-        $this->SetFont('helvetica', 'I', 8);
-        $this->Cell(0, 10, 'Página '.$this->getAliasNumPage().' de '.$this->getAliasNbPages(), 0, 0, 'C');
+        //$this->SetFont('helvetica', 'I', 8);
+        //$this->Cell(0, 10, 'Página '.$this->getAliasNumPage().' de '.$this->getAliasNbPages(), 0, 0, 'C');
     }
 }
 
@@ -136,7 +136,7 @@ class PDFController extends Controller
         $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
 
         // set auto page breaks
-        $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+        $pdf->SetAutoPageBreak(TRUE, 5);
 
         // set image scale factor
         $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
@@ -167,14 +167,18 @@ class PDFController extends Controller
     ->orderBy('orden', 'asc')
     ->get();
     
+    // Configuración de las columnas
     $columnaAncho = 80; // Ancho total de cada columna (ajustado para centrar)
-    $columnaIzquierda = 15; // Posición X de la primera columna
+    $columnaIzquierda = 20; // Posición X de la primera columna
     $columnaDerecha = 110; // Posición X de la segunda columna
-    $posicionY = 30; // Posición inicial Y
+    $posicionY = 31; // Posición inicial Y
     $anchoTitle = 80; // Ancho de la imagen
     //$altoImagen = 60; // Alto de la imagen
     $contador = 0; // Contador de imágenes en la página
-    
+    $imagenesPorPagina = 6; // Máximo de imágenes por página
+    $totalImagenes = count($imagenes);
+    $imagenActual = 0;
+
     foreach ($imagenes as $index => $imagen) {
         $imgPath = public_path("storage/{$imagen['imagen']}");
     
@@ -186,11 +190,11 @@ class PDFController extends Controller
             if ($width > $height) {
                 // Imagen horizontal
                 $anchoImagen = 80;
-                $altoImagen = 60;
+                $altoImagen = 68;
             } else {
                 // Imagen vertical
                 $anchoImagen = 50;
-                $altoImagen = 60;
+                $altoImagen = 68;
             }
             // Determinar la columna
             $columnaX = ($contador % 2 == 0) ? $columnaIzquierda : $columnaDerecha;
@@ -209,14 +213,14 @@ class PDFController extends Controller
     
             // Incrementar el contador
             $contador++;
-    
+            $imagenActual++;
             // Si ya se llenaron las 2 columnas en una fila, mover la posición Y para la siguiente fila
             if ($contador % 2 == 0) {
-                $posicionY += $altoImagen + 20; // Ajustar espacio entre filas
+                $posicionY += $altoImagen + 17; // Ajustar espacio entre filas
             }
     
-            // Si ya se llenaron las 6 imágenes en la página, agregar una nueva página
-            if ($contador == 6) {
+            // ✅ Solo agregar página si hay más imágenes
+            if ($contador == $imagenesPorPagina && $imagenActual < $totalImagenes) {
                 $pdf->AddPage();
                 $posicionY = 30; // Reiniciar la posición Y
                 $contador = 0; // Reiniciar el contador
@@ -227,7 +231,7 @@ class PDFController extends Controller
 
         // Close and output PDF document
         // This method has several options, check the source code documentation for more information.
-        $pdf->Output('example_001.pdf', 'I');
+        $pdf->Output($numeroAvaluo.'.pdf', 'I');
 
         //============================================================+
         // END OF FILE
