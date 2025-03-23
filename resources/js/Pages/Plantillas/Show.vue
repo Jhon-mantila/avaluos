@@ -43,6 +43,9 @@
                                 <a v-if="imagenes.length > 0" :href="`/plantillas/${plantilla.id}/pdf`" target="_blank" class="inline-flex items-center px-4 py-2 bg-blue-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 active:bg-blue-900 focus:outline-none focus:border-blue-900 focus:ring ring-blue-300 disabled:opacity-25 transition ease-in-out duration-150">
                                     PDF
                                 </a>
+                                <a v-if="imagenes.length > 0 && userRole === 'admin'" :href="`/plantillas/${plantilla.id}/excel`" target="_blank" class="inline-flex items-center px-4 py-2 bg-blue-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 active:bg-blue-900 focus:outline-none focus:border-blue-900 focus:ring ring-blue-300 disabled:opacity-25 transition ease-in-out duration-150">
+                                    Descargar Excel
+                                </a>
                             </div>
                         </div>
 
@@ -122,7 +125,10 @@ import AppLayout from '@/Layouts/AppLayout.vue';
 import { formatDate } from '@/Utils/dateUtils'; // Importar la función desde el archivo de utilidades
 import axios from 'axios';
 import draggable from 'vuedraggable';
+import { inject } from 'vue';
 
+const userRole = inject('$userRole');
+const userPermissions = inject('$userPermissions');
 const { props } = usePage();
 const plantilla = ref(props.plantilla);
 const showModal = ref(false);

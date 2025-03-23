@@ -10,6 +10,7 @@ use App\Http\Controllers\InformacionVisitaController;
 use App\Http\Controllers\PlantillaController;
 use App\Http\Controllers\PDFController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ExcelExportController;
 Route::get('/', function () {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
@@ -49,13 +50,14 @@ Route::get('/plantillas/{id}/pdf', [PDFController::class, 'generarPDF']);*/
 
 // Rutas para administradores
 Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
+    Route::resource('users', UserController::class);
     Route::resource('visitadores', VisitadoresController::class);
     Route::resource('clientes', ClientesController::class);
     Route::resource('avaluos', AvaluosController::class);
     Route::resource('informacion-visita', InformacionVisitaController::class);
     Route::resource('plantillas', PlantillaController::class);
     Route::get('/plantillas/{id}/pdf', [PDFController::class, 'generarPDF']);
-    Route::resource('users', UserController::class);
+    Route::get('/export-excel/{id}', [ExcelExportController::class, 'generarExcel']);
 });
 
 // Rutas para visitadores
@@ -63,4 +65,5 @@ Route::middleware(['auth', 'verified', 'role_or_permission:visitador|informacion
     Route::resource('informacion-visita', InformacionVisitaController::class);
     Route::resource('plantillas', PlantillaController::class);
     Route::get('/plantillas/{id}/pdf', [PDFController::class, 'generarPDF']);
+    Route::get('/plantillas/{id}/excel', [ExcelExportController::class, 'generarExcel']);
 });
