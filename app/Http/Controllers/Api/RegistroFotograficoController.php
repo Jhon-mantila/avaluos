@@ -143,4 +143,39 @@ class RegistroFotograficoController extends Controller
     
         return response()->json(['message' => 'Imagen eliminada correctamente']);
     }
+
+    public function destroyMultiple(Request $request)
+    {
+        \Log::info("🛠️ DELETE múltiple recibido", ['payload' => $request->all()]);
+
+        $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'required|exists:registros_fotograficos,id',
+        ]);
+
+        $ids = $request->input('ids');
+        $imagenesEliminadas = [];
+
+        foreach ($ids as $id) {
+            $registro = RegistroFotografico::findOrFail($id);
+
+            // Log para verificar qué ruta se está almacenando en la base de datos
+            Log::info("📌 Imagen almacenada en la BD: {$registro->imagen}");
+            
+            $rutaImagen = public_path("storage/{$registro->imagen}");
+
+            if (file_exists($rutaImagen)) {
+                unlink($rutaImagen);
+                Log::info("🗑️ Imagen eliminada con unlink: {$rutaImagen}");
+            } else {
+                Log::warning("⚠️ Archivo no encontrado en public_path: {$rutaImagen}");
+            }
+
+            // Eliminar el registro de la base de datos
+            $registro->delete();
+            $imagenesEliminadas[] = $registro->id;
+        }
+
+        return response()->json(['message' => 'Imágenes eliminadas correctamente', 'deleted_ids' => $imagenesEliminadas]);
+    }
 }

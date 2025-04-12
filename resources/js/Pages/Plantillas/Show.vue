@@ -46,6 +46,9 @@
                                 <a v-if="imagenes.length > 0 && userRole === 'admin'" :href="`/plantillas/${plantilla.id}/excel`" target="_blank" class="inline-flex items-center px-4 py-2 bg-blue-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 active:bg-blue-900 focus:outline-none focus:border-blue-900 focus:ring ring-blue-300 disabled:opacity-25 transition ease-in-out duration-150">
                                     Descargar Excel
                                 </a>
+                                <button v-if="selectedImages.length > 0" @click="deleteSelectedImages" class="inline-flex items-center px-4 py-2 bg-red-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700 active:bg-red-900 focus:outline-none focus:border-red-900 focus:ring ring-red-300 disabled:opacity-25 transition ease-in-out duration-150">
+                                    Eliminar Seleccionadas
+                                </button>
                             </div>
                         </div>
 
@@ -56,6 +59,9 @@
                             <draggable :list="imagenes" item-key="id" @end="updateOrder" class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <template #item="{ element }">
                                     <div class="bg-white shadow-md rounded-lg p-4 border flex flex-col items-center">
+                                        <!-- Checkbox para selección múltiple -->
+                                        <input type="checkbox" v-model="selectedImages" :value="element.id" class="mb-2">
+                                        
                                         <!-- Imagen -->
                                         <img :src="`/storage/${element.imagen}`" :alt="element.title" class="w-full h-40 object-cover rounded-lg">
 
@@ -137,6 +143,8 @@ const imagenes = ref([]);
 // **Variables para edición**
 const showEditModal = ref(false);
 const editImageData = ref({ id: null, title: "", newFile: null });
+// **Variable para selección múltiple**
+const selectedImages = ref([]);
 // Imprimir la data de la plantilla en la consola
 onMounted(() => {
     console.log('Plantilla:', props.plantilla);
@@ -272,6 +280,30 @@ const deleteImage = (id) => {
         .catch(error => {
             console.error('Error eliminando imagen:', error);
         });
+};
+
+// 🔹 Eliminar imágenes seleccionadas
+const deleteSelectedImages = () => {
+    if (!confirm("¿Estás seguro de que deseas eliminar las imágenes seleccionadas?")) {
+        return;
+    }
+
+    console.log("📌 Enviando IDs para eliminar:", selectedImages.value);
+
+    axios({
+        method: 'post',
+        url: '/api/imagenes/delete-multiple',
+        data: { ids: selectedImages.value },
+        headers: { 'Content-Type': 'application/json' }
+    })
+    .then(response => {
+        console.log("✅ Imágenes eliminadas:", response.data);
+        fetchImages();
+        selectedImages.value = [];
+    })
+    .catch(error => {
+        console.error("❌ Error eliminando imágenes:", error.response ? error.response.data : error);
+    });
 };
 </script>
 

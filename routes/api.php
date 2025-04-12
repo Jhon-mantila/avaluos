@@ -93,3 +93,7 @@ Route::get('/plantillas/{id}/imagenes', [PlantillaController::class, 'getImages'
 Route::post('/imagenes/update/{id}', [RegistroFotograficoController::class, 'update']);
 Route::post('/imagenes/update-order', [RegistroFotograficoController::class, 'updateOrder']);
 Route::delete('/imagenes/{id}', [RegistroFotograficoController::class, 'destroy']);
+//Route::delete('/imagenes/delete-multiple', [RegistroFotograficoController::class, 'destroyMultiple']);
+//Route::match(['post', 'delete'], '/imagenes/delete-multiple', [RegistroFotograficoController::class, 'destroyMultiple']);
+//Route::delete('/imagenes/delete-multiple', [RegistroFotograficoController::class, 'destroyMultiple']);
+Route::post('/imagenes/delete-multiple', [RegistroFotograficoController::class, 'destroyMultiple']);
