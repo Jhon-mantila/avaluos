@@ -37,14 +37,24 @@ class RegistroFotograficoController extends Controller
                 // 🔹 Obtener solo el nombre del archivo SIN extensión
                 $nombreSinExtension = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
 
+                if (preg_match('/^(\d+)\.\s*(.*)$/', $nombreSinExtension, $match)) {
+                    $numero = $match[1];
+                    $nombre = $match[2]; // El resto es el nombre limpio
+                }
+                else {
+                    $numero = $ultimoOrden + $index + 1; // Sumar al último orden
+                    $nombre = $nombreSinExtension; // Usar el nombre original
+                }
+
+                Log::info("📌 NUMERO IMAGEN: {$numero}");
                 // Guardar en la base de datos
                 $imagen = RegistroFotografico::create([
                     'id' => Str::uuid(),
                     'plantilla_id' => $request->plantilla_id,
                     'imagen' => $path, // Guardar la ruta en la BD
-                    'title' => $nombreSinExtension,
+                    'title' => $nombre,
                     'tipo' => $file->getClientMimeType(),
-                    'orden' => $ultimoOrden + $index + 1, // Sumar al último orden
+                    'orden' => $numero, // Sumar al último orden
                 ]);
 
                 $imagenesGuardadas[] = $imagen;
