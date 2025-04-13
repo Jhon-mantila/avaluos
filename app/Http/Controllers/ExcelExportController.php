@@ -182,7 +182,7 @@ class ExcelExportController extends Controller
                 /*$newWidth = $isHorizontal ? $tamanioHorizontal['width'] : $tamanioVertical['width'];
                 $newHeight = $isHorizontal ? $tamanioHorizontal['height'] : $tamanioVertical['height'];*/
                 // Dimensiones máximas permitidas (ajústalas si quieres)
-                $maxWidth = $isHorizontal ? 90 : 60;
+                /*$maxWidth = $isHorizontal ? 90 : 60;
                 $maxHeight = $isHorizontal ? 150 : 170;
                 // 🔄 Calcular escala para mantener proporción
                 $scale = max($maxWidth / $imgWidth, $maxHeight / $imgHeight);
@@ -199,7 +199,25 @@ class ExcelExportController extends Controller
 
                 $offsetX = ($espacioAncho - $newWidth) / 2;
                 $offsetY = max(0, ($espacioAlto - $newHeight) / 2);//$offsetY = ($espacioAlto - $newHeight) / 2;
-                //$offsetX = $isHorizontal ? $offsetX : $offsetX + 60;
+                //$offsetX = $isHorizontal ? $offsetX : $offsetX + 60;*/
+                // Tamaño real del área combinada (en píxeles aproximados)
+                
+                $cellWidth = 10 * 3.8 * 7.5;   // 10 columnas * ancho de columna * 7.5 px
+                $cellHeight = 17 * 12.75;      // 13 filas * alto de fila
+
+                // Escala para que la imagen entre sin deformarse
+                $scaleX = $cellWidth / $imgWidth;
+                $scaleY = $cellHeight / $imgHeight;
+                $scale = min($scaleX, $scaleY); // Escalado proporcional para que entre completa
+
+                // Nuevas dimensiones
+                $newWidth = $imgWidth * $scale;
+                $newHeight = $imgHeight * $scale;
+
+                // Centrado dentro del espacio
+                $offsetX = ($cellWidth - $newWidth) / 2;
+                $offsetY = ($cellHeight - $newHeight) / 2;
+                
 
                 // Insertar imagen
                 $drawing = new Drawing();
