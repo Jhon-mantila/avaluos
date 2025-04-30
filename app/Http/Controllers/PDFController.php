@@ -171,7 +171,7 @@ class PDFController extends Controller
     $columnaAncho = 80; // Ancho total de cada columna (ajustado para centrar)
     $columnaIzquierda = 20; // Posición X de la primera columna
     $columnaDerecha = 110; // Posición X de la segunda columna
-    $posicionY = 31; // Posición inicial Y
+    $posicionY = 25; // Posición inicial Y
     $anchoTitle = 80; // Ancho de la imagen
     //$altoImagen = 60; // Alto de la imagen
     $contador = 0; // Contador de imágenes en la página
@@ -203,12 +203,12 @@ class PDFController extends Controller
             $posX = $columnaX + (($columnaAncho - $anchoImagen) / 2);
     
             // Insertar la imagen
-            $pdf->Image($imgPath, $posX, $posicionY, $anchoImagen, $altoImagen, '', '', 'T', false, 300, '', false, false, 0, false, false, false);
+            $pdf->Image($imgPath, $posX, $posicionY + 10, $anchoImagen, $altoImagen, '', '', 'T', false, 300, '', false, false, 0, false, false, false);
             
             // Calcular la posición X de la imagen
             $posX = ($contador % 2 == 0) ? $columnaIzquierda : $columnaDerecha;
             // Posición del título debajo de la imagen
-            $pdf->SetXY($posX, $posicionY + $altoImagen + 5);
+            $pdf->SetXY($posX, $posicionY + $altoImagen + 14);
             $pdf->Cell($anchoTitle, 10, $imagen['title'], 1, 1, 'C', 0, '', 1);
     
             // Incrementar el contador
@@ -222,7 +222,7 @@ class PDFController extends Controller
             // ✅ Solo agregar página si hay más imágenes
             if ($contador == $imagenesPorPagina && $imagenActual < $totalImagenes) {
                 $pdf->AddPage();
-                $posicionY = 30; // Reiniciar la posición Y
+                $posicionY = 24; // Reiniciar la posición Y
                 $contador = 0; // Reiniciar el contador
             }
         }
