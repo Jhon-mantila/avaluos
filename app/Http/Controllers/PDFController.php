@@ -30,7 +30,7 @@ class CustomPDF extends TCPDF {
         $this->Line(200, 5, 200, 287); // Derecha (de header a footer)
 
         // Configurar la fuente para el texto del header
-        $this->SetFont('helvetica', 'B', 10);
+        $this->SetFont('helvetica', 'B', 14);
 
         // Columna 1 (Texto)
         $this->SetXY(15, 10); // Ajustar posición dentro del borde
@@ -95,7 +95,7 @@ class PDFController extends Controller
 
         // set document information
         $pdf->SetCreator(PDF_CREATOR);
-        $pdf->SetAuthor('Nicola Asuni');
+        $pdf->SetAuthor('Jhon Edinson Mantilla Ruiz');
         $pdf->SetTitle('TCPDF Example 001');
         $pdf->SetSubject('TCPDF Tutorial');
         $pdf->SetKeywords('TCPDF, PDF, example, test, guide');
@@ -156,7 +156,7 @@ class PDFController extends Controller
         // dejavusans is a UTF-8 Unicode font, if you only need to
         // print standard ASCII chars, you can use core fonts like
         // helvetica or times to reduce file size.
-        $pdf->SetFont('dejavusans', '', 14, '', true);
+        $pdf->SetFont('helvetica', '', 12);
 
         // Add a page
         // This method has several options, check the source code documentation for more information.
@@ -190,11 +190,11 @@ class PDFController extends Controller
             if ($width > $height) {
                 // Imagen horizontal
                 $anchoImagen = 80;
-                $altoImagen = 68;
+                $altoImagen = 64;
             } else {
                 // Imagen vertical
                 $anchoImagen = 50;
-                $altoImagen = 68;
+                $altoImagen = 64;
             }
             // Determinar la columna
             $columnaX = ($contador % 2 == 0) ? $columnaIzquierda : $columnaDerecha;
@@ -208,7 +208,7 @@ class PDFController extends Controller
             // Calcular la posición X de la imagen
             $posX = ($contador % 2 == 0) ? $columnaIzquierda : $columnaDerecha;
             // Posición del título debajo de la imagen
-            $pdf->SetXY($posX, $posicionY + $altoImagen + 2);
+            $pdf->SetXY($posX, $posicionY + $altoImagen + 5);
             $pdf->Cell($anchoTitle, 10, $imagen['title'], 1, 1, 'C', 0, '', 1);
     
             // Incrementar el contador
