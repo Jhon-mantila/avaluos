@@ -56,7 +56,7 @@ class RolesAndPermissionsSeeder extends Seeder
             optional(User::find(1))->assignRole('admin');
 
             // Asignar rol de visitador a otro usuario si existe
-            optional(User::find(2))->assignRole('visitador');
+            //optional(User::find(2))->assignRole('visitador');
         });
     }
 }

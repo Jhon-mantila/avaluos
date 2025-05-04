@@ -22,13 +22,13 @@ class DatabaseSeeder extends Seeder
     {
 
 
-        $user = \App\Models\User::factory()->create();
-        /*User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);*/
+        //$user = \App\Models\User::factory()->create();
+        User::factory()->create([
+            'name' => 'Jhon Mantilla',
+            'email' => 'jhon.e.mantilla@gmail.com',
+        ]);
 
-        Visitadores::factory()->count(10)->create();
+        /*Visitadores::factory()->count(10)->create();
         Clientes::factory()->count(1)->create();
         Avaluos::factory()->count(1)->create();
         InformacionVisita::factory()->count(10)->create();
