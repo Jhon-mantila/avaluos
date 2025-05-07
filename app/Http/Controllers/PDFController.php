@@ -26,8 +26,8 @@ class CustomPDF extends TCPDF {
         $this->Line(115, 5, 115, 25); // (x1, y1, x2, y2)
 
         // 🔹 Dibujar líneas verticales en los lados izquierdo y derecho
-        $this->Line(10, 5, 10, 287);  // Izquierda (de header a footer)
-        $this->Line(200, 5, 200, 287); // Derecha (de header a footer)
+        $this->Line(10, 5, 10, 274);  // Izquierda (de header a footer)
+        $this->Line(200, 5, 200, 274); // Derecha (de header a footer)
 
         // Configurar la fuente para el texto del header
         $this->SetFont('helvetica', 'B', 14);
@@ -50,7 +50,7 @@ class CustomPDF extends TCPDF {
         $this->SetY(-20);
 
         // 🔹 Dibujar línea final del marco
-        $this->Line(10, 287, 200, 287); // Línea horizontal final del marco
+        $this->Line(10, 274, 200, 274); // Línea horizontal final del marco
 
         // 🔹 Configurar fuente y texto del footer
         //$this->SetFont('helvetica', 'I', 8);
@@ -102,7 +102,7 @@ class PDFController extends Controller
 
         // set default header data
         // Crear instancia del PDF con la clase personalizada
-        $pdf = new CustomPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+        $pdf = new CustomPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, 'LETTER', true, 'UTF-8', false);
         $query = Plantilla::with([
             'informacionVisita.avaluo.cliente' // Incluir la relación con el cliente dentro del avalúo
         ])
@@ -190,11 +190,11 @@ class PDFController extends Controller
             if ($width > $height) {
                 // Imagen horizontal
                 $anchoImagen = 80;
-                $altoImagen = 64;
+                $altoImagen = 60;
             } else {
                 // Imagen vertical
-                $anchoImagen = 50;
-                $altoImagen = 64;
+                $anchoImagen = 45;
+                $altoImagen = 60;
             }
             // Determinar la columna
             $columnaX = ($contador % 2 == 0) ? $columnaIzquierda : $columnaDerecha;
