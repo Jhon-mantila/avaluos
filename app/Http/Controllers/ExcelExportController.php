@@ -81,6 +81,10 @@ class ExcelExportController extends Controller
             $sheet->getRowDimension($i)->setRowHeight(12.75);
         }
 
+        // Cambiar solo el ancho de las columnas L y M
+        $sheet->getColumnDimension('L')->setWidth(3.9);
+        $sheet->getColumnDimension('M')->setWidth(3.9);
+
         // Función para insertar encabezado use (&$areasImpresion, $maxFilasPorPagina)
         $insertarEncabezado = function ($sheet, $fila, $numeroAvaluo, $logoCliente) use (&$filasEncabezadoGlobal) {
 
