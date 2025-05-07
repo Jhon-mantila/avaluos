@@ -71,12 +71,12 @@ class ExcelExportController extends Controller
         $filasEncabezadoGlobal = [];
         // Configurar columnas (A - X)
         foreach (range('A', 'X') as $columnID) {
-            $sheet->getColumnDimension($columnID)->setWidth(3.80);
+            $sheet->getColumnDimension($columnID)->setWidth(3.4);
         }
 
         // Configurar filas
-        $sheet->getRowDimension(1)->setRowHeight(19.5);
-        $sheet->getRowDimension(2)->setRowHeight(19.5);
+        $sheet->getRowDimension(1)->setRowHeight(21.75);
+        $sheet->getRowDimension(2)->setRowHeight(21.75);
         for ($i = 3; $i <= 100; $i++) {
             $sheet->getRowDimension($i)->setRowHeight(12.75);
         }
@@ -87,8 +87,8 @@ class ExcelExportController extends Controller
             $filasEncabezadoGlobal[] = $fila;
             $filasEncabezadoGlobal[] = $fila + 1;
             // Aplicar altura de fila a los encabezados
-            $sheet->getRowDimension($fila)->setRowHeight(19.5);
-            $sheet->getRowDimension($fila + 1)->setRowHeight(19.5);
+            $sheet->getRowDimension($fila)->setRowHeight(21.75);
+            $sheet->getRowDimension($fila + 1)->setRowHeight(21.75);
 
             // Encabezado
             $sheet->setCellValue("A{$fila}", 'ANEXO No. 2 (ESTUDIO FOTOGRÁFICO)');
@@ -202,7 +202,7 @@ class ExcelExportController extends Controller
                 //$offsetX = $isHorizontal ? $offsetX : $offsetX + 60;*/
                 // Tamaño real del área combinada (en píxeles aproximados)
                 
-                $cellWidth = 10 * 3.8 * 7.5;   // 10 columnas * ancho de columna * 7.5 px
+                $cellWidth = 10 * 3.4 * 7.5;   // 10 columnas * ancho de columna * 7.5 px
                 $cellHeight = 17 * 12.75;      // 13 filas * alto de fila
 
                 // Escala para que la imagen entre sin deformarse
