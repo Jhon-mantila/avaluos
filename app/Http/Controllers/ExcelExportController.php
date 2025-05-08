@@ -71,7 +71,7 @@ class ExcelExportController extends Controller
         $filasEncabezadoGlobal = [];
         // Configurar columnas (A - X)
         foreach (range('A', 'X') as $columnID) {
-            $sheet->getColumnDimension($columnID)->setWidth(3.4);
+            $sheet->getColumnDimension($columnID)->setWidth(3.726);
         }
 
         // Configurar filas
@@ -82,8 +82,8 @@ class ExcelExportController extends Controller
         }
 
         // Cambiar solo el ancho de las columnas L y M
-        $sheet->getColumnDimension('L')->setWidth(3.9);
-        $sheet->getColumnDimension('M')->setWidth(3.9);
+        $sheet->getColumnDimension('L')->setWidth(4.01);
+        $sheet->getColumnDimension('M')->setWidth(4.01);
 
         // Función para insertar encabezado use (&$areasImpresion, $maxFilasPorPagina)
         $insertarEncabezado = function ($sheet, $fila, $numeroAvaluo, $logoCliente) use (&$filasEncabezadoGlobal) {
@@ -210,27 +210,77 @@ class ExcelExportController extends Controller
                 $cellHeight = 17 * 12.75;      // 13 filas * alto de fila
 
                 // Escala para que la imagen entre sin deformarse
-                $scaleX = $cellWidth / $imgWidth;
+                /*$scaleX = $cellWidth / $imgWidth;
                 $scaleY = $cellHeight / $imgHeight;
-                $scale = min($scaleX, $scaleY); // Escalado proporcional para que entre completa
+                $scale = min($scaleX, $scaleY); // Escalado proporcional para que entre completa*/
+
+                /*if ($isHorizontal) {
+                    // Tamaños específicos para imágenes horizontales
+                    $maxWidth = $cellWidth * 0.95; // o algún valor fijo si lo prefieres
+                    $maxHeight = $cellHeight * 2.9; // más baja para horizontales
+                } else {
+                    // Tamaños para verticales: usa todo el alto permitido
+                    $maxWidth = $cellWidth * 0.85;
+                    $maxHeight = $cellHeight * 0.95;
+                }
+                
+                $scaleX = $maxWidth / $imgWidth;
+                $scaleY = $maxHeight / $imgHeight;
+                $scale = min($scaleX, $scaleY);
 
                 // Nuevas dimensiones
                 $newWidth = $imgWidth * $scale;
                 $newHeight = $imgHeight * $scale;
 
+                log::info("ANCHO NUEVO: " . $newWidth . ' ALTO NUEVO: ' . $newHeight);
                 // Centrado dentro del espacio
                 $offsetX = ($cellWidth - $newWidth) / 2;
-                $offsetY = ($cellHeight - $newHeight) / 2;
-                
+                $offsetY = ($cellHeight - $newHeight) / 2;*/
+
 
                 // Insertar imagen
                 $drawing = new Drawing();
                 $drawing->setName('Imagen');
                 $drawing->setDescription($imagen['title']);
                 $drawing->setPath($imgPath);
-                $drawing->setWidth($newWidth);
-                $drawing->setHeight($newHeight);
-                $drawing->setResizeProportional(false); // <--- importante para que respete tamaño fijo
+
+
+                if ($isHorizontal) {
+                    // Tamaño fijo para horizontales
+                    $fixedWidth = 300; // píxeles fijos
+                    $fixedHeight = 180;
+                
+                    $drawing->setResizeProportional(false);
+                    $drawing->setWidth($fixedWidth);
+                    $drawing->setHeight($fixedHeight);
+                
+                    // Centrado
+                    $offsetX = ($cellWidth - $fixedWidth) / 2;
+                    $offsetY = ($cellHeight - $fixedHeight) / 2;
+                } else {
+                    // Escalado proporcional para verticales
+                    $maxWidth = $cellWidth * 0.85;
+                    $maxHeight = $cellHeight * 0.95;
+                
+                    $scaleX = $maxWidth / $imgWidth;
+                    $scaleY = $maxHeight / $imgHeight;
+                    $scale = min($scaleX, $scaleY);
+                
+                    $newWidth = $imgWidth * $scale;
+                    $newHeight = $imgHeight * $scale;
+                
+                    $drawing->setResizeProportional(true);
+                    $drawing->setWidth($newWidth);
+                    $drawing->setHeight($newHeight);
+                
+                    // Centrado
+                    $offsetX = ($cellWidth - $newWidth) / 2;
+                    $offsetY = ($cellHeight - $newHeight) / 2;
+                }
+
+
+
+                
                 $drawing->setCoordinates($columna . $filaInicial);
                 $drawing->setOffsetX($offsetX);
                 $drawing->setOffsetY($offsetY);
