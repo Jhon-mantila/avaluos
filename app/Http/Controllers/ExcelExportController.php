@@ -239,7 +239,7 @@ class ExcelExportController extends Controller
 
 
                 // Insertar imagen
-                $drawing = new Drawing();
+                /*$drawing = new Drawing();
                 $drawing->setName('Imagen');
                 $drawing->setDescription($imagen['title']);
                 $drawing->setPath($imgPath);
@@ -250,7 +250,7 @@ class ExcelExportController extends Controller
                     $fixedWidth = 300; // píxeles fijos
                     $fixedHeight = 180;
                 
-                    $drawing->setResizeProportional(false);
+                    $drawing->setResizeProportional(true);
                     $drawing->setWidth($fixedWidth);
                     $drawing->setHeight($fixedHeight);
                 
@@ -284,8 +284,46 @@ class ExcelExportController extends Controller
                 $drawing->setCoordinates($columna . $filaInicial);
                 $drawing->setOffsetX($offsetX);
                 $drawing->setOffsetY($offsetY);
-                $drawing->setWorksheet($sheet);
+                $drawing->setWorksheet($sheet);*/
+                    // Insertar imagen
+                    $drawing = new Drawing();
+                    $drawing->setName('Imagen');
+                    $drawing->setDescription($imagen['title']);
+                    $drawing->setPath($imgPath);
 
+                    // Convertir dimensiones de celda a píxeles (aproximadamente)
+                    $columnWidth = 3.726 * 7; // Ancho de columna en puntos * factor de conversión
+                    $rowHeight = 12.75 * 0.75; // Alto de fila en puntos * factor de conversión
+
+                    // Tamaño del área combinada (10 columnas, 13 filas)
+                    $areaWidth = 10 * $columnWidth;
+                    $areaHeight = 13 * $rowHeight;
+
+                    // Mantener relación de aspecto
+                    $drawing->setResizeProportional(true);
+
+                    // Establecer tamaño máximo permitido
+                    $maxWidth = $areaWidth * 0.95; // 95% del ancho disponible
+                    $maxHeight = $areaHeight * 0.95; // 95% del alto disponible
+
+                    // Calcular nuevas dimensiones manteniendo la proporción
+                    $ratio = min($maxWidth / $imgWidth, $maxHeight / $imgHeight);
+                    $newWidth = $imgWidth * $ratio;
+                    $newHeight = $imgHeight * $ratio;
+
+                    // Establecer dimensiones
+                    $drawing->setWidth($newWidth);
+                    $drawing->setHeight($newHeight);
+
+                    // Calcular offsets para centrado exacto
+                    $offsetX = ($areaWidth - $newWidth) / 2;
+                    $offsetY = ($areaHeight - $newHeight) / 2;
+
+                    // Ajustar offsets para Excel (puede requerir ajuste fino)
+                    $drawing->setCoordinates($columna . $filaInicial);
+                    $drawing->setOffsetX($offsetX);
+                    $drawing->setOffsetY($offsetY);
+                    $drawing->setWorksheet($sheet);
                 /*$imageResource = null;
                 $extension = strtolower(pathinfo($imgPath, PATHINFO_EXTENSION));
                 switch ($extension) {
