@@ -202,8 +202,8 @@ class ExcelExportController extends Controller
 
                 if ($isHorizontal) {
                     // Tamaño fijo para horizontales
-                    $fixedWidth = 253; // píxeles fijos
-                    $fixedHeight = 201;
+                    $fixedWidth = 261; // píxeles fijos 
+                    $fixedHeight = 204;
                 
                     $drawing->setResizeProportional(false);
                     $drawing->setWidth($fixedWidth);
@@ -213,29 +213,11 @@ class ExcelExportController extends Controller
                     $offsetX = (($cellWidth - $fixedWidth) / 2);
                     $offsetY = (($cellHeight - $fixedHeight) / 2)+80;
                 } else {
-                    // Escalado proporcional para verticales
-                    /*$maxWidth = $cellWidth * 0.85;
-                    $maxHeight = $cellHeight * 0.95;
-                
-                    $scaleX = $maxWidth / $imgWidth;
-                    $scaleY = $maxHeight / $imgHeight;
-                    $scale = min($scaleX, $scaleY);
-                
-                    $newWidth = $imgWidth * $scale;
-                    $newHeight = $imgHeight * $scale;
-                
-                    $drawing->setResizeProportional(true);
-                    $drawing->setWidth($newWidth);
-                    $drawing->setHeight($newHeight);
-                
-                    // Centrado
-                    $offsetX = ($cellWidth - $newWidth) / 2;
-                    $offsetY = ($cellHeight - $newHeight) / 2;*/
 
-                        // Tamaño fijo para verticales en píxeles
+                    // Tamaño fijo para verticales en píxeles
                     // Conversión de pulgadas a píxeles (96 ppi): alto 2.14", ancho 1.21"
-                    $fixedWidth = 116; // 1.21" * 96
-                    $fixedHeight = 205; // 2.14" * 96
+                    $fixedWidth = 157; // 1.21" * 96 como sacar el ancho
+                    $fixedHeight = 221; // 2.14" * 96
 
                     $drawing->setResizeProportional(false);
                     $drawing->setWidth($fixedWidth);
@@ -250,9 +232,9 @@ class ExcelExportController extends Controller
                 //$drawing->setCoordinates($columna . $filaInicial);
                 // Determinar coordenada base dinámica
                 if ($contador % 2 == 0) { // Columna izquierda
-                    $columna_img = $isHorizontal ? 'B' : 'D';
+                    $columna_img = $isHorizontal ? 'B' : 'C';
                 } else { // Columna derecha
-                    $columna_img = $isHorizontal ? 'N' : 'P';
+                    $columna_img = $isHorizontal ? 'N' : 'O';
                 }
                 $drawing->setCoordinates($columna_img . $filaInicial);
                 $drawing->setOffsetX($offsetX);
