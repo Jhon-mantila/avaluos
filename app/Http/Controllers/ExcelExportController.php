@@ -108,9 +108,11 @@ class ExcelExportController extends Controller
                     $drawing = new Drawing();
                     $drawing->setName('Logo Cliente');
                     $drawing->setPath($logoPath);
-                    $drawing->setHeight(45);
+                    $drawing->setResizeProportional(false);
+                    $drawing->setHeight(46);
+                    $drawing->setWidth(147);
                     $drawing->setCoordinates("Q{$fila}");
-                    $drawing->setOffsetX(10);
+                    $drawing->setOffsetX(25);
                     $drawing->setOffsetY(5);
                     $drawing->setWorksheet($sheet);
                 }
