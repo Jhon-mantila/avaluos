@@ -214,7 +214,7 @@ class ExcelExportController extends Controller
                     $offsetY = (($cellHeight - $fixedHeight) / 2)+80;
                 } else {
                     // Escalado proporcional para verticales
-                    $maxWidth = $cellWidth * 0.85;
+                    /*$maxWidth = $cellWidth * 0.85;
                     $maxHeight = $cellHeight * 0.95;
                 
                     $scaleX = $maxWidth / $imgWidth;
@@ -230,7 +230,20 @@ class ExcelExportController extends Controller
                 
                     // Centrado
                     $offsetX = ($cellWidth - $newWidth) / 2;
-                    $offsetY = ($cellHeight - $newHeight) / 2;
+                    $offsetY = ($cellHeight - $newHeight) / 2;*/
+
+                        // Tamaño fijo para verticales en píxeles
+                    // Conversión de pulgadas a píxeles (96 ppi): alto 2.14", ancho 1.21"
+                    $fixedWidth = 116; // 1.21" * 96
+                    $fixedHeight = 205; // 2.14" * 96
+
+                    $drawing->setResizeProportional(false);
+                    $drawing->setWidth($fixedWidth);
+                    $drawing->setHeight($fixedHeight);
+
+                    // Centrado
+                    $offsetX = (($cellWidth - $fixedWidth) / 2);
+                    $offsetY = (($cellHeight - $fixedHeight) / 2);
                 }
 
                 
