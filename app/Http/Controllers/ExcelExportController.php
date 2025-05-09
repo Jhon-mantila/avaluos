@@ -63,7 +63,7 @@ class ExcelExportController extends Controller
         $columnaDerecha = 'N';
         $contador = 0;
         $filaInicial = 4;
-        $maxFilasPorPagina = 55;
+        $maxFilasPorPagina = 57;
         $ultimaFilaEncabezado = 1;
         //$esPrimerEncabezado = true;
         $saltosPagina = []; // Para almacenar los saltos de página
@@ -149,6 +149,8 @@ class ExcelExportController extends Controller
         // Insertar el primer encabezado
         $inicioArea = 1;
         $insertarEncabezado($sheet, 1, $numeroAvaluo, $logoCliente);
+        $inicioArea = 1;
+        $filaInicial = 4; // Aquí garantizamos que las imágenes SIEMPRE empiezan desde la fila 4
 
         foreach ($imagenes as $index => $imagen) {
             // Verificar si necesitamos un nuevo encabezado (nueva página)
@@ -163,7 +165,10 @@ class ExcelExportController extends Controller
                 // Insertar nuevo encabezado
                 $insertarEncabezado($sheet, $filaInicial, $numeroAvaluo, $logoCliente);
                 $ultimaFilaEncabezado = $filaInicial;
-                $filaInicial += 3;
+                //$filaInicial += 4;
+
+                    $filaInicial += 4; // encabezado + 2 filas de espacio
+                
                 
             }
 
@@ -183,61 +188,9 @@ class ExcelExportController extends Controller
                 $isHorizontal = $imgWidth > $imgHeight;
                 \Log::info("IMAGEN: {}" .$imagen['title'] . ' HORIZONTAL ' . $isHorizontal);
                 \Log::info("ANCHO" . $imgWidth . ' ALTO ' . $imgHeight);
-                /*$newWidth = $isHorizontal ? $tamanioHorizontal['width'] : $tamanioVertical['width'];
-                $newHeight = $isHorizontal ? $tamanioHorizontal['height'] : $tamanioVertical['height'];*/
-                // Dimensiones máximas permitidas (ajústalas si quieres)
-                /*$maxWidth = $isHorizontal ? 90 : 60;
-                $maxHeight = $isHorizontal ? 150 : 170;
-                // 🔄 Calcular escala para mantener proporción
-                $scale = max($maxWidth / $imgWidth, $maxHeight / $imgHeight);
-
-                $newWidth = $imgWidth * $scale;
-                $newHeight = $imgHeight * $scale;
-                
-                // Limitar por si se pasa del espacio real (puede ocurrir con imágenes muy pequeñas)
-                $newWidth = min($newWidth, $maxWidth);
-                $newHeight = min($newHeight, $maxHeight - 10);
-
-                $espacioAncho = 95;
-                $espacioAlto = 195;
-
-                $offsetX = ($espacioAncho - $newWidth) / 2;
-                $offsetY = max(0, ($espacioAlto - $newHeight) / 2);//$offsetY = ($espacioAlto - $newHeight) / 2;
-                //$offsetX = $isHorizontal ? $offsetX : $offsetX + 60;*/
-                // Tamaño real del área combinada (en píxeles aproximados)
                 
                 $cellWidth = 10 * 3.4 * 7.5;   // 10 columnas * ancho de columna * 7.5 px
                 $cellHeight = 17 * 12.75;      // 13 filas * alto de fila
-
-                //$cellWidth = 10 * $sheet->getColumnDimension($columna)->getWidth() * 7.5;
-                //$cellHeight = 13 * $sheet->getRowDimension($filaInicial)->getRowHeight() * 0.75;
-                // Escala para que la imagen entre sin deformarse
-                /*$scaleX = $cellWidth / $imgWidth;
-                $scaleY = $cellHeight / $imgHeight;
-                $scale = min($scaleX, $scaleY); // Escalado proporcional para que entre completa*/
-
-                /*if ($isHorizontal) {
-                    // Tamaños específicos para imágenes horizontales
-                    $maxWidth = $cellWidth * 0.95; // o algún valor fijo si lo prefieres
-                    $maxHeight = $cellHeight * 2.9; // más baja para horizontales
-                } else {
-                    // Tamaños para verticales: usa todo el alto permitido
-                    $maxWidth = $cellWidth * 0.85;
-                    $maxHeight = $cellHeight * 0.95;
-                }
-                
-                $scaleX = $maxWidth / $imgWidth;
-                $scaleY = $maxHeight / $imgHeight;
-                $scale = min($scaleX, $scaleY);
-
-                // Nuevas dimensiones
-                $newWidth = $imgWidth * $scale;
-                $newHeight = $imgHeight * $scale;
-
-                log::info("ANCHO NUEVO: " . $newWidth . ' ALTO NUEVO: ' . $newHeight);
-                // Centrado dentro del espacio
-                $offsetX = ($cellWidth - $newWidth) / 2;
-                $offsetY = ($cellHeight - $newHeight) / 2;*/
 
 
                 // Insertar imagen
@@ -257,8 +210,8 @@ class ExcelExportController extends Controller
                     $drawing->setHeight($fixedHeight);
                 
                     // Centrado
-                    $offsetX = ($cellWidth - $fixedWidth) / 2;
-                    $offsetY = ($cellHeight - $fixedHeight) / 2;
+                    $offsetX = (($cellWidth - $fixedWidth) / 2);
+                    $offsetY = (($cellHeight - $fixedHeight) / 2)+80;
                 } else {
                     // Escalado proporcional para verticales
                     $maxWidth = $cellWidth * 0.85;
@@ -293,34 +246,6 @@ class ExcelExportController extends Controller
                 $drawing->setOffsetY($offsetY);
                 $drawing->setWorksheet($sheet);
 
-                /*$imageResource = null;
-                $extension = strtolower(pathinfo($imgPath, PATHINFO_EXTENSION));
-                switch ($extension) {
-                    case 'jpg':
-                    case 'jpeg':
-                        $imageResource = imagecreatefromjpeg($imgPath);
-                        break;
-                    case 'png':
-                        $imageResource = imagecreatefrompng($imgPath);
-                        break;
-                    case 'gif':
-                        $imageResource = imagecreatefromgif($imgPath);
-                        break;
-                }
-
-                if ($imageResource) {
-                    $memoryDrawing = new MemoryDrawing();
-                    $memoryDrawing->setName('Imagen');
-                    $memoryDrawing->setDescription($imagen['title']);
-                    $memoryDrawing->setImageResource($imageResource);
-                    $memoryDrawing->setRenderingFunction(MemoryDrawing::RENDERING_JPEG);
-                    $memoryDrawing->setMimeType(MemoryDrawing::MIMETYPE_DEFAULT);
-                    $memoryDrawing->setHeight($newHeight);
-                    $memoryDrawing->setCoordinates($columna . $filaInicial);
-                    $memoryDrawing->setOffsetX($offsetX);
-                    $memoryDrawing->setOffsetY($offsetY);
-                    $memoryDrawing->setWorksheet($sheet);
-                }*/
 
                 // Insertar título
                 $filaTituloInicio = $filaInicial + 14;
@@ -346,7 +271,7 @@ class ExcelExportController extends Controller
                 $contador++;
 
                 if ($contador % 2 == 0) {
-                    $filaInicial += 17;
+                    $filaInicial += 18;
                 }
             }
         }
@@ -445,7 +370,7 @@ class ExcelExportController extends Controller
         }
         // redirect output to client browser
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment;filename="myfile.xlsx"');
+        header('Content-Disposition: attachment;filename="Avaluo_'. $numeroAvaluo. '.xlsx"');
         header('Cache-Control: max-age=0');
         
         // Guardar y descargar el archivo
