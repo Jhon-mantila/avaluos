@@ -206,8 +206,8 @@ class ExcelExportController extends Controller
                 //$offsetX = $isHorizontal ? $offsetX : $offsetX + 60;*/
                 // Tamaño real del área combinada (en píxeles aproximados)
                 
-                //$cellWidth = 10 * 3.4 * 7.5;   // 10 columnas * ancho de columna * 7.5 px
-                //$cellHeight = 17 * 12.75;      // 13 filas * alto de fila
+                $cellWidth = 10 * 3.4 * 7.5;   // 10 columnas * ancho de columna * 7.5 px
+                $cellHeight = 17 * 12.75;      // 13 filas * alto de fila
 
                 //$cellWidth = 10 * $sheet->getColumnDimension($columna)->getWidth() * 7.5;
                 //$cellHeight = 13 * $sheet->getRowDimension($filaInicial)->getRowHeight() * 0.75;
@@ -241,18 +241,18 @@ class ExcelExportController extends Controller
 
 
                 // Insertar imagen
-                /*$drawing = new Drawing();
+                $drawing = new Drawing();
                 $drawing->setName('Imagen');
                 $drawing->setDescription($imagen['title']);
                 $drawing->setPath($imgPath);
-
+                
 
                 if ($isHorizontal) {
                     // Tamaño fijo para horizontales
-                    $fixedWidth = 300; // píxeles fijos
-                    $fixedHeight = 180;
+                    $fixedWidth = 253; // píxeles fijos
+                    $fixedHeight = 201;
                 
-                    $drawing->setResizeProportional(true);
+                    $drawing->setResizeProportional(false);
                     $drawing->setWidth($fixedWidth);
                     $drawing->setHeight($fixedHeight);
                 
@@ -281,10 +281,17 @@ class ExcelExportController extends Controller
                 }
 
                 
-                $drawing->setCoordinates($columna . $filaInicial);
+                //$drawing->setCoordinates($columna . $filaInicial);
+                // Determinar coordenada base dinámica
+                if ($contador % 2 == 0) { // Columna izquierda
+                    $columna_img = $isHorizontal ? 'B' : 'D';
+                } else { // Columna derecha
+                    $columna_img = $isHorizontal ? 'N' : 'P';
+                }
+                $drawing->setCoordinates($columna_img . $filaInicial);
                 $drawing->setOffsetX($offsetX);
                 $drawing->setOffsetY($offsetY);
-                $drawing->setWorksheet($sheet);*/
+                $drawing->setWorksheet($sheet);
 
                 /*$imageResource = null;
                 $extension = strtolower(pathinfo($imgPath, PATHINFO_EXTENSION));
@@ -314,52 +321,7 @@ class ExcelExportController extends Controller
                     $memoryDrawing->setOffsetY($offsetY);
                     $memoryDrawing->setWorksheet($sheet);
                 }*/
-                // Dimensiones del área combinada (aproximado en puntos)
-                $cellWidthPoints = 10 * $sheet->getColumnDimension($columna)->getWidth();
-                $cellHeightPoints = 13 * $sheet->getRowDimension($filaInicial)->getRowHeight();
 
-                // Convertir a píxeles (aproximado, 1 punto ≈ 1.333 píxeles)
-                $cellWidthPixels = $cellWidthPoints * 1.333;
-                $cellHeightPixels = $cellHeightPoints * 1.333;
-
-                // Crear el objeto de dibujo
-                $drawing = new Drawing();
-                $drawing->setName('Imagen');
-                $drawing->setDescription($imagen['title']);
-                $drawing->setPath($imgPath);
-                $drawing->setCoordinates($columna . $filaInicial);
-
-                if ($isHorizontal) {
-                // Ajustar tamaño para imágenes horizontales
-                $maxWidth = $cellWidthPixels * 0.95; // Ajusta según sea necesario
-                $maxHeight = $cellHeightPixels * 0.7; // Ajusta según sea necesario
-                } else {
-                // Ajustar tamaño para imágenes verticales
-                $maxWidth = $cellWidthPixels * 0.7; // Ajusta según sea necesario
-                $maxHeight = $cellHeightPixels * 0.95; // Ajusta según sea necesario
-                }
-
-                // Calcular la escala para que la imagen quepa sin deformarse
-                $ratioX = $maxWidth / $imgWidth;
-                $ratioY = $maxHeight / $imgHeight;
-                $ratio = min($ratioX, $ratioY, 1); // No escalar si la imagen es más pequeña
-
-                $newWidth = $imgWidth * $ratio;
-                $newHeight = $imgHeight * $ratio;
-
-                $drawing->setWidth($newWidth);
-                $drawing->setHeight($newHeight);
-
-                // Calcular los offsets para centrar la imagen
-                $offsetX = ($cellWidthPixels - $newWidth) / 2;
-                $offsetY = ($cellHeightPixels - $newHeight) / 2;
-
-                // Establecer los offsets
-                $drawing->setOffsetX(round($offsetX));
-                $drawing->setOffsetY(round($offsetY));
-
-                // Añadir el dibujo a la hoja
-                $drawing->setWorksheet($sheet);
                 // Insertar título
                 $filaTituloInicio = $filaInicial + 14;
                 $filaTituloFin = $filaTituloInicio + 1;
@@ -481,14 +443,20 @@ class ExcelExportController extends Controller
                 $sheet->getRowDimension($i)->setRowHeight(-1); // -1 restaura a altura predeterminada
             }
         }
-    
+        // redirect output to client browser
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="myfile.xlsx"');
+        header('Cache-Control: max-age=0');
         
         // Guardar y descargar el archivo
-        $writer = new Xlsx($spreadsheet);
+        /*$writer = new Xlsx($spreadsheet);
         $fileName = "Avaluo_{$numeroAvaluo}.xlsx";
         $filePath = public_path("storage/{$fileName}");
-        $writer->save($filePath);
+        $writer->save($filePath);*/
 
-        return response()->download($filePath)->deleteFileAfterSend(true);
+        $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Xlsx');
+        $writer->save('php://output');
+
+        //return response()->download($filePath)->deleteFileAfterSend(true);
     }
 }
