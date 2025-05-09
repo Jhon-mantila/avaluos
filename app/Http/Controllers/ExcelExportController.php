@@ -167,7 +167,7 @@ class ExcelExportController extends Controller
                 $ultimaFilaEncabezado = $filaInicial;
                 //$filaInicial += 4;
 
-                    $filaInicial += 4; // encabezado + 2 filas de espacio
+                    $filaInicial += 3; // encabezado + 2 filas de espacio
                 
                 
             }
