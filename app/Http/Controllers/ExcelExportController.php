@@ -32,16 +32,16 @@ class ExcelExportController extends Controller
         $pageSetup->setFitToWidth(1);
         $pageSetup->setFitToHeight(0);
         $pageSetup->setHorizontalCentered(true);
-        $pageSetup->setVerticalCentered(false);
+        $pageSetup->setVerticalCentered(true);
         
 
         $sheet->getPageMargins()
-            ->setTop(0.4)
-            ->setRight(0.5)
-            ->setLeft(0.5)
-            ->setBottom(0.4)
-            ->setHeader(0.2)
-            ->setFooter(0.2);
+            ->setTop(0.472)
+            ->setRight(0.787)
+            ->setLeft(0.787)
+            ->setBottom(0.472)
+            ->setHeader(0.0)
+            ->setFooter(0.0);
 
         // Configurar encabezados y pies de página
         /*$sheet->getHeaderFooter()
@@ -291,8 +291,7 @@ class ExcelExportController extends Controller
             $sheet->setBreak("A{$filaSalto}", \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet::BREAK_ROW);
         }
 
-        
-        foreach ($areasImpresion as $area) {
+        /*foreach ($areasImpresion as $area) {
             \Log::info("Área de impresión: {$area}");
 
             if (preg_match('/^[A-Z]+(\d+):[A-Z]+(\d+)$/', $area, $matches)) {
@@ -350,9 +349,85 @@ class ExcelExportController extends Controller
             } else {
                 \Log::info("❌ Área de impresión no coincide con el patrón esperado: {$area}");
             }
+        }*/
+
+        // Establecer área de impresión y centrar en cada página
+        $sheet->getPageSetup()->setPrintArea(implode(',', $areasImpresion));
+        $sheet->getPageSetup()->setHorizontalCentered(true);
+
+        // Ajustar última hoja para completar visualmente la altura (¡aquí colocas el nuevo bloque!)
+        $filasTotalesPorPagina = 57;
+        $ultimaAreaIndex = count($areasImpresion) - 1;
+        $inicioArea = explode(':', $areasImpresion[$ultimaAreaIndex])[0];
+        $inicioFila = (int) filter_var($inicioArea, FILTER_SANITIZE_NUMBER_INT);
+        $ultimaFilaActual = $ultimaFilaUsada;
+
+        if (($ultimaFilaActual - $inicioFila + 1) < $filasTotalesPorPagina) {
+            $faltantes = $filasTotalesPorPagina - ($ultimaFilaActual - $inicioFila + 1);
+            $ultimaFilaUsada += $faltantes;
+
+            for ($i = $ultimaFilaActual + 1; $i <= $ultimaFilaUsada; $i++) {
+                $sheet->getRowDimension($i)->setRowHeight(12.75);
+
+                $sheet->getStyle("A{$i}:X{$i}")->applyFromArray([
+                    'borders' => [
+                        'left' => ['borderStyle' => Border::BORDER_THIN, 'color' => ['argb' => '00000000']],
+                        'right' => ['borderStyle' => Border::BORDER_THIN, 'color' => ['argb' => '00000000']],
+                    ],
+                ]);
+            }
+
+            // Actualizar el área de impresión para incluir esas filas nuevas
+            $areasImpresion[$ultimaAreaIndex] = "{$inicioArea}:X{$ultimaFilaUsada}";
         }
 
-        // Configurar TODAS las áreas de impresión al final
+        foreach ($areasImpresion as $area) {
+            \Log::info("Área de impresión: {$area}");
+        
+            if (preg_match('/^[A-Z]+(\d+):[A-Z]+(\d+)$/', $area, $matches)) {
+                $inicio = (int)$matches[1];
+                $fin = (int)$matches[2];
+        
+                \Log::info("✅ Coincidencia encontrada. Fila inicio: {$inicio}, fila fin: {$fin}");
+        
+                // Asegurar que las filas existen
+                foreach (range($inicio, $fin) as $i) {
+                    if (!in_array($i, $filasEncabezadoGlobal)) {
+                        $sheet->getRowDimension($i)->setRowHeight(12.75);
+                    }
+        
+                    // 🟢 APLICAR BORDES LATERALES A CADA FILA DE LA PÁGINA
+                    $sheet->getStyle("A{$i}")->applyFromArray([
+                        'borders' => [
+                            'left' => [
+                                'borderStyle' => Border::BORDER_THIN,
+                                'color' => ['argb' => '00000000'],
+                            ],
+                        ],
+                    ]);
+        
+                    $sheet->getStyle("X{$i}")->applyFromArray([
+                        'borders' => [
+                            'right' => [
+                                'borderStyle' => Border::BORDER_THIN,
+                                'color' => ['argb' => '00000000'],
+                            ],
+                        ],
+                    ]);
+                }
+        
+                // Borde inferior
+                $sheet->getStyle("A{$fin}:X{$fin}")->applyFromArray([
+                    'borders' => [
+                        'bottom' => [
+                            'borderStyle' => Border::BORDER_THIN,
+                            'color' => ['argb' => '00000000'],
+                        ],
+                    ],
+                ]);
+            }
+        }
+     // Configurar TODAS las áreas de impresión al final
         if (!empty($areasImpresion)) {
             //$sheet->getPageSetup()->setPrintArea(implode(',', $areasImpresion));
             $ultimaFilaUsada = $sheet->getHighestRow();
@@ -365,6 +440,8 @@ class ExcelExportController extends Controller
                 $sheet->getRowDimension($i)->setRowHeight(-1); // -1 restaura a altura predeterminada
             }
         }
+
+
         // redirect output to client browser
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment;filename="Avaluo_'. $numeroAvaluo. '.xlsx"');
