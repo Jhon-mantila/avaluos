@@ -433,6 +433,11 @@ class ExcelExportController extends Controller
                 $sheet->getPageSetup()->setPrintArea("A1:X{$ultimaFilaImpresion}");
 
             }else{*/
+                //$sheet->getPageSetup()->setFitToPage(true);
+                //$sheet->getPageSetup()->setFitToWidth(1);
+                //$sheet->getPageSetup()->setFitToHeight(0);
+                //$sheet->getPageSetup()->setFitToPage(false);
+                //$sheet->getPageSetup()->setScale(100);
                 // Establecer áreas definitivas
                 $sheet->getPageSetup()->setPrintArea(implode(',', $areasImpresion));
             //}
