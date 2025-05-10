@@ -28,7 +28,8 @@ class ExcelExportController extends Controller
         $pageSetup = $sheet->getPageSetup();
         $pageSetup->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_PORTRAIT);
         $pageSetup->setPaperSize(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::PAPERSIZE_LETTER);
-        $pageSetup->setFitToPage(true);
+        $pageSetup->setFitToPage(false);
+        $pageSetup->setScale(100);
         $pageSetup->setFitToWidth(1);
         $pageSetup->setFitToHeight(0);
         $pageSetup->setHorizontalCentered(true);
@@ -37,8 +38,8 @@ class ExcelExportController extends Controller
 
         $sheet->getPageMargins()
             ->setTop(0.472)
-            ->setRight(0.787)
-            ->setLeft(0.787)
+            ->setRight(0.787)//0.787
+            ->setLeft(0.787)//0.787
             ->setBottom(0.472)
             ->setHeader(0.0)
             ->setFooter(0.0);
@@ -153,7 +154,7 @@ class ExcelExportController extends Controller
         $insertarEncabezado($sheet, 1, $numeroAvaluo, $logoCliente);
         $inicioArea = 1;
         $filaInicial = 4; // Aquí garantizamos que las imágenes SIEMPRE empiezan desde la fila 4
-
+        $imagenesPorFila = [];
         foreach ($imagenes as $index => $imagen) {
             // Verificar si necesitamos un nuevo encabezado (nueva página)
             if (($filaInicial - $ultimaFilaEncabezado) >= ($maxFilasPorPagina - 17)) {
@@ -178,6 +179,7 @@ class ExcelExportController extends Controller
             $imgPath = public_path("storage/{$imagen['imagen']}");
             
             if (file_exists($imgPath)) {
+                $imagenFila = $filaInicial;
                 $columna = ($contador % 2 == 0) ? $columnaIzquierda : $columnaDerecha;
                 $rangoColumnas = "{$columna}{$filaInicial}:" . chr(ord($columna) + 9) . ($filaInicial + 12);
                 $sheet->mergeCells($rangoColumnas);
@@ -193,7 +195,7 @@ class ExcelExportController extends Controller
                 
                 $cellWidth = 10 * 3.4 * 7.5;   // 10 columnas * ancho de columna * 7.5 px
                 $cellHeight = 17 * 12.75;      // 13 filas * alto de fila
-
+                $imagenesPorFila[] = $imagenFila;
 
                 // Insertar imagen
                 $drawing = new Drawing();
@@ -286,70 +288,26 @@ class ExcelExportController extends Controller
             $ultimaFilaUsada = isset($filaTituloFin) && $filaTituloFin > 0 ? $filaTituloFin + 1 : $filaInicial;
             $areasImpresion[$ultimaAreaIndex] = "{$inicioArea}:X{$ultimaFilaUsada}";
         }
+            // Contar imágenes en la última área de impresión
+            $ultimaArea = $areasImpresion[$ultimaAreaIndex];
+            list($inicioCoord, $finCoord) = explode(':', $ultimaArea);
+            $inicioFilaUltima = (int) filter_var($inicioCoord, FILTER_SANITIZE_NUMBER_INT);
+            $finFilaUltima = (int) filter_var($finCoord, FILTER_SANITIZE_NUMBER_INT);
+
+            $imagenesUltimaHoja = 0;
+            foreach ($imagenesPorFila as $filaImg) {
+                if ($filaImg >= $inicioFilaUltima && $filaImg <= $finFilaUltima) {
+                    $imagenesUltimaHoja++;
+                }
+            }
+
+            \Log::info("📸 Imágenes en la última hoja: {$imagenesUltimaHoja}");
+
         // Aplicar todos los saltos de página al final
         foreach ($saltosPagina as $filaSalto) {
             $sheet->setBreak("A{$filaSalto}", \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet::BREAK_ROW);
         }
 
-        /*foreach ($areasImpresion as $area) {
-            \Log::info("Área de impresión: {$area}");
-
-            if (preg_match('/^[A-Z]+(\d+):[A-Z]+(\d+)$/', $area, $matches)) {
-                $inicio = (int)$matches[1];
-                $fin = (int)$matches[2];
-        
-                \Log::info("✅ Coincidencia encontrada. Fila inicio: {$inicio}, fila fin: {$fin}");
-        
-                // Asegurar que las filas existen
-                foreach (range($inicio, $fin) as $i) {
-                    if (!in_array($i, $filasEncabezadoGlobal)) {
-                        $sheet->getRowDimension($i)->setRowHeight(12.75);
-                    }
-                }
-        
-                // Aplicar borde inferior
-                $sheet->getStyle("A{$fin}:X{$fin}")->applyFromArray([
-                    'borders' => [
-                        'bottom' => [
-                            'borderStyle' => Border::BORDER_THIN,
-                            'color' => ['argb' => '00000000'],
-                        ],
-                        'left' => [
-                            'borderStyle' => Border::BORDER_THIN,
-                            'color' => ['argb' => '00000000'],
-                        ],
-                        'right' => [
-                            'borderStyle' => Border::BORDER_THIN,
-                            'color' => ['argb' => '00000000'],
-                        ],
-                    ],
-                ]);
-
-                // Borde izquierdo
-                $sheet->getStyle("A{$inicio}:A{$fin}")->applyFromArray([
-                    'borders' => [
-                        'left' => [
-                            'borderStyle' => Border::BORDER_THIN,
-                            'color' => ['argb' => '00000000'],
-                        ],
-                    ],
-                ]);
-
-                // Borde derecho
-                $sheet->getStyle("X{$inicio}:X{$fin}")->applyFromArray([
-                    'borders' => [
-                        'right' => [
-                            'borderStyle' => Border::BORDER_THIN,
-                            'color' => ['argb' => '00000000'],
-                        ],
-                    ],
-                ]);
-        
-                \Log::info("🟢 Borde inferior aplicado a A{$fin}:X{$fin}");
-            } else {
-                \Log::info("❌ Área de impresión no coincide con el patrón esperado: {$area}");
-            }
-        }*/
 
         // Establecer área de impresión y centrar en cada página
         $sheet->getPageSetup()->setPrintArea(implode(',', $areasImpresion));
@@ -362,7 +320,7 @@ class ExcelExportController extends Controller
         $inicioFila = (int) filter_var($inicioArea, FILTER_SANITIZE_NUMBER_INT);
         $ultimaFilaActual = $ultimaFilaUsada;
 
-        if (($ultimaFilaActual - $inicioFila + 1) < $filasTotalesPorPagina) {
+        /*if (($ultimaFilaActual - $inicioFila + 1) < $filasTotalesPorPagina) {
             $faltantes = $filasTotalesPorPagina - ($ultimaFilaActual - $inicioFila + 1);
             $ultimaFilaUsada += $faltantes;
 
@@ -378,7 +336,30 @@ class ExcelExportController extends Controller
             }
 
             // Actualizar el área de impresión para incluir esas filas nuevas
-            $areasImpresion[$ultimaAreaIndex] = "{$inicioArea}:X{$ultimaFilaUsada}";
+            $areasImpresion[$ultimaAreaIndex] = "{$inicioArea}:X{$ultimaFilaUsada}";*/
+            // Calcula cuántas filas faltan para completar las 57
+            $filasActualesEnPagina = $ultimaFilaActual - $inicioFila + 1;
+            $faltantes = $filasTotalesPorPagina - $filasActualesEnPagina;
+
+            // Asegúrate de que no excedas el total
+            if ($faltantes > 0) {
+                /*for ($i = 1; $i <= $faltantes; $i++) {
+                    $fila = $ultimaFilaActual + $i;
+
+                    $sheet->getRowDimension($fila)->setRowHeight(12.75);
+                    $sheet->getStyle("A{$fila}:X{$fila}")->applyFromArray([
+                        'borders' => [
+                            'left' => ['borderStyle' => Border::BORDER_THIN, 'color' => ['argb' => '00000000']],
+                            'right' => ['borderStyle' => Border::BORDER_THIN, 'color' => ['argb' => '00000000']],
+                        ],
+                    ]);
+                }*/
+
+                //$ultimaFilaUsada += $faltantes;
+                //$areasImpresion[$ultimaAreaIndex] = "{$inicioArea}:X{$ultimaFilaUsada}";
+                // Forzar máximo de 57 filas desde el inicio del área
+                $finEsperado = $inicioFila + $filasTotalesPorPagina - 1;
+                $areasImpresion[$ultimaAreaIndex] = "{$inicioArea}:X{$finEsperado}";
         }
 
         foreach ($areasImpresion as $area) {
@@ -432,7 +413,30 @@ class ExcelExportController extends Controller
             //$sheet->getPageSetup()->setPrintArea(implode(',', $areasImpresion));
             $ultimaFilaUsada = $sheet->getHighestRow();
             $spreadsheet->garbageCollect(); // Limpia rangos no usados internamente
-            $sheet->getPageSetup()->setPrintArea("A1:X{$ultimaFilaContenido}");
+            //$sheet->getPageSetup()->setPrintArea("A1:X{$ultimaFilaContenido}");
+            \Log::info("Última area usada 1----: ". print_r($ultimaFilaUsada, true));
+            \Log::info("Última area usada 2----: ". print_r($areasImpresion, true));
+
+            \Log::info("CONTADOR----: ". $contador);
+            
+            
+            if($imagenesUltimaHoja<= 4){
+
+                $sheet->getPageSetup()->setFitToPage(true);
+                $sheet->getPageSetup()->setFitToWidth(1);
+                $sheet->getPageSetup()->setFitToHeight(0);
+                $sheet->getPageSetup()->setFitToPage(false);
+                $sheet->getPageSetup()->setScale(100);
+                //$sheet->getPageSetup()->setPrintArea(implode(',', $areasImpresion));
+                $numeroPaginas = count($areasImpresion);
+                $ultimaFilaImpresion = ($numeroPaginas * 57)-3;
+                $sheet->getPageSetup()->setPrintArea("A1:X{$ultimaFilaImpresion}");
+
+            }else{
+                // Establecer áreas definitivas
+                $sheet->getPageSetup()->setPrintArea(implode(',', $areasImpresion));
+            }
+
 
             // Opcional: resetear altura de filas posteriores
             $maxFila = $sheet->getHighestRow();
@@ -452,7 +456,7 @@ class ExcelExportController extends Controller
         $fileName = "Avaluo_{$numeroAvaluo}.xlsx";
         $filePath = public_path("storage/{$fileName}");
         $writer->save($filePath);*/
-
+        
         $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Xlsx');
         $writer->save('php://output');
 
