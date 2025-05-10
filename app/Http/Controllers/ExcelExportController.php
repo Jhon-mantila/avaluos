@@ -420,22 +420,22 @@ class ExcelExportController extends Controller
             \Log::info("CONTADOR----: ". $contador);
             
             
-            if($imagenesUltimaHoja<= 4){
+            /*if($imagenesUltimaHoja<= 4){
 
-                /*$sheet->getPageSetup()->setFitToPage(true);
+                $sheet->getPageSetup()->setFitToPage(true);
                 $sheet->getPageSetup()->setFitToWidth(1);
                 $sheet->getPageSetup()->setFitToHeight(0);
                 $sheet->getPageSetup()->setFitToPage(false);
-                $sheet->getPageSetup()->setScale(100);*/
+                $sheet->getPageSetup()->setScale(100);
                 //$sheet->getPageSetup()->setPrintArea(implode(',', $areasImpresion));
                 $numeroPaginas = count($areasImpresion);
                 $ultimaFilaImpresion = ($numeroPaginas * 57)-3;
                 $sheet->getPageSetup()->setPrintArea("A1:X{$ultimaFilaImpresion}");
 
-            }else{
+            }else{*/
                 // Establecer áreas definitivas
                 $sheet->getPageSetup()->setPrintArea(implode(',', $areasImpresion));
-            }
+            //}
 
 
             // Opcional: resetear altura de filas posteriores
