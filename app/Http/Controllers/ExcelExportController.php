@@ -359,6 +359,12 @@ class ExcelExportController extends Controller
                 //$areasImpresion[$ultimaAreaIndex] = "{$inicioArea}:X{$ultimaFilaUsada}";
                 // Forzar máximo de 57 filas desde el inicio del área
                 $finEsperado = $inicioFila + $filasTotalesPorPagina - 1;
+
+                // Rellenar filas con altura correcta
+                for ($i = $ultimaFilaActual + 1; $i <= $finEsperado; $i++) {
+                    $sheet->getRowDimension($i)->setRowHeight(12.75);
+                    $sheet->setCellValue("A{$i}", ''); // celda vacía que evita que Excel ignore la fila
+                }
                 $areasImpresion[$ultimaAreaIndex] = "{$inicioArea}:X{$finEsperado}";
         }
 
@@ -446,7 +452,7 @@ class ExcelExportController extends Controller
             // Opcional: resetear altura de filas posteriores
             $maxFila = $sheet->getHighestRow();
             for ($i = $ultimaFilaContenido + 1; $i <= $maxFila; $i++) {
-                $sheet->getRowDimension($i)->setRowHeight(-1); // -1 restaura a altura predeterminada
+                //$sheet->getRowDimension($i)->setRowHeight(-1); // -1 restaura a altura predeterminada
             }
         }
 
