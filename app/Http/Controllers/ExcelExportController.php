@@ -253,7 +253,8 @@ class ExcelExportController extends Controller
                 $rangoTitulo = "{$columna}{$filaTituloInicio}:" . chr(ord($columna) + 9) . "{$filaTituloFin}";
                 $sheet->mergeCells($rangoTitulo);
                 $sheet->setCellValue("{$columna}{$filaTituloInicio}", strtoupper($imagen['title']));
-
+                // Ajuste de texto (wrap text)
+                $sheet->getStyle("{$columna}{$filaTituloInicio}")->getAlignment()->setWrapText(true);
                 $sheet->getStyle($rangoTitulo)->applyFromArray([
                     'borders' => [
                         'top' => ['borderStyle' => Border::BORDER_THIN, 'color' => ['argb' => '00000000']],
