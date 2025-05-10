@@ -422,11 +422,11 @@ class ExcelExportController extends Controller
             
             if($imagenesUltimaHoja<= 4){
 
-                $sheet->getPageSetup()->setFitToPage(true);
+                /*$sheet->getPageSetup()->setFitToPage(true);
                 $sheet->getPageSetup()->setFitToWidth(1);
                 $sheet->getPageSetup()->setFitToHeight(0);
                 $sheet->getPageSetup()->setFitToPage(false);
-                $sheet->getPageSetup()->setScale(100);
+                $sheet->getPageSetup()->setScale(100);*/
                 //$sheet->getPageSetup()->setPrintArea(implode(',', $areasImpresion));
                 $numeroPaginas = count($areasImpresion);
                 $ultimaFilaImpresion = ($numeroPaginas * 57)-3;
