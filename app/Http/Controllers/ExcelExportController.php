@@ -154,7 +154,7 @@ class ExcelExportController extends Controller
         $insertarEncabezado($sheet, 1, $numeroAvaluo, $logoCliente);
         $inicioArea = 1;
         $filaInicial = 4; // Aquí garantizamos que las imágenes SIEMPRE empiezan desde la fila 4
-        $imagenesPorFila = [];
+        //$imagenesPorFila = [];
         foreach ($imagenes as $index => $imagen) {
             // Verificar si necesitamos un nuevo encabezado (nueva página)
             if (($filaInicial - $ultimaFilaEncabezado) >= ($maxFilasPorPagina - 17)) {
@@ -179,7 +179,7 @@ class ExcelExportController extends Controller
             $imgPath = public_path("storage/{$imagen['imagen']}");
             
             if (file_exists($imgPath)) {
-                $imagenFila = $filaInicial;
+                //$imagenFila = $filaInicial;
                 $columna = ($contador % 2 == 0) ? $columnaIzquierda : $columnaDerecha;
                 $rangoColumnas = "{$columna}{$filaInicial}:" . chr(ord($columna) + 9) . ($filaInicial + 12);
                 $sheet->mergeCells($rangoColumnas);
@@ -195,7 +195,7 @@ class ExcelExportController extends Controller
                 
                 $cellWidth = 10 * 3.4 * 7.5;   // 10 columnas * ancho de columna * 7.5 px
                 $cellHeight = 17 * 12.75;      // 13 filas * alto de fila
-                $imagenesPorFila[] = $imagenFila;
+                //$imagenesPorFila[] = $imagenFila;
 
                 // Insertar imagen
                 $drawing = new Drawing();
@@ -206,7 +206,7 @@ class ExcelExportController extends Controller
 
                 if ($isHorizontal) {
                     // Tamaño fijo para horizontales
-                    $fixedWidth = 261; // píxeles fijos 
+                    $fixedWidth = 280; // píxeles fijos 
                     $fixedHeight = 204;
                 
                     $drawing->setResizeProportional(false);
@@ -288,7 +288,7 @@ class ExcelExportController extends Controller
             $ultimaFilaUsada = isset($filaTituloFin) && $filaTituloFin > 0 ? $filaTituloFin + 1 : $filaInicial;
             $areasImpresion[$ultimaAreaIndex] = "{$inicioArea}:X{$ultimaFilaUsada}";
         }
-            // Contar imágenes en la última área de impresión
+            /*// Contar imágenes en la última área de impresión
             $ultimaArea = $areasImpresion[$ultimaAreaIndex];
             list($inicioCoord, $finCoord) = explode(':', $ultimaArea);
             $inicioFilaUltima = (int) filter_var($inicioCoord, FILTER_SANITIZE_NUMBER_INT);
@@ -301,7 +301,7 @@ class ExcelExportController extends Controller
                 }
             }
 
-            \Log::info("📸 Imágenes en la última hoja: {$imagenesUltimaHoja}");
+            \Log::info("📸 Imágenes en la última hoja: {$imagenesUltimaHoja}");*/
 
         // Aplicar todos los saltos de página al final
         foreach ($saltosPagina as $filaSalto) {
@@ -320,43 +320,12 @@ class ExcelExportController extends Controller
         $inicioFila = (int) filter_var($inicioArea, FILTER_SANITIZE_NUMBER_INT);
         $ultimaFilaActual = $ultimaFilaUsada;
 
-        /*if (($ultimaFilaActual - $inicioFila + 1) < $filasTotalesPorPagina) {
-            $faltantes = $filasTotalesPorPagina - ($ultimaFilaActual - $inicioFila + 1);
-            $ultimaFilaUsada += $faltantes;
-
-            for ($i = $ultimaFilaActual + 1; $i <= $ultimaFilaUsada; $i++) {
-                $sheet->getRowDimension($i)->setRowHeight(12.75);
-
-                $sheet->getStyle("A{$i}:X{$i}")->applyFromArray([
-                    'borders' => [
-                        'left' => ['borderStyle' => Border::BORDER_THIN, 'color' => ['argb' => '00000000']],
-                        'right' => ['borderStyle' => Border::BORDER_THIN, 'color' => ['argb' => '00000000']],
-                    ],
-                ]);
-            }
-
-            // Actualizar el área de impresión para incluir esas filas nuevas
-            $areasImpresion[$ultimaAreaIndex] = "{$inicioArea}:X{$ultimaFilaUsada}";*/
             // Calcula cuántas filas faltan para completar las 57
             $filasActualesEnPagina = $ultimaFilaActual - $inicioFila + 1;
             $faltantes = $filasTotalesPorPagina - $filasActualesEnPagina;
 
             // Asegúrate de que no excedas el total
             if ($faltantes > 0) {
-                /*for ($i = 1; $i <= $faltantes; $i++) {
-                    $fila = $ultimaFilaActual + $i;
-
-                    $sheet->getRowDimension($fila)->setRowHeight(12.75);
-                    $sheet->getStyle("A{$fila}:X{$fila}")->applyFromArray([
-                        'borders' => [
-                            'left' => ['borderStyle' => Border::BORDER_THIN, 'color' => ['argb' => '00000000']],
-                            'right' => ['borderStyle' => Border::BORDER_THIN, 'color' => ['argb' => '00000000']],
-                        ],
-                    ]);
-                }*/
-
-                //$ultimaFilaUsada += $faltantes;
-                //$areasImpresion[$ultimaAreaIndex] = "{$inicioArea}:X{$ultimaFilaUsada}";
                 // Forzar máximo de 57 filas desde el inicio del área
                 $finEsperado = $inicioFila + $filasTotalesPorPagina - 1;
 
