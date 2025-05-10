@@ -252,7 +252,7 @@ class ExcelExportController extends Controller
                 
                 $rangoTitulo = "{$columna}{$filaTituloInicio}:" . chr(ord($columna) + 9) . "{$filaTituloFin}";
                 $sheet->mergeCells($rangoTitulo);
-                $sheet->setCellValue("{$columna}{$filaTituloInicio}", $imagen['title']);
+                $sheet->setCellValue("{$columna}{$filaTituloInicio}", strtoupper($imagen['title']));
 
                 $sheet->getStyle($rangoTitulo)->applyFromArray([
                     'borders' => [
