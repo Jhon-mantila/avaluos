@@ -206,7 +206,7 @@ class ExcelExportController extends Controller
 
                 if ($isHorizontal) {
                     // Tamaño fijo para horizontales
-                    $fixedWidth = 280; // píxeles fijos 
+                    $fixedWidth = 279; // píxeles fijos 
                     $fixedHeight = 204;
                 
                     $drawing->setResizeProportional(false);
@@ -214,7 +214,7 @@ class ExcelExportController extends Controller
                     $drawing->setHeight($fixedHeight);
                 
                     // Centrado
-                    $offsetX = (($cellWidth - $fixedWidth) / 2)+3;
+                    $offsetX = (($cellWidth - $fixedWidth) / 2)+14;
                     $offsetY = (($cellHeight - $fixedHeight) / 2)+80;
                 } else {
 
