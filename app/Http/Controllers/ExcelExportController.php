@@ -214,7 +214,7 @@ class ExcelExportController extends Controller
                     $drawing->setHeight($fixedHeight);
                 
                     // Centrado
-                    $offsetX = (($cellWidth - $fixedWidth) / 2)+14;
+                    $offsetX = (($cellWidth - $fixedWidth) / 2)+12;
                     $offsetY = (($cellHeight - $fixedHeight) / 2)+80;
                 } else {
 
