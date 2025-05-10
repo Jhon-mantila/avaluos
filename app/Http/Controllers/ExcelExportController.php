@@ -110,9 +110,9 @@ class ExcelExportController extends Controller
                     $drawing->setPath($logoPath);
                     $drawing->setResizeProportional(false);
                     $drawing->setHeight(46);
-                    $drawing->setWidth(147);
+                    $drawing->setWidth(150);
                     $drawing->setCoordinates("Q{$fila}");
-                    $drawing->setOffsetX(25);
+                    $drawing->setOffsetX(35);
                     $drawing->setOffsetY(5);
                     $drawing->setWorksheet($sheet);
                 }
