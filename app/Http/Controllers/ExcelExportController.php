@@ -29,7 +29,7 @@ class ExcelExportController extends Controller
         $pageSetup->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_PORTRAIT);
         $pageSetup->setPaperSize(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::PAPERSIZE_LETTER);
         $pageSetup->setFitToPage(false);
-        $pageSetup->setScale(100);
+        $pageSetup->setScale(98);
         $pageSetup->setFitToWidth(1);
         $pageSetup->setFitToHeight(0);
         $pageSetup->setHorizontalCentered(true);
