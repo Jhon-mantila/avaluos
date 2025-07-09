@@ -7,6 +7,7 @@ class DropdownService
     public function list_tipo_documento()
     {
         return [
+            '' => '',
             'Nit' => 'Nit',
             'CC' => 'Cédula de Ciudadanía',
             'CE' => 'Cédula de extranjería',
@@ -17,29 +18,36 @@ class DropdownService
     public function list_tipos_avaluos()
     {
         return [
-            'Residencial' => 'Residencial',
-            'Comercial' => 'Comercial',
-            'Industrial' => 'Industrial',
-            'Terreno' => 'Terreno',
-            'Catastral' => 'Catastral',
-            'Rural' => 'Rural',
-            'Urbano' => 'Urbano',
-            'Apartamento' => 'Apartamento',
+            '' => '',
+            'PH' => 'PH',
+            'NPH' => 'NPH',
         ];
     }
 
     public function list_estados()
     {
         return [
+            '' => '',
             'Nuevo' => 'Nuevo',
-            'Pendiente' => 'Pendiente',
-            'En Proceso' => 'En Proceso',
-            'Sin Asignar' => 'Sin Asignar',
+            'Sin Coordinar' => 'Sin Coordinar',
+            'Agendado' => 'Agendado',
+            'Visita Realizada' => 'Visita Realizada',
+            'Realizando Informe' => 'Realizando Informe',
             'Completado' => 'Completado',
             'Cancelado' => 'Cancelado',
         ];
     }
 
+    public function list_uso()
+    {
+        return [
+            '' => '',
+            'Residencial' => 'Residencial',
+            'Comercial' => 'Comercial',
+            'Industrial' => 'Industrial',
+            'Dotacional' => 'Dotacional',
+        ];
+    }
 
 
     // Agrega más métodos para otras listas desplegables
