@@ -20,7 +20,7 @@ class Avaluos extends Model
         'direccion',
         'ciudad',
         'departamento',
-        'area',
+        'uso',
         'valor_comercial_estimado',
         'observaciones',
         'cliente_id',

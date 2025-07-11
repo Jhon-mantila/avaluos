@@ -61,12 +61,14 @@ class AvaluosController extends Controller
     {
         $list_estados = $this->dropdownService->list_estados();
         $list_tipos_avaluos = $this->dropdownService->list_tipos_avaluos();
+        $list_uso = $this->dropdownService->list_uso();
 
         $clientes = Clientes::all();
         return Inertia::render('Avaluos/Create', [
             'clientes' => $clientes,
             'estados' => $list_estados,
             'tiposAvaluo' => $list_tipos_avaluos,
+            'tiposUso' => $list_uso,
         ]);
     }
 
@@ -78,7 +80,7 @@ class AvaluosController extends Controller
             'direccion' => 'required|string|max:255',
             'ciudad' => 'nullable|string|max:255',
             'departamento' => 'nullable|string|max:255',
-            'area' => 'nullable|numeric',
+            'uso' => 'nullable|string|max:255',
             'valor_comercial_estimado' => 'nullable|numeric',
             'observaciones' => 'nullable|string',
             'cliente_id' => 'required|exists:clientes,id',
@@ -89,7 +91,6 @@ class AvaluosController extends Controller
             'direccion.required' => 'La dirección es requeida.',
             'numero_avaluo.required' => 'El número de avalúo es requerido.',
             'tipo_avaluo.required' => 'El tipo de avalúo es requerido.',
-            'area.numeric' => 'El área es númerico.',
             'estado.required' => 'El estado es requerido.',
         ]);
 
@@ -103,6 +104,7 @@ class AvaluosController extends Controller
         $avaluo = Avaluos::findOrFail($id);
         $list_estados = $this->dropdownService->list_estados();
         $list_tipos_avaluos = $this->dropdownService->list_tipos_avaluos();
+        $list_uso = $this->dropdownService->list_uso();
         $clientes = Clientes::all();
 
         return Inertia::render('Avaluos/Edit', [
@@ -110,6 +112,7 @@ class AvaluosController extends Controller
             'clientes' => $clientes,
             'estados' => $list_estados,
             'tiposAvaluo' => $list_tipos_avaluos,
+            'tiposUso' => $list_uso,
         ]);
     }
 
@@ -123,7 +126,7 @@ class AvaluosController extends Controller
             'direccion' => 'required|string|max:255',
             'ciudad' => 'nullable|string|max:255',
             'departamento' => 'nullable|string|max:255',
-            'area' => 'nullable|numeric',
+            'uso' => 'nullable|string|max:255',
             'valor_comercial_estimado' => 'nullable|numeric',
             'observaciones' => 'nullable|string',
             'cliente_id' => 'required|exists:clientes,id',
@@ -134,7 +137,6 @@ class AvaluosController extends Controller
             'direccion.required' => 'La dirección es requeida.',
             'numero_avaluo.required' => 'El número de avalúo es requerido.',
             'tipo_avaluo.required' => 'El tipo de avalúo es requerido.',
-            'area.numeric' => 'El área es númerico.',
             'estado.required' => 'El estado es requerido.',
         ]);
 

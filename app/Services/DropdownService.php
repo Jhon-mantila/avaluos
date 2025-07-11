@@ -7,7 +7,6 @@ class DropdownService
     public function list_tipo_documento()
     {
         return [
-            '' => '',
             'Nit' => 'Nit',
             'CC' => 'Cédula de Ciudadanía',
             'CE' => 'Cédula de extranjería',
@@ -18,7 +17,6 @@ class DropdownService
     public function list_tipos_avaluos()
     {
         return [
-            '' => '',
             'PH' => 'PH',
             'NPH' => 'NPH',
         ];
@@ -27,7 +25,6 @@ class DropdownService
     public function list_estados()
     {
         return [
-            '' => '',
             'Nuevo' => 'Nuevo',
             'Sin Coordinar' => 'Sin Coordinar',
             'Agendado' => 'Agendado',
@@ -41,7 +38,6 @@ class DropdownService
     public function list_uso()
     {
         return [
-            '' => '',
             'Residencial' => 'Residencial',
             'Comercial' => 'Comercial',
             'Industrial' => 'Industrial',

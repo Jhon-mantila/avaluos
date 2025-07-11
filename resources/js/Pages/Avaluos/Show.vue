@@ -45,8 +45,8 @@
                                 <p class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">{{ avaluo.departamento }}</p>
                             </div>
                             <div class="mb-4">
-                                <label class="block text-sm font-medium text-gray-700">Área</label>
-                                <p class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">{{ avaluo.area }}</p>
+                                <label class="block text-sm font-medium text-gray-700">Uso</label>
+                                <p class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">{{ avaluo.uso }}</p>
                             </div>
                             <div class="mb-4">
                                 <label class="block text-sm font-medium text-gray-700">Valor Comercial</label>

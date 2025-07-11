@@ -64,9 +64,14 @@
                                     <span v-if="errors.departamento" class="text-red-500 text-sm">{{ errors.departamento }}</span>
                                 </div>
                                 <div class="mb-4">
-                                    <label for="area" class="block text-sm font-medium text-gray-700">Área</label>
-                                    <input type="number" v-model="form.area" id="area" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
-                                    <span v-if="errors.area" class="text-red-500 text-sm">{{ errors.area }}</span>
+                                    <label for="uso" class="block text-sm font-medium text-gray-700">Uso</label>
+                                    <v-select
+                                        v-model="selectedUso"
+                                        :options="tiposUso"
+                                        placeholder="Seleccionar tipo de avalúo..."
+                                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                                    />
+                                    <span v-if="errors.uso" class="text-red-500 text-sm">{{ errors.uso }}</span>
                                 </div>
                                 <div class="mb-4">
                                     <label for="valor_comercial_estimado" class="block text-sm font-medium text-gray-700">Valor Comercial</label>
@@ -108,13 +113,14 @@ const toast = useToast();
 const { props } = usePage();
 const estados = ref(Object.keys(props.estados).map(key => ({ label: props.estados[key], value: key })));
 const tiposAvaluo = ref(Object.keys(props.tiposAvaluo).map(key => ({ label: props.tiposAvaluo[key], value: key })));
+const tiposUso = ref(Object.keys(props.tiposUso).map(key => ({ label: props.tiposUso[key], value: key })));
 const form = useForm({
     numero_avaluo: props.avaluo.numero_avaluo || '',
     tipo_avaluo: props.avaluo.tipo_avaluo || '',
     direccion: props.avaluo.direccion || '',
     ciudad: props.avaluo.ciudad || '',
     departamento: props.avaluo.departamento || '',
-    area: props.avaluo.area || '',
+    uso: props.avaluo.uso || '',
     valor_comercial_estimado: props.avaluo.valor_comercial_estimado || '',
     observaciones: props.avaluo.observaciones || '',
     cliente_id: props.avaluo.cliente_id || '',
@@ -125,6 +131,7 @@ const clientes = ref([]);
 const selectedCliente = ref(null);
 const selectedEstado = ref(estados.value.find(estado => estado.value === form.estado));
 const selectedTipoAvaluo = ref(tiposAvaluo.value.find(tipo => tipo.value === form.tipo_avaluo));
+const selectedUso = ref(tiposUso.value.find(uso => uso.value === form.uso));
 onMounted(() => {
     // Fetch clients from the server
     axios.get('/api/clientes').then(response => {
@@ -157,6 +164,11 @@ watch(selectedEstado, (newValue, oldValue) => {
 watch(selectedTipoAvaluo, (newValue, oldValue) => {
     console.log('selectedTipoAvaluo cambió de:', oldValue, 'a:', newValue);
     form.tipo_avaluo = newValue ? newValue.value : '';
+});
+
+watch(selectedUso, (newValue, oldValue) => {
+    console.log('selectedUso cambió de:', oldValue, 'a:', newValue);
+    form.uso = newValue ? newValue.value : '';
 });
 
 const updateClienteId = (cliente) => {

@@ -64,8 +64,14 @@
                                 <span v-if="errors.departamento" class="text-red-500 text-sm">{{ errors.departamento }}</span>
                             </div>
                             <div class="mb-4">
-                                <label for="area" class="block text-sm font-medium text-gray-700">Área</label>
-                                <input type="number" v-model="form.area" id="area" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" >
+                                <label for="uso" class="block text-sm font-medium text-gray-700">Uso</label>
+                                    <v-select
+                                        v-model="form.uso"
+                                        :options="tiposUso"
+                                        placeholder="Seleccionar tipos de uso..."
+                                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                                    />
+                                <span v-if="errors.estado" class="text-red-500 text-sm">{{ errors.estado }}</span>
                             </div>
                             <div class="mb-4">
                                 <label for="valor_comercial_estimado" class="block text-sm font-medium text-gray-700">Valor Comercial</label>
@@ -108,6 +114,7 @@ const { props } = usePage();
 //const estados = ref([]);
 const estados = ref(Object.keys(props.estados).map(key => ({ label: props.estados[key], value: key })));
 const tiposAvaluo = ref(Object.keys(props.tiposAvaluo).map(key => ({ label: props.tiposAvaluo[key], value: key })));
+const tiposUso = ref(Object.keys(props.tiposUso).map(key => ({ label: props.tiposUso[key], value: key })));
 console.log('Estados:', props.estados);
 const form = useForm({
     numero_avaluo: '',
@@ -115,7 +122,7 @@ const form = useForm({
     direccion: '',
     ciudad: '',
     departamento: '',
-    area: '',
+    uso: '',
     valor_comercial_estimado: '',
     observaciones: '',
     cliente_id: '',
@@ -161,7 +168,8 @@ const submit = () => {
     // Extraer los valores de estado y tipo_avaluo antes de enviar el formulario
     form.estado = form.estado.value;
     form.tipo_avaluo = form.tipo_avaluo.value;
-
+    form.uso = form.uso.value;
+    
     console.log('Form data:', form);
     form.post(route('avaluos.store'), {
         onSuccess: () => {

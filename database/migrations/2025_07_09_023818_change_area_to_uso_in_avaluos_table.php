@@ -12,7 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('avaluos', function (Blueprint $table) {
-            //
+            $table->dropColumn('area');
+            $table->string('uso')->nullable();
         });
     }
 
@@ -22,7 +23,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('avaluos', function (Blueprint $table) {
-            //
+            $table->dropColumn('uso');
+            $table->integer('area')->nullable();
         });
     }
 };
