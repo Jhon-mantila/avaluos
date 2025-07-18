@@ -9,79 +9,105 @@
             <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
                 <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                     <div class="p-6 text-gray-900">
+
+                        <!-- Tabs -->
+                        <div class="flex border-b border-gray-200 mb-6">
+                            <button
+                                v-for="(tab, index) in tabs"
+                                :key="index"
+                                @click="activeTab = index"
+                                :class="[
+                                    'px-4 py-2 font-semibold text-sm focus:outline-none',
+                                    activeTab === index ? 'border-b-2 border-blue-500 text-blue-600' : 'text-gray-500 hover:text-gray-700'
+                                ]"
+                            >
+                                {{ tab }}
+                            </button>
+                        </div>
                         <form @submit.prevent="submit">
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div class="mb-4">
-                                    <label for="numero_avaluo" class="block text-sm font-medium text-gray-700">Número de Avalúo</label>
-                                    <input type="text" v-model="form.numero_avaluo" id="numero_avaluo" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
-                                    <span v-if="errors.numero_avaluo" class="text-red-500 text-sm">{{ errors.numero_avaluo }}</span>
+                            <!-- Tab 1: Etapa 1 -->
+                            <div v-show="activeTab === 0">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div class="mb-4">
+                                        <label for="numero_avaluo" class="block text-sm font-medium text-gray-700">Número de Avalúo</label>
+                                        <input type="text" v-model="form.numero_avaluo" id="numero_avaluo" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                                        <span v-if="errors.numero_avaluo" class="text-red-500 text-sm">{{ errors.numero_avaluo }}</span>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label for="cliente_id" class="block text-sm font-medium text-gray-700">Cliente</label>
+                                        <v-select
+                                            v-model="selectedCliente"
+                                            :options="clientes"
+                                            label="nombre"
+                                            placeholder="Buscar cliente..."
+                                            @input="updateClienteId"
+                                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                                        />
+                                        <span v-if="errors.cliente_id" class="text-red-500 text-sm">{{ errors.cliente_id }}</span>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label for="estado" class="block text-sm font-medium text-gray-700">Estado</label>
+                                        <v-select
+                                            v-model="selectedEstado"
+                                            :options="estados"
+                                            placeholder="Seleccionar estado..."
+                                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                                        />
+                                        <span v-if="errors.estado" class="text-red-500 text-sm">{{ errors.estado }}</span>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label for="tipo_avaluo" class="block text-sm font-medium text-gray-700">Tipo de Avalúo</label>
+                                        <v-select
+                                            v-model="selectedTipoAvaluo"
+                                            :options="tiposAvaluo"
+                                            placeholder="Seleccionar tipo de avalúo..."
+                                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                                        />
+                                        <span v-if="errors.tipo_avaluo" class="text-red-500 text-sm">{{ errors.tipo_avaluo }}</span>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label for="direccion" class="block text-sm font-medium text-gray-700">Dirección</label>
+                                        <input type="text" v-model="form.direccion" id="direccion" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                                        <span v-if="errors.direccion" class="text-red-500 text-sm">{{ errors.direccion }}</span>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label for="ciudad" class="block text-sm font-medium text-gray-700">Ciudad</label>
+                                        <input type="text" v-model="form.ciudad" id="ciudad" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                                        <span v-if="errors.ciudad" class="text-red-500 text-sm">{{ errors.ciudad }}</span>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label for="departamento" class="block text-sm font-medium text-gray-700">Departamento</label>
+                                        <input type="text" v-model="form.departamento" id="departamento" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                                        <span v-if="errors.departamento" class="text-red-500 text-sm">{{ errors.departamento }}</span>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label for="observaciones" class="block text-sm font-medium text-gray-700">Observaciones</label>
+                                        <textarea v-model="form.observaciones" id="observaciones" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"></textarea>
+                                        <span v-if="errors.observaciones" class="text-red-500 text-sm">{{ errors.observaciones }}</span>
+                                    </div>
                                 </div>
+                            </div>
+
+                            <!-- Tab 2: Etapa 2 -->
+                            <div v-show="activeTab === 1">
                                 <div class="mb-4">
-                                    <label for="cliente_id" class="block text-sm font-medium text-gray-700">Cliente</label>
-                                    <v-select
-                                        v-model="selectedCliente"
-                                        :options="clientes"
-                                        label="nombre"
-                                        placeholder="Buscar cliente..."
-                                        @input="updateClienteId"
-                                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
-                                    />
-                                    <span v-if="errors.cliente_id" class="text-red-500 text-sm">{{ errors.cliente_id }}</span>
+                                        <label for="uso" class="block text-sm font-medium text-gray-700">Uso</label>
+                                        <v-select
+                                            v-model="selectedUso"
+                                            :options="tiposUso"
+                                            placeholder="Seleccionar tipo de avalúo..."
+                                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                                        />
+                                        <span v-if="errors.uso" class="text-red-500 text-sm">{{ errors.uso }}</span>
                                 </div>
+                            </div>
+
+                             <!-- Tab 3: Etapa 3 -->
+                            <div v-show="activeTab === 2">
                                 <div class="mb-4">
-                                    <label for="estado" class="block text-sm font-medium text-gray-700">Estado</label>
-                                    <v-select
-                                        v-model="selectedEstado"
-                                        :options="estados"
-                                        placeholder="Seleccionar estado..."
-                                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
-                                    />
-                                    <span v-if="errors.estado" class="text-red-500 text-sm">{{ errors.estado }}</span>
-                                </div>
-                                <div class="mb-4">
-                                    <label for="tipo_avaluo" class="block text-sm font-medium text-gray-700">Tipo de Avalúo</label>
-                                    <v-select
-                                        v-model="selectedTipoAvaluo"
-                                        :options="tiposAvaluo"
-                                        placeholder="Seleccionar tipo de avalúo..."
-                                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
-                                    />
-                                    <span v-if="errors.tipo_avaluo" class="text-red-500 text-sm">{{ errors.tipo_avaluo }}</span>
-                                </div>
-                                <div class="mb-4">
-                                    <label for="direccion" class="block text-sm font-medium text-gray-700">Dirección</label>
-                                    <input type="text" v-model="form.direccion" id="direccion" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
-                                    <span v-if="errors.direccion" class="text-red-500 text-sm">{{ errors.direccion }}</span>
-                                </div>
-                                <div class="mb-4">
-                                    <label for="ciudad" class="block text-sm font-medium text-gray-700">Ciudad</label>
-                                    <input type="text" v-model="form.ciudad" id="ciudad" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
-                                    <span v-if="errors.ciudad" class="text-red-500 text-sm">{{ errors.ciudad }}</span>
-                                </div>
-                                <div class="mb-4">
-                                    <label for="departamento" class="block text-sm font-medium text-gray-700">Departamento</label>
-                                    <input type="text" v-model="form.departamento" id="departamento" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
-                                    <span v-if="errors.departamento" class="text-red-500 text-sm">{{ errors.departamento }}</span>
-                                </div>
-                                <div class="mb-4">
-                                    <label for="uso" class="block text-sm font-medium text-gray-700">Uso</label>
-                                    <v-select
-                                        v-model="selectedUso"
-                                        :options="tiposUso"
-                                        placeholder="Seleccionar tipo de avalúo..."
-                                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
-                                    />
-                                    <span v-if="errors.uso" class="text-red-500 text-sm">{{ errors.uso }}</span>
-                                </div>
-                                <div class="mb-4">
-                                    <label for="valor_comercial_estimado" class="block text-sm font-medium text-gray-700">Valor Comercial</label>
-                                    <input type="number" v-model="form.valor_comercial_estimado" id="valor_comercial_estimado" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
-                                    <span v-if="errors.valor_comercial_estimado" class="text-red-500 text-sm">{{ errors.valor_comercial_estimado }}</span>
-                                </div>
-                                <div class="mb-4">
-                                    <label for="observaciones" class="block text-sm font-medium text-gray-700">Observaciones</label>
-                                    <textarea v-model="form.observaciones" id="observaciones" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"></textarea>
-                                    <span v-if="errors.observaciones" class="text-red-500 text-sm">{{ errors.observaciones }}</span>
+                                        <label for="valor_comercial_estimado" class="block text-sm font-medium text-gray-700">Valor Comercial</label>
+                                        <input type="number" v-model="form.valor_comercial_estimado" id="valor_comercial_estimado" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                                        <span v-if="errors.valor_comercial_estimado" class="text-red-500 text-sm">{{ errors.valor_comercial_estimado }}</span>
                                 </div>
                             </div>
                             <div class="flex items-center justify-between mt-4">
@@ -132,6 +158,23 @@ const selectedCliente = ref(null);
 const selectedEstado = ref(estados.value.find(estado => estado.value === form.estado));
 const selectedTipoAvaluo = ref(tiposAvaluo.value.find(tipo => tipo.value === form.tipo_avaluo));
 const selectedUso = ref(tiposUso.value.find(uso => uso.value === form.uso));
+
+const tabs = ['Etapa 1', 'Etapa 2', 'Etapa 3'];
+const activeTab = ref(0);
+//LLevarlo para el tab donde esta el campo requerido
+const fieldTabMap = {
+  numero_avaluo: 0,
+  cliente_id: 0,
+  estado: 0,
+  tipo_avaluo: 0,
+  direccion: 0,
+  ciudad: 0,
+  departamento: 0,
+  observaciones: 0,
+  uso: 1,
+  valor_comercial_estimado: 2
+};
+
 onMounted(() => {
     // Fetch clients from the server
     axios.get('/api/clientes').then(response => {
@@ -195,6 +238,14 @@ const submit = () => {
         onError: (error) => {
             console.error('Error updating avaluo:', error);
             errors.value = error;
+
+            // Buscar la primera clave con error y redirigir a su pestaña
+            const firstErrorField = Object.keys(error)[0];
+            if (firstErrorField && fieldTabMap[firstErrorField] !== undefined) {
+                activeTab.value = fieldTabMap[firstErrorField];
+            }
+
+            toast.error('Revisa los campos con errores');
         }
     });
 };
