@@ -24,6 +24,9 @@ class Avaluos extends Model
         'valor_comercial_estimado',
         'observaciones',
         'cliente_id',
+        'auxiliar',
+        'fecha_entrega_avaluo',
+        'valor_informe',
     ];
 
     public function cliente(){

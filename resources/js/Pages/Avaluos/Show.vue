@@ -71,9 +71,23 @@
 
                         <!-- Tab 2: Etapa 2 -->
                         <div v-show="activeTab === 1">
-                            <div class="mb-4">
-                                    <label class="block text-sm font-medium text-gray-700">Uso</label>
-                                    <p class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">{{ avaluo.uso }}</p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="mb-4">
+                                        <label class="block text-sm font-medium text-gray-700">Uso</label>
+                                        <p class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">{{ avaluo.uso }}</p>
+                                </div>
+                                <div class="mb-4">
+                                        <label class="block text-sm font-medium text-gray-700">Auxiliar</label>
+                                        <p class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">{{ avaluo.auxiliar }}</p>
+                                </div>
+                                <div class="mb-4">
+                                        <label class="block text-sm font-medium text-gray-700">Fecha Entrega Avalúo</label>
+                                        <p class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">{{ avaluo.fecha_entrega_avaluo }}</p>
+                                </div>
+                                <div class="mb-4">
+                                        <label class="block text-sm font-medium text-gray-700">Valor informe</label>
+                                        <p class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">{{ avaluo.valor_informe }}</p>
+                                </div>
                             </div>
                         </div>
 

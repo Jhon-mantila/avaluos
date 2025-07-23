@@ -85,6 +85,9 @@ class AvaluosController extends Controller
             'observaciones' => 'nullable|string',
             'cliente_id' => 'required|exists:clientes,id',
             'estado' => 'required|string|max:255',
+            'auxiliar' => 'nullable|string|max:255',
+            'fecha_entrega_avaluo' => 'nullable|date',
+            'valor_informe' => 'nullable|numeric',
         ], [
             'numero_avaluo.unique' => 'El número de avalúo ya existe. Por favor, elija un número diferente.',
             'cliente_id.required' => 'El cliente es requerido.',
@@ -131,6 +134,9 @@ class AvaluosController extends Controller
             'observaciones' => 'nullable|string',
             'cliente_id' => 'required|exists:clientes,id',
             'estado' => 'required|string|max:255',
+            'auxiliar' => 'nullable|string|max:255',
+            'fecha_entrega_avaluo' => 'nullable|date',
+            'valor_informe' => 'nullable|numeric',
         ], [
             'numero_avaluo.unique' => 'El número de avalúo ya existe. Por favor, elija un número diferente.',
             'cliente_id.required' => 'El cliente es requerido.',

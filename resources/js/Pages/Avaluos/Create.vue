@@ -91,15 +91,35 @@
 
                             <!-- Tab 2: Etapa 2 -->
                             <div v-show="activeTab === 1">
-                                <div class="mb-4">
-                                        <label for="uso" class="block text-sm font-medium text-gray-700">Uso</label>
-                                            <v-select
-                                                v-model="form.uso"
-                                                :options="tiposUso"
-                                                placeholder="Seleccionar tipos de uso..."
-                                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
-                                            />
-                                        <span v-if="errors.estado" class="text-red-500 text-sm">{{ errors.estado }}</span>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4"> 
+                                    <div class="mb-4">
+                                            <label for="uso" class="block text-sm font-medium text-gray-700">Uso</label>
+                                                <v-select
+                                                    v-model="form.uso"
+                                                    :options="tiposUso"
+                                                    placeholder="Seleccionar tipos de uso..."
+                                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                                                />
+                                            <span v-if="errors.estado" class="text-red-500 text-sm">{{ errors.estado }}</span>
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <label for="auxiliar" class="block text-sm font-medium text-gray-700">Auxiliar</label>
+                                        <input type="text" v-model="form.auxiliar" id="auxiliar" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" >
+                                        <span v-if="errors.auxiliar" class="text-red-500 text-sm">{{ errors.auxiliar }}</span>
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <label for="fecha_entrega_avaluo" class="block text-sm font-medium text-gray-700">Fecha Entrega Avalúo</label>
+                                        <input type="datetime-local" v-model="form.fecha_entrega_avaluo" id="fecha_entrega_avaluo" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" >
+                                        <span v-if="errors.fecha_entrega_avaluo" class="text-red-500 text-sm">{{ errors.fecha_entrega_avaluo }}</span>
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <label for="valor_informe" class="block text-sm font-medium text-gray-700">Valor Informe</label>
+                                        <input type="number" v-model="form.valor_informe" id="valor_informe" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" >
+                                        <span v-if="errors.valor_informe" class="text-red-500 text-sm">{{ errors.valor_informe }}</span>
+                                    </div>
                                 </div>
                             </div>
 
@@ -157,6 +177,9 @@ const form = useForm({
     observaciones: '',
     cliente_id: '',
     estado: '',
+    auxiliar: '',
+    fecha_entrega_avaluo: '',
+    valor_informe: ''
 });
 const tabs = ['Etapa 1', 'Etapa 2', 'Etapa 3'];
 const activeTab = ref(0);
@@ -171,6 +194,9 @@ const fieldTabMap = {
   departamento: 0,
   observaciones: 0,
   uso: 1,
+  auxiliar: 1,
+  fecha_entrega_avaluo: 1,
+  valor_informe: 1,
   valor_comercial_estimado: 2
 };
 const errors = ref({});

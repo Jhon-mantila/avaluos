@@ -29,7 +29,9 @@ class AvaluosFactory extends Factory
             'uso' => $this->faker->randomElement(['Residencial', 'Comercial', 'Industrial', 'Dotacional']), // Genera un uso aleatorio
             'valor_comercial_estimado' => $this->faker->randomNumber(7), // Genera un número aleatorio de 7 dígitos
             'observaciones' => $this->faker->sentence, // Genera una oración aleatoria
-            
+            'auxiliar' => fake()->name(), // Genera un nombre aleatorio para el auxiliar
+            'fecha_entrega_avaluo' => $this->faker->dateTimeBetween('now', '+1 month'), // Genera una fecha aleatoria entre ahora y un mes en el futuro
+            'valor_informe' => $this->faker->randomNumber(7), // Genera un número aleatorio de 7 dígitos
         ];
     }
 }
