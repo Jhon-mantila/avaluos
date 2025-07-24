@@ -93,7 +93,7 @@
                                             </div>
                                         </template>
                                         <template v-else>
-                                            <p class="mt-1 block w-full border-gray-300 rounded-md shadow-sm cursor-pointer">{{ avaluo.auxiliar }}</p>
+                                            <p class="mt-1 block w-full border-gray-300 rounded-md shadow-sm cursor-pointer text-gray-500 italic">{{ avaluo.auxiliar || '\u00A0' }}</p>
                                         </template>
                                     </div>
                                 </div>
@@ -114,7 +114,7 @@
                                             </div>
                                         </template>
                                         <template v-else>
-                                            <p class="mt-1 block w-full border-gray-300 rounded-md shadow-sm cursor-pointer">{{ avaluo.fecha_entrega_avaluo }}</p>
+                                            <p class="mt-1 block w-full border-gray-300 rounded-md shadow-sm cursor-pointer">{{ avaluo.fecha_entrega_avaluo || '\u00A0' }}</p>
                                         </template>
                                     </div>
                                 </div>
@@ -135,7 +135,7 @@
                                                 </div>
                                             </template>
                                             <template v-else>
-                                                <p class="mt-1 block w-full border-gray-300 rounded-md shadow-sm cursor-pointer">{{ avaluo.valor_informe }}</p>
+                                                <p class="mt-1 block w-full border-gray-300 rounded-md shadow-sm cursor-pointer">{{ avaluo.valor_informe || '\u00A0' }}</p>
                                             </template>
                                         </div>
                                     </div>
@@ -208,9 +208,9 @@ const { props } = usePage();
 const avaluo = ref(props.avaluo);
 
 const editable = ref({
-    auxiliar: avaluo.value.auxiliar,
-    fecha_entrega_avaluo: avaluo.value.fecha_entrega_avaluo,
-    valor_informe: avaluo.value.valor_informe,
+    auxiliar: avaluo.value.auxiliar ?? '',
+    fecha_entrega_avaluo: avaluo.value.fecha_entrega_avaluo ?? '',
+    valor_informe: avaluo.value.valor_informe ?? '',
 });
 
 const editing = ref(false); // para activar todos a la vez

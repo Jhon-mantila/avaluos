@@ -157,12 +157,18 @@ class AvaluosController extends Controller
 
         $campo = $request->keys()[0]; // e.g. 'valor_informe'
         $valor = $request->input($campo);
+
+        $rules = [
+            'auxiliar' => 'nullable|string|max:255',
+            'fecha_entrega_avaluo' => 'nullable|date',
+            'valor_informe' => 'nullable|numeric',
+        ];
     
         // Validar solo ese campo
         $validated = $request->validate([
-            $campo => $campo === 'valor_informe' ? 'nullable|numeric' : 'nullable|string|max:255'
+            $campo => $rules[$campo] ?? 'nullable',
         ]);
-    
+
         $avaluo->$campo = $valor;
         $avaluo->save();
     
