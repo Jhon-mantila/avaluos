@@ -54,6 +54,7 @@ Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
     Route::resource('visitadores', VisitadoresController::class);
     Route::resource('clientes', ClientesController::class);
     Route::resource('avaluos', AvaluosController::class);
+    Route::put('/avaluos/{id}/campo', [AvaluosController::class, 'updateCampo'])->name('avaluos.updateCampo');
     Route::resource('informacion-visita', InformacionVisitaController::class);
     Route::resource('plantillas', PlantillaController::class);
     Route::get('/plantillas/{id}/pdf', [PDFController::class, 'generarPDF']);

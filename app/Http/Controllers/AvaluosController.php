@@ -150,4 +150,22 @@ class AvaluosController extends Controller
 
         return redirect()->route('avaluos.index')->with('success', 'Avalúo actualizado correctamente.');
     }
+
+    public function updateCampo(Request $request, $id)
+    {
+        $avaluo = Avaluos::findOrFail($id);
+
+        $campo = $request->keys()[0]; // e.g. 'valor_informe'
+        $valor = $request->input($campo);
+    
+        // Validar solo ese campo
+        $validated = $request->validate([
+            $campo => $campo === 'valor_informe' ? 'nullable|numeric' : 'nullable|string|max:255'
+        ]);
+    
+        $avaluo->$campo = $valor;
+        $avaluo->save();
+    
+        return back()->with('success', 'Campo actualizado correctamente.');
+    }
 }

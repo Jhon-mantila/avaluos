@@ -76,18 +76,71 @@
                                         <label class="block text-sm font-medium text-gray-700">Uso</label>
                                         <p class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">{{ avaluo.uso }}</p>
                                 </div>
+
+                                <!-- Auxiliar -->
                                 <div class="mb-4">
-                                        <label class="block text-sm font-medium text-gray-700">Auxiliar</label>
-                                        <p class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">{{ avaluo.auxiliar }}</p>
+                                    <label class="block text-sm font-medium text-gray-700">Auxiliar</label>
+                                    <div @dblclick="editingField = 'auxiliar'">
+                                        <template v-if="editingField === 'auxiliar'">
+                                            <div class="flex gap-2 items-center">
+                                                <input v-model="editable.auxiliar" type="text" class="form-input" />
+                                                <button
+                                                    @click="guardarCampo('auxiliar')"
+                                                    class="px-2 py-1 bg-green-500 text-white rounded hover:bg-green-600"
+                                                >
+                                                    Guardar
+                                                </button>
+                                            </div>
+                                        </template>
+                                        <template v-else>
+                                            <p class="mt-1 block w-full border-gray-300 rounded-md shadow-sm cursor-pointer">{{ avaluo.auxiliar }}</p>
+                                        </template>
+                                    </div>
                                 </div>
+
+                                <!-- Fecha entrega -->
                                 <div class="mb-4">
-                                        <label class="block text-sm font-medium text-gray-700">Fecha Entrega Avalúo</label>
-                                        <p class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">{{ avaluo.fecha_entrega_avaluo }}</p>
+                                    <label class="block text-sm font-medium text-gray-700">Fecha Entrega Avalúo</label>
+                                    <div @dblclick="editingField = 'fecha_entrega_avaluo'">
+                                        <template v-if="editingField === 'fecha_entrega_avaluo'">
+                                            <div class="flex gap-2 items-center">
+                                                <input v-model="editable.fecha_entrega_avaluo" type="datetime-local" class="form-input" />
+                                                <button
+                                                    @click="guardarCampo('fecha_entrega_avaluo')"
+                                                    class="px-2 py-1 bg-green-500 text-white rounded hover:bg-green-600"
+                                                >
+                                                    Guardar
+                                                </button>
+                                            </div>
+                                        </template>
+                                        <template v-else>
+                                            <p class="mt-1 block w-full border-gray-300 rounded-md shadow-sm cursor-pointer">{{ avaluo.fecha_entrega_avaluo }}</p>
+                                        </template>
+                                    </div>
                                 </div>
+
+                                <!-- Valor Informe -->
                                 <div class="mb-4">
-                                        <label class="block text-sm font-medium text-gray-700">Valor informe</label>
-                                        <p class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">{{ avaluo.valor_informe }}</p>
-                                </div>
+                                        <label class="block text-sm font-medium text-gray-700">Valor Informe</label>
+                                        <div @dblclick="editingField = 'valor_informe'">
+                                            <template v-if="editingField === 'valor_informe'">
+                                                <div class="flex gap-2 items-center">
+                                                    <input v-model="editable.valor_informe" type="number" class="form-input" />
+                                                    <button
+                                                        @click="guardarCampo('valor_informe')"
+                                                        class="px-2 py-1 bg-green-500 text-white rounded hover:bg-green-600"
+                                                    >
+                                                        Guardar
+                                                    </button>
+                                                </div>
+                                            </template>
+                                            <template v-else>
+                                                <p class="mt-1 block w-full border-gray-300 rounded-md shadow-sm cursor-pointer">{{ avaluo.valor_informe }}</p>
+                                            </template>
+                                        </div>
+                                    </div>
+
+
                             </div>
                         </div>
 
@@ -148,9 +201,22 @@ import { ref, onMounted } from 'vue';
 import { usePage } from '@inertiajs/vue3';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import Pagination from '@/Components/Pagination.vue';
-
+import { router } from '@inertiajs/vue3';
+import { useToast } from 'vue-toastification';
+const toast = useToast();
 const { props } = usePage();
 const avaluo = ref(props.avaluo);
+
+const editable = ref({
+    auxiliar: avaluo.value.auxiliar,
+    fecha_entrega_avaluo: avaluo.value.fecha_entrega_avaluo,
+    valor_informe: avaluo.value.valor_informe,
+});
+
+const editing = ref(false); // para activar todos a la vez
+const editingField = ref(null); // Nombre del campo que está siendo editado
+
+
 const informacionVisitas = ref(props.informacionVisitas);
 
 const tabs = ['Etapa 1', 'Etapa 2', 'Etapa 3'];
@@ -165,6 +231,22 @@ onMounted(() => {
 //const referer = ref(document.referrer.includes('clientes') ? document.referrer : route('avaluos.index'));
 const referer = ref(document.referrer.includes('clientes') || document.referrer.includes('informacion-visita') || document.referrer.includes('plantillas') || document.referrer.includes('visitadores') ? document.referrer : route('avaluos.index'));
 console.log('Referer:', referer.value);
+
+function guardarCampo(campo) {
+    router.put(route('avaluos.updateCampo', avaluo.value.id), {
+        [campo]: editable.value[campo],
+    }, {
+        preserveScroll: true,
+        onSuccess: () => {
+            avaluo.value[campo] = editable.value[campo];
+            editingField.value = null;
+            toast.success(`Campo ${campo} guardado exitosamente.`);
+        },
+        onError: (err) => {
+            console.error('Error al guardar campo', campo, ':', err);
+        }
+    });
+}
 
 </script>
 
