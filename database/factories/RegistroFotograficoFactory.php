@@ -25,9 +25,7 @@ class RegistroFotograficoFactory extends Factory
             "title" => $this->faker->name,
             "tipo" => $this->faker->mimeType,
             "orden" => $this->faker->numberBetween(1, 10),
-            "pagina" => $this->faker->numberBetween(1, 10),
-            "posicion" => $this->faker->numberBetween(1, 10),
-            "user_id" =>  \App\Models\User::inRandomOrder()->first()->id ?? \App\Models\User::factory()->create()->id,
+            //"user_id" =>  \App\Models\User::inRandomOrder()->first()->id ?? \App\Models\User::factory()->create()->id,
         ];
     }
 }

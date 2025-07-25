@@ -29,12 +29,21 @@ class Avaluos extends Model
         'valor_informe',
     ];
 
-    public function cliente(){
+    public function cliente()
+    {
         return $this->belongsTo(Clientes::class);
     }
 
-    public function informacionVisitas(){
+    public function informacionVisitas()
+    {
         return $this->hasMany(InformacionVisita::class, 'avaluo_id');
+    }
+
+    public function contactos()
+    {
+        return $this->belongsToMany(Contacto::class, 'avaluo_contacto', 'avaluo_id', 'contacto_id')
+            ->withPivot(['fecha_asignacion', 'observaciones'])
+            ->withTimestamps();
     }
 
 }
