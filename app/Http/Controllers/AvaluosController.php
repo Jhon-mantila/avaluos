@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use App\Models\Avaluos;
 use App\Models\Clientes;
+use App\Models\Plantilla;
 use Inertia\Inertia;
 use App\Services\DropdownService;
 use Illuminate\Http\Request;
@@ -44,16 +45,22 @@ class AvaluosController extends Controller
         ]);
     }
 
-        public function show($id)
+    public function show($id)
     {
-        $avaluo = Avaluos::with(['cliente', 'informacionVisitas.visitador.user'])->findOrFail($id);
+        $avaluo = Avaluos::with(['cliente', 'informacionVisitas.visitador.user', 'informacionVisitas.plantillas'])->findOrFail($id);
 
         $informacionVisitas = $avaluo->informacionVisitas()->with('visitador.user')->paginate(5);
+
+        //$informacionPlantillas = $avaluo->informacionVisitas()->pluck('plantillas')->flatten();
+        $informacionPlantillas = Plantilla::whereHas('informacionVisita', function ($query) use ($id) {
+            $query->where('avaluo_id', $id);
+        })->with('informacionVisita')->paginate(5);  
         
-        //dd($informacionVisitas);
+        //dd($informacionPlantillas);
         return Inertia::render('Avaluos/Show', [
             'avaluo' => $avaluo,
             'informacionVisitas' => $informacionVisitas,
+            'informacionPlantillas' => $informacionPlantillas,
         ]);
     }
 

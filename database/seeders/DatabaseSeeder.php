@@ -25,7 +25,7 @@ class DatabaseSeeder extends Seeder
 
 
         //$user = \App\Models\User::factory()->create();
-        $user = User::factory()->create([
+        /*$user = User::factory()->create([
             'name' => 'Jhon Mantilla',
             'email' => 'jhon.e.mantilla@gmail.com',
         ]);
@@ -55,7 +55,7 @@ class DatabaseSeeder extends Seeder
         $contactos = \App\Models\Contacto::factory()->count(3)->create();
         \App\Models\AvaluoContacto::factory()->count(3)->create([
             'avaluo_id' => $avaluo->id,
-        ]);
+        ]);*/
     
     }
 }

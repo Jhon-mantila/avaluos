@@ -156,7 +156,7 @@
                                 Regresar
                             </a>
                         </div>
-
+                        <!-- Visitas -->
                         <div class="mt-8">
                             <h3 class="text-lg font-semibold leading-tight text-gray-800">Visitas</h3>
                             <div v-if="informacionVisitas.data.length">
@@ -186,6 +186,32 @@
                             </div>
                             <div v-else>
                                 <p>No hay visitas registradas para este avalúo.</p>
+                            </div>
+                        </div>
+                        <!-- Plantillas -->
+                        <div class="mt-8">
+                            <h3 class="text-lg font-semibold leading-tight text-gray-800">Plantillas</h3>
+                            <div v-if="informacionPlantillas.data.length">
+                                <table class="min-w-full divide-y divide-gray-200">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">NOMBRE PLANTILLA</th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">FECHA CREACIÓN</th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">FECHA MODIFICACIÓN</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="bg-white divide-y divide-gray-200">
+                                        <tr v-for="plantilla in informacionPlantillas.data" :key="plantilla.id">
+                                            <td class="px-6 py-4 whitespace-nowrap"><a :href="route('plantillas.show', plantilla.id)" class="text-blue-500 hover:text-blue-700">{{ plantilla.nombre_plantilla }}</a></td>
+                                            <td class="px-6 py-4 whitespace-nowrap">{{ plantilla.created_at }}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap">{{ plantilla.updated_at }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <Pagination :links="informacionVisitas.links" class="mt-4" />
+                            </div>
+                            <div v-else>
+                                <p>No hay plantillas registradas para este avalúo.</p>
                             </div>
                         </div>
 
@@ -218,6 +244,7 @@ const editingField = ref(null); // Nombre del campo que está siendo editado
 
 
 const informacionVisitas = ref(props.informacionVisitas);
+const informacionPlantillas = ref(props.informacionPlantillas);
 
 const tabs = ['Etapa 1', 'Etapa 2', 'Etapa 3'];
 const activeTab = ref(0);
@@ -226,6 +253,7 @@ const activeTab = ref(0);
 onMounted(() => {
     console.log('Avaluos:', props.avaluo);
     console.log('informacionVisitas:', props.informacionVisitas);
+    console.log('informacionPlantillas:', props.informacionPlantillas);
 });
 // Determinar la URL de referencia
 //const referer = ref(document.referrer.includes('clientes') ? document.referrer : route('avaluos.index'));

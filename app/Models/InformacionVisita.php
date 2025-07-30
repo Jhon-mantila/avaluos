@@ -32,7 +32,7 @@ class InformacionVisita extends Model
         return $this->belongsTo(Avaluos::class, 'avaluo_id');
     }
     
-    public function plantilla(){
-        return $this->hasMany(Plantilla::class, 'plantilla_id');
+    public function plantillas(){
+        return $this->hasMany(Plantilla::class, 'informacion_visita_id');
     }
 }
