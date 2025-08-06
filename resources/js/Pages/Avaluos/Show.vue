@@ -51,16 +51,16 @@
                                     <p class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">{{ avaluo.tipo_avaluo }}</p>
                                 </div>
                                 <div class="mb-4">
-                                    <label class="block text-sm font-medium text-gray-700">Dirección</label>
-                                    <p class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">{{ avaluo.direccion }}</p>
+                                    <label class="block text-sm font-medium text-gray-700">Departamento</label>
+                                    <p class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">{{ avaluo.departamento?.nombre || '' }}</p>
                                 </div>
                                 <div class="mb-4">
                                     <label class="block text-sm font-medium text-gray-700">Ciudad</label>
-                                    <p class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">{{ avaluo.ciudad }}</p>
+                                    <p class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">{{ avaluo.municipio?.nombre || '' }}</p>
                                 </div>
                                 <div class="mb-4">
-                                    <label class="block text-sm font-medium text-gray-700">Departamento</label>
-                                    <p class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">{{ avaluo.departamento }}</p>
+                                    <label class="block text-sm font-medium text-gray-700">Dirección</label>
+                                    <p class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">{{ avaluo.direccion }}</p>
                                 </div>
                                 <div class="mb-4">
                                     <label class="block text-sm font-medium text-gray-700">Observaciones</label>

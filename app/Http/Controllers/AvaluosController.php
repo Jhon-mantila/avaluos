@@ -47,8 +47,13 @@ class AvaluosController extends Controller
 
     public function show($id)
     {
-        $avaluo = Avaluos::with(['cliente', 'informacionVisitas.visitador.user', 'informacionVisitas.plantillas'])->findOrFail($id);
-
+        $avaluo = Avaluos::with([
+            'cliente', 
+            'departamento', 
+            'municipio',
+            'informacionVisitas.visitador.user', 
+            'informacionVisitas.plantillas'])->findOrFail($id);
+            //dd($avaluo);
         $informacionVisitas = $avaluo->informacionVisitas()->with('visitador.user')->paginate(5);
 
         //$informacionPlantillas = $avaluo->informacionVisitas()->pluck('plantillas')->flatten();
@@ -85,8 +90,8 @@ class AvaluosController extends Controller
             'numero_avaluo' => 'required|string|max:255|unique:avaluos,numero_avaluo',
             'tipo_avaluo' => 'required|string|max:255',
             'direccion' => 'required|string|max:255',
-            'ciudad' => 'nullable|string|max:255',
-            'departamento' => 'nullable|string|max:255',
+            'municipio_id' => 'nullable|string|max:255',
+            'departamento_id' => 'nullable|string|max:255',
             'uso' => 'nullable|string|max:255',
             'valor_comercial_estimado' => 'nullable|numeric',
             'observaciones' => 'nullable|string',
@@ -134,8 +139,8 @@ class AvaluosController extends Controller
             'numero_avaluo' => 'required|string|max:255|unique:avaluos,numero_avaluo,' . $id,
             'tipo_avaluo' => 'required|string|max:255',
             'direccion' => 'required|string|max:255',
-            'ciudad' => 'nullable|string|max:255',
-            'departamento' => 'nullable|string|max:255',
+            'municipio_id' => 'nullable|string|max:255',
+            'departamento_id' => 'nullable|string|max:255',
             'uso' => 'nullable|string|max:255',
             'valor_comercial_estimado' => 'nullable|numeric',
             'observaciones' => 'nullable|string',

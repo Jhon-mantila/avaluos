@@ -67,20 +67,36 @@
                                         <span v-if="errors.tipo_avaluo" class="text-red-500 text-sm">{{ errors.tipo_avaluo }}</span>
                                     </div>
                                     <div class="mb-4">
+                                        <label for="departamento_id" class="block text-sm font-medium text-gray-700">Departamento</label>
+                                        <v-select
+                                            v-model="selectedDepartamento"
+                                            :options="departamentos"
+                                            label="nombre"
+                                            placeholder="Seleccionar departamento..."
+                                            @update:modelValue="updateDepartamento"
+                                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                                        />
+                                        <span v-if="errors.departamento_id" class="text-red-500 text-sm">{{ errors.departamento_id }}</span>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label for="municipio_id" class="block text-sm font-medium text-gray-700">Ciudad</label>
+                                        <v-select
+                                            v-model="selectedCiudad"
+                                            :options="ciudades"
+                                            label="nombre"
+                                            placeholder="Seleccionar ciudad..."
+                                            @update:modelValue="updateCiudad"
+                                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                                        />
+                                        <span v-if="errors.municipio_id" class="text-red-500 text-sm">{{ errors.municipio_id }}</span>
+                                    </div>
+
+                                    <div class="mb-4">
                                         <label for="direccion" class="block text-sm font-medium text-gray-700">Dirección</label>
                                         <input type="text" v-model="form.direccion" id="direccion" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" >
                                         <span v-if="errors.direccion" class="text-red-500 text-sm">{{ errors.direccion }}</span>
                                     </div>
-                                    <div class="mb-4">
-                                        <label for="ciudad" class="block text-sm font-medium text-gray-700">Ciudad</label>
-                                        <input type="text" v-model="form.ciudad" id="ciudad" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" >
-                                        <span v-if="errors.ciudad" class="text-red-500 text-sm">{{ errors.ciudad }}</span>
-                                    </div>
-                                    <div class="mb-4">
-                                        <label for="departamento" class="block text-sm font-medium text-gray-700">Departamento</label>
-                                        <input type="text" v-model="form.departamento" id="departamento" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" >
-                                        <span v-if="errors.departamento" class="text-red-500 text-sm">{{ errors.departamento }}</span>
-                                    </div>
+                                    
                                     <div class="mb-4">
                                         <label for="observaciones" class="block text-sm font-medium text-gray-700">Observaciones</label>
                                         <textarea v-model="form.observaciones" id="observaciones" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" ></textarea>
@@ -166,12 +182,19 @@ const tiposAvaluo = ref(Object.keys(props.tiposAvaluo).map(key => ({ label: prop
 const tiposUso = ref(Object.keys(props.tiposUso).map(key => ({ label: props.tiposUso[key], value: key })));
 console.log('Estados:', props.estados);
 
+const departamentos = ref([]);
+const ciudades = ref([]);
+
+const selectedDepartamento = ref(null);
+const selectedCiudad = ref(null);
+
+
 const form = useForm({
     numero_avaluo: '',
     tipo_avaluo: '',
     direccion: '',
-    ciudad: '',
-    departamento: '',
+    municipio_id: '',
+    departamento_id: '',
     uso: '',
     valor_comercial_estimado: '',
     observaciones: '',
@@ -190,8 +213,8 @@ const fieldTabMap = {
   estado: 0,
   tipo_avaluo: 0,
   direccion: 0,
-  ciudad: 0,
-  departamento: 0,
+  municipio_id: 0,
+  departamento_id: 0,
   observaciones: 0,
   uso: 1,
   auxiliar: 1,
@@ -205,6 +228,10 @@ const selectedCliente = ref(null);
 //const tiposAvaluo = ref(props.tiposAvaluo);
 
 onMounted(() => {
+    axios.get('/api/departamentos').then(response => {
+        departamentos.value = response.data;
+    });
+
     // Fetch clients from the server
     axios.get('/api/clientes').then(response => {
         //console.log('Clientes:', response.data);
@@ -219,6 +246,26 @@ onMounted(() => {
     });
 });
 
+// Cuando cambia el departamento, obtener sus municipios (ciudades)
+const updateDepartamento = (departamento) => {
+    form.departamento_id = departamento?.id || '';
+    selectedCiudad.value = null;
+    form.municipio_id = '';
+    console.log('Departamento seleccionado:', departamento);
+    if (departamento && departamento.id) {
+        axios.get(`/api/municipios/${departamento.id}`)
+            .then(response => {
+                console.log('Ciudades recibidas:', response.data);
+                ciudades.value = response.data;
+            });
+    } else {
+        ciudades.value = [];
+    }
+};
+
+const updateCiudad = (ciudad) => {
+    form.municipio_id = ciudad?.id || '';
+};
 
 watch(selectedCliente, (newValue, oldValue) => {
     console.log('selectedCliente cambió de:', oldValue, 'a:', newValue);
@@ -245,6 +292,8 @@ const submit = () => {
     form.post(route('avaluos.store'), {
         onSuccess: () => {
             form.reset();
+                        selectedDepartamento.value = null;
+            selectedCiudad.value = null;
             toast.success('Avalúo creado correctamente.');
            
         },

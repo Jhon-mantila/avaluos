@@ -65,20 +65,37 @@
                                         />
                                         <span v-if="errors.tipo_avaluo" class="text-red-500 text-sm">{{ errors.tipo_avaluo }}</span>
                                     </div>
+
+                                    <!-- Departamento -->
+                                    <div class="mb-4">
+                                        <label for="departamento_id" class="block text-sm font-medium text-gray-700">Departamento</label>
+                                        <v-select
+                                            v-model="selectedDepartamento"
+                                            :options="departamentos"
+                                            label="nombre"
+                                            placeholder="Seleccionar departamento..."
+                                            @update:modelValue="onDepartamentoChange"
+                                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                                        />
+                                        <span v-if="errors.departamento_id" class="text-red-500 text-sm">{{ errors.departamento_id }}</span>
+                                    </div>
+                                    <!-- Ciudad / Municipio -->
+                                    <div class="mb-4">
+                                        <label for="municipio_id" class="block text-sm font-medium text-gray-700">Ciudad</label>
+                                        <v-select
+                                            v-model="selectedMunicipio"
+                                            :options="municipios"
+                                            label="nombre"
+                                            placeholder="Seleccionar ciudad..."
+                                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                                        />
+                                        <span v-if="errors.municipio_id" class="text-red-500 text-sm">{{ errors.municipio_id }}</span>
+                                    </div>
+
                                     <div class="mb-4">
                                         <label for="direccion" class="block text-sm font-medium text-gray-700">Dirección</label>
                                         <input type="text" v-model="form.direccion" id="direccion" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
                                         <span v-if="errors.direccion" class="text-red-500 text-sm">{{ errors.direccion }}</span>
-                                    </div>
-                                    <div class="mb-4">
-                                        <label for="ciudad" class="block text-sm font-medium text-gray-700">Ciudad</label>
-                                        <input type="text" v-model="form.ciudad" id="ciudad" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
-                                        <span v-if="errors.ciudad" class="text-red-500 text-sm">{{ errors.ciudad }}</span>
-                                    </div>
-                                    <div class="mb-4">
-                                        <label for="departamento" class="block text-sm font-medium text-gray-700">Departamento</label>
-                                        <input type="text" v-model="form.departamento" id="departamento" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
-                                        <span v-if="errors.departamento" class="text-red-500 text-sm">{{ errors.departamento }}</span>
                                     </div>
                                     <div class="mb-4">
                                         <label for="observaciones" class="block text-sm font-medium text-gray-700">Observaciones</label>
@@ -152,17 +169,25 @@ import AppLayout from '@/Layouts/AppLayout.vue';
 import vSelect from 'vue-select';
 import 'vue-select/dist/vue-select.css';
 
+
+
 const toast = useToast();
 const { props } = usePage();
 const estados = ref(Object.keys(props.estados).map(key => ({ label: props.estados[key], value: key })));
 const tiposAvaluo = ref(Object.keys(props.tiposAvaluo).map(key => ({ label: props.tiposAvaluo[key], value: key })));
 const tiposUso = ref(Object.keys(props.tiposUso).map(key => ({ label: props.tiposUso[key], value: key })));
+
+const departamentos = ref([]);
+const municipios = ref([]);
+const selectedDepartamento = ref(null);
+const selectedMunicipio = ref(null);
+
 const form = useForm({
     numero_avaluo: props.avaluo.numero_avaluo || '',
     tipo_avaluo: props.avaluo.tipo_avaluo || '',
     direccion: props.avaluo.direccion || '',
-    ciudad: props.avaluo.ciudad || '',
-    departamento: props.avaluo.departamento || '',
+    municipio_id: props.avaluo.municipio_id || '',
+    departamento_id: props.avaluo.departamento_id || '',
     uso: props.avaluo.uso || '',
     valor_comercial_estimado: props.avaluo.valor_comercial_estimado || '',
     observaciones: props.avaluo.observaciones || '',
@@ -199,6 +224,22 @@ const fieldTabMap = {
 };
 
 onMounted(() => {
+    // Departamentos
+    axios.get('/api/departamentos').then(response => {
+        departamentos.value = response.data;
+        selectedDepartamento.value = departamentos.value.find(dep => dep.id === props.avaluo.departamento_id);
+        console.log('Departamentos recibidos:', departamentos.value);
+        console.log('Departamento seleccionado:', selectedDepartamento.value);
+        if (selectedDepartamento.value) {
+            // Cargar municipios del departamento
+            console.log('Cargando municipios para el departamento:', selectedDepartamento.value.id);
+            axios.get(`/api/municipios/${selectedDepartamento.value.id}`).then(response => {
+                console.log('Municipios recibidos:', response.data);
+                municipios.value = response.data;
+                selectedMunicipio.value = municipios.value.find(m => m.id === props.avaluo.municipio_id);
+            });
+        }
+    });
     // Fetch clients from the server
     axios.get('/api/clientes').then(response => {
         console.log('Clientes recibidos:', response.data);
@@ -216,6 +257,16 @@ onMounted(() => {
     // Set the selected client
     //selectedCliente.value = clientes.value.find(cliente => cliente.id === form.cliente_id);
 });
+
+const onDepartamentoChange = (departamento) => {
+    selectedDepartamento.value = departamento;
+    form.departamento_id = departamento.id;
+
+    axios.get(`/api/municipios/${departamento.id}`).then(response => {
+        municipios.value = response.data;
+        selectedMunicipio.value = null; // Limpiar municipio anterior
+    });
+};
 
 watch(selectedCliente, (newValue, oldValue) => {
     console.log('selectedCliente cambió de:', oldValue, 'a:', newValue);
@@ -235,6 +286,14 @@ watch(selectedTipoAvaluo, (newValue, oldValue) => {
 watch(selectedUso, (newValue, oldValue) => {
     console.log('selectedUso cambió de:', oldValue, 'a:', newValue);
     form.uso = newValue ? newValue.value : '';
+});
+watch(municipios, (newVal) => {
+    if (!selectedMunicipio.value && newVal.length > 0) {
+        selectedMunicipio.value = newVal.find(m => m.id === props.avaluo.municipio_id);
+    }
+});
+watch(selectedMunicipio, (newVal) => {
+    form.municipio_id = newVal ? newVal.id : '';
 });
 
 const updateClienteId = (cliente) => {

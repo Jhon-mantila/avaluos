@@ -18,8 +18,8 @@ class Avaluos extends Model
         'estado',
         'tipo_avaluo',
         'direccion',
-        'ciudad',
-        'departamento',
+        'municipio_id', // antes 'ciudad'
+        'departamento_id', // antes 'departamento'
         'uso',
         'valor_comercial_estimado',
         'observaciones',
@@ -44,6 +44,15 @@ class Avaluos extends Model
         return $this->belongsToMany(Contacto::class, 'avaluo_contacto', 'avaluo_id', 'contacto_id')
             ->withPivot(['fecha_asignacion', 'observaciones'])
             ->withTimestamps();
+    }
+    public function departamento()
+    {
+        return $this->belongsTo(Departamento::class , 'departamento_id');
+    }
+
+    public function municipio()
+    {
+        return $this->belongsTo(Municipio::class , 'municipio_id');
     }
 
 }
