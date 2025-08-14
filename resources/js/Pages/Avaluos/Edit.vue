@@ -11,7 +11,7 @@
                     <div class="p-6 text-gray-900">
 
                         <!-- Tabs -->
-                        <div class="flex border-b border-gray-200 mb-6">
+                        <div class="flex border-b border-gray-200 mb-6 px-4 py-2 bg-gray-100 rounded-t-lg">
                             <button
                                 v-for="(tab, index) in tabs"
                                 :key="index"

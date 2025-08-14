@@ -45,6 +45,13 @@ class DropdownService
         ];
     }
 
-
+    public function list_genero()
+    {
+        return [
+            'masculino' => 'Masculino',
+            'femenino' => 'Femenino',
+            'otro' => 'Otro',
+        ];
+    }
     // Agrega más métodos para otras listas desplegables
 }

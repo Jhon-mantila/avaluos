@@ -29,8 +29,8 @@
                             />
 
                             <!-- Tabla de avaluos -->
-                            <table class="w-full mt-4">
-                                <thead>
+                            <table class="w-full mt-4 bg-white shadow-md rounded-lg">
+                                <thead class="bg-gray-100 text-gray-600 uppercase text-sm leading-normal">
                                     <tr>
                                         <th class="px-4 py-2">Numero Avalúo</th>
                                         <th class="px-4 py-2">Cliente</th>

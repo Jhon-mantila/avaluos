@@ -11,14 +11,22 @@
                     <div class="p-6 text-gray-900">
 
                         <div class="flex items-center justify-between mb-4">
+                             <!-- Título a la izquierda -->
                             <h3 class="text-lg font-semibold leading-tight text-gray-800">Información del Avalúo</h3>
-                            <a :href="route('avaluos.edit', avaluo.id)" class="inline-flex items-center px-4 py-2 bg-blue-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 active:bg-blue-900 focus:outline-none focus:border-blue-900 focus:ring ring-blue-300 disabled:opacity-25 transition ease-in-out duration-150">
-                                Editar
-                            </a>
+                            
+                            <!-- Botones a la derecha -->
+                            <div class="flex gap-2">
+                                <a :href="route('avaluos.edit', avaluo.id)" class="inline-flex items-center px-4 py-2 bg-blue-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 active:bg-blue-900 focus:outline-none focus:border-blue-900 focus:ring ring-blue-300 disabled:opacity-25 transition ease-in-out duration-150">
+                                    Editar
+                                </a>
+                                <a :href="referer" class="inline-flex items-center px-4 py-2 bg-gray-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150">
+                                    Regresar
+                                </a>
+                            </div>
                         </div>
 
                         <!-- Tabs -->
-                        <div class="flex border-b border-gray-200 mb-6">
+                        <div class="flex border-b border-gray-200 mb-6 px-4 py-2 bg-gray-100 rounded-t-lg">
                             <button
                                 v-for="(tab, index) in tabs"
                                 :key="index"
@@ -151,14 +159,49 @@
                                     <p class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">{{ avaluo.valor_comercial_estimado }}</p>
                              </div>
                         </div>
-                        <div class="flex items-center justify-between mt-4">
-                            <a :href="referer" class="inline-flex items-center px-4 py-2 bg-gray-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150">
-                                Regresar
-                            </a>
+
+                        <!-- Contactos -->
+                        <div class="mt-8">
+                            <div class="flex items-center justify-between px-4 py-2 bg-gray-100 rounded-t-lg"> 
+                                <h3 class="text-lg font-semibold leading-tight text-gray-800">Contactos</h3>
+                                <ContactosDrawer 
+                                :avaluo-id="avaluo.id"  
+                                @contacto-agregado="agregarContacto" 
+                               :generos="generos" 
+                                />
+                            </div>
+                            <div v-if="contactos.data.length">
+                                <table class="min-w-full divide-y divide-gray-200">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">NOMBRE</th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">CELUAR</th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">GÉNERO</th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">FECHA ASIGNACIÓN</th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">OBSERVACIÓN</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="bg-white divide-y divide-gray-200">
+                                        <tr v-for="contacto in contactos.data" :key="contacto.id">
+                                            <td class="px-6 py-4 whitespace-nowrap"><a class="text-blue-500 hover:text-blue-700">{{ contacto.nombre }}</a></td>
+                                            <td class="px-6 py-4 whitespace-nowrap">{{ contacto.celular }}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap">{{ contacto.genero }}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap">{{ contacto.pivot?.fecha_asignacion ?? '' }}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap">{{ contacto.pivot?.observaciones ?? '' }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <Pagination :links="contactos.links" class="mt-4" />
+                            </div>
+                            <div v-else>
+                                <p>No hay contactos registrados registradas para este avalúo.</p>
+                            </div>
                         </div>
                         <!-- Visitas -->
                         <div class="mt-8">
-                            <h3 class="text-lg font-semibold leading-tight text-gray-800">Visitas</h3>
+                            <div class="px-4 py-2 bg-gray-100 rounded-t-lg">
+                                <h3 class="text-lg font-semibold leading-tight text-gray-800">Visitas</h3>
+                            </div>
                             <div v-if="informacionVisitas.data.length">
                                 <table class="min-w-full divide-y divide-gray-200">
                                     <thead class="bg-gray-50">
@@ -190,7 +233,9 @@
                         </div>
                         <!-- Plantillas -->
                         <div class="mt-8">
-                            <h3 class="text-lg font-semibold leading-tight text-gray-800">Plantillas</h3>
+                            <div class="px-4 py-2 bg-gray-100 rounded-t-lg">
+                                <h3 class="text-lg font-semibold leading-tight text-gray-800">Plantillas</h3>
+                            </div>
                             <div v-if="informacionPlantillas.data.length">
                                 <table class="min-w-full divide-y divide-gray-200">
                                     <thead class="bg-gray-50">
@@ -214,7 +259,7 @@
                                 <p>No hay plantillas registradas para este avalúo.</p>
                             </div>
                         </div>
-
+   
                     </div>
                 </div>
             </div>
@@ -229,10 +274,12 @@ import AppLayout from '@/Layouts/AppLayout.vue';
 import Pagination from '@/Components/Pagination.vue';
 import { router } from '@inertiajs/vue3';
 import { useToast } from 'vue-toastification';
+import ContactosDrawer from '@/Components/Avaluos/ContactosDrawer.vue'
+
 const toast = useToast();
 const { props } = usePage();
 const avaluo = ref(props.avaluo);
-
+const generos = ref(props.generos); // Lista de géneros para el dropdown
 const editable = ref({
     auxiliar: avaluo.value.auxiliar ?? '',
     fecha_entrega_avaluo: avaluo.value.fecha_entrega_avaluo ?? '',
@@ -245,13 +292,20 @@ const editingField = ref(null); // Nombre del campo que está siendo editado
 
 const informacionVisitas = ref(props.informacionVisitas);
 const informacionPlantillas = ref(props.informacionPlantillas);
+const contactos = ref(props.contactos);
 
 const tabs = ['Etapa 1', 'Etapa 2', 'Etapa 3'];
 const activeTab = ref(0);
 
+function agregarContacto(nuevoContacto) {
+    console.log('Nuevo contacto agregado:', nuevoContacto);
+    contactos.value.data.push(nuevoContacto) // ⚠️ es contactos.value.data, no contactos.value
+}
 // Imprimir la data de cliente y avaluos en la consola
 onMounted(() => {
+    console.log('generos:', props.generos);
     console.log('Avaluos:', props.avaluo);
+    console.log('Contactos:', props.contactos);
     console.log('informacionVisitas:', props.informacionVisitas);
     console.log('informacionPlantillas:', props.informacionPlantillas);
 });

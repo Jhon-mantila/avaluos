@@ -11,6 +11,8 @@ use App\Http\Controllers\PlantillaController;
 use App\Http\Controllers\PDFController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ExcelExportController;
+use App\Http\Controllers\AvaluoContactoController;
+
 Route::get('/', function () {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
@@ -59,6 +61,9 @@ Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
     Route::resource('plantillas', PlantillaController::class);
     Route::get('/plantillas/{id}/pdf', [PDFController::class, 'generarPDF']);
     Route::get('/export-excel/{id}', [ExcelExportController::class, 'generarExcel']);
+    // routes/web.php
+    Route::post('/avaluos/{avaluo}/contactos', [AvaluoContactoController::class, 'store'])
+    ->name('avaluos.contactos.store');
 });
 
 // Rutas para visitadores

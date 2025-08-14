@@ -52,8 +52,16 @@ class AvaluosController extends Controller
             'departamento', 
             'municipio',
             'informacionVisitas.visitador.user', 
-            'informacionVisitas.plantillas'])->findOrFail($id);
-            //dd($avaluo);
+            'informacionVisitas.plantillas',
+            ])->findOrFail($id);
+        //dd($avaluo);
+        
+        // Paginamos los contactos con sus pivots
+        $contactos = $avaluo->contactos()
+        ->withPivot(['fecha_asignacion', 'observaciones'])
+        ->orderBy('contactos.created_at', 'desc') // o 'asc'
+        ->paginate(5);
+
         $informacionVisitas = $avaluo->informacionVisitas()->with('visitador.user')->paginate(5);
 
         //$informacionPlantillas = $avaluo->informacionVisitas()->pluck('plantillas')->flatten();
@@ -64,8 +72,10 @@ class AvaluosController extends Controller
         //dd($informacionPlantillas);
         return Inertia::render('Avaluos/Show', [
             'avaluo' => $avaluo,
+            'contactos' => $contactos, // <--- Ahora sí enviamos contactos
             'informacionVisitas' => $informacionVisitas,
             'informacionPlantillas' => $informacionPlantillas,
+            'generos' => $this->dropdownService->list_genero()
         ]);
     }
 
