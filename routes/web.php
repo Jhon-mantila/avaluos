@@ -4,6 +4,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\VisitadoresController;
+use App\Http\Controllers\ContactoController;
 use App\Http\Controllers\ClientesController;
 use App\Http\Controllers\AvaluosController;
 use App\Http\Controllers\InformacionVisitaController;
@@ -54,6 +55,7 @@ Route::get('/plantillas/{id}/pdf', [PDFController::class, 'generarPDF']);*/
 Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
     Route::resource('users', UserController::class);
     Route::resource('visitadores', VisitadoresController::class);
+    Route::resource('contactos', ContactoController::class);
     Route::resource('clientes', ClientesController::class);
     Route::resource('avaluos', AvaluosController::class);
     Route::put('/avaluos/{id}/campo', [AvaluosController::class, 'updateCampo'])->name('avaluos.updateCampo');
