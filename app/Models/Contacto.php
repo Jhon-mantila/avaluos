@@ -21,7 +21,7 @@ class Contacto extends Model
 
     public function avaluos()
     {
-        return $this->belongsToMany(Avaluo::class, 'avaluo_contacto', 'contacto_id', 'avaluo_id')
+        return $this->belongsToMany(Avaluos::class, 'avaluo_contacto', 'contacto_id', 'avaluo_id')
             ->withPivot(['fecha_asignacion', 'observaciones'])
             ->withTimestamps();
     }

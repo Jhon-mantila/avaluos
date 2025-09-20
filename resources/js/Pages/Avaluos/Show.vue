@@ -183,7 +183,7 @@
                                     </thead>
                                     <tbody class="bg-white divide-y divide-gray-200">
                                         <tr v-for="contacto in contactos.data" :key="contacto.id">
-                                            <td class="px-6 py-4 whitespace-nowrap"><a class="text-blue-500 hover:text-blue-700">{{ contacto.nombre }}</a></td>
+                                            <td class="px-6 py-4 whitespace-nowrap"><a :href="route('contactos.show', contacto.id)" class="text-blue-500 hover:text-blue-700">{{ contacto.nombre }}</a></td>
                                             <td class="px-6 py-4 whitespace-nowrap">{{ contacto.celular }}</td>
                                             <td class="px-6 py-4 whitespace-nowrap">{{ contacto.genero }}</td>
                                             <td class="px-6 py-4 whitespace-nowrap">{{ contacto.pivot?.fecha_asignacion ?? '' }}</td>
@@ -194,7 +194,7 @@
                                 <Pagination :links="contactos.links" class="mt-4" />
                             </div>
                             <div v-else>
-                                <p>No hay contactos registrados registradas para este avalúo.</p>
+                                <p>No hay contactos registrados para este avalúo.</p>
                             </div>
                         </div>
                         <!-- Visitas -->

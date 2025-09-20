@@ -34,4 +34,22 @@ class ContactoController extends Controller
             'filters' => $request->only(['search']),
         ]);
     }
+
+    public function show(string $id)
+    {
+        //
+        $contacto = Contacto::findOrFail($id);
+
+
+        // Paginamos los contactos con sus pivots
+        $avaluos = $contacto->avaluos()
+        ->withPivot(['fecha_asignacion', 'observaciones'])
+        ->orderBy('avaluos.created_at', 'desc') // o 'asc'
+        ->paginate(5);
+        //dd($avaluos);
+        return Inertia::render('Contactos/Show', [
+            'contacto' => $contacto,
+            'avaluos' => $avaluos,
+        ]);
+    }
 }
