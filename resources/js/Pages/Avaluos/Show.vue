@@ -163,12 +163,17 @@
                         <!-- Contactos -->
                         <div class="mt-8">
                             <div class="flex items-center justify-between px-4 py-2 bg-gray-100 rounded-t-lg"> 
-                                <h3 class="text-lg font-semibold leading-tight text-gray-800">Contactos</h3>
-                                <ContactosDrawer 
-                                :avaluo-id="avaluo.id"  
-                                @contacto-agregado="agregarContacto" 
-                               :generos="generos" 
-                                />
+                               
+                                    <h3 class="text-lg font-semibold leading-tight text-gray-800">Contactos</h3>
+                               
+                               
+                                    <ContactosDrawer 
+                                    :avaluo-id="avaluo.id"  
+                                    @contacto-agregado="agregarContacto" 
+                                    :generos="generos" 
+                                    :contactos-disponibles="props.contactosDisponibles"
+                                    />
+                                
                             </div>
                             <div v-if="contactos.data.length">
                                 <table class="min-w-full divide-y divide-gray-200">
@@ -183,11 +188,11 @@
                                     </thead>
                                     <tbody class="bg-white divide-y divide-gray-200">
                                         <tr v-for="contacto in contactos.data" :key="contacto.id">
-                                            <td class="px-6 py-4 whitespace-nowrap"><a :href="route('contactos.show', contacto.id)" class="text-blue-500 hover:text-blue-700">{{ contacto.nombre }}</a></td>
-                                            <td class="px-6 py-4 whitespace-nowrap">{{ contacto.celular }}</td>
-                                            <td class="px-6 py-4 whitespace-nowrap">{{ contacto.genero }}</td>
-                                            <td class="px-6 py-4 whitespace-nowrap">{{ contacto.pivot?.fecha_asignacion ?? '' }}</td>
-                                            <td class="px-6 py-4 whitespace-nowrap">{{ contacto.pivot?.observaciones ?? '' }}</td>
+                                            <td class="px-6 py-1 whitespace-nowrap"><a :href="route('contactos.show', contacto.id)" class="text-blue-500 hover:text-blue-700">{{ contacto.nombre }}</a></td>
+                                            <td class="px-6 py-1 whitespace-nowrap">{{ contacto.celular }}</td>
+                                            <td class="px-6 py-1 whitespace-nowrap">{{ contacto.genero }}</td>
+                                            <td class="px-6 py-1 whitespace-nowrap">{{ contacto.pivot?.fecha_asignacion ?? '' }}</td>
+                                            <td class="px-6 py-1 whitespace-nowrap">{{ contacto.pivot?.observaciones ?? '' }}</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -216,12 +221,12 @@
                                     </thead>
                                     <tbody class="bg-white divide-y divide-gray-200">
                                         <tr v-for="visita in informacionVisitas.data" :key="visita.id">
-                                            <td class="px-6 py-4 whitespace-nowrap"><a :href="route('informacion-visita.show', visita.id)" class="text-blue-500 hover:text-blue-700">{{ visita.incremental_id }}</a></td>
-                                            <td class="px-6 py-4 whitespace-nowrap"><a :href="route('visitadores.show', visita.visitador_id)" class="text-blue-500 hover:text-blue-700">{{ visita.visitador?.user?.name || 'N/A' }}</a></td>
-                                            <td class="px-6 py-4 whitespace-nowrap">{{ visita.celular }}</td>
-                                            <td class="px-6 py-4 whitespace-nowrap">{{ visita.ciudad }}</td>
-                                            <td class="px-6 py-4 whitespace-nowrap">{{ visita.fecha_visita }}</td>
-                                            <td class="px-6 py-4 whitespace-nowrap">{{ visita.observaciones }}</td>
+                                            <td class="px-6 py-1 whitespace-nowrap"><a :href="route('informacion-visita.show', visita.id)" class="text-blue-500 hover:text-blue-700">{{ visita.incremental_id }}</a></td>
+                                            <td class="px-6 py-1 whitespace-nowrap"><a :href="route('visitadores.show', visita.visitador_id)" class="text-blue-500 hover:text-blue-700">{{ visita.visitador?.user?.name || 'N/A' }}</a></td>
+                                            <td class="px-6 py-1 whitespace-nowrap">{{ visita.celular }}</td>
+                                            <td class="px-6 py-1 whitespace-nowrap">{{ visita.ciudad }}</td>
+                                            <td class="px-6 py-1 whitespace-nowrap">{{ visita.fecha_visita }}</td>
+                                            <td class="px-6 py-1 whitespace-nowrap">{{ visita.observaciones }}</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -247,9 +252,9 @@
                                     </thead>
                                     <tbody class="bg-white divide-y divide-gray-200">
                                         <tr v-for="plantilla in informacionPlantillas.data" :key="plantilla.id">
-                                            <td class="px-6 py-4 whitespace-nowrap"><a :href="route('plantillas.show', plantilla.id)" class="text-blue-500 hover:text-blue-700">{{ plantilla.nombre_plantilla }}</a></td>
-                                            <td class="px-6 py-4 whitespace-nowrap">{{ plantilla.created_at }}</td>
-                                            <td class="px-6 py-4 whitespace-nowrap">{{ plantilla.updated_at }}</td>
+                                            <td class="px-6 py-1 whitespace-nowrap"><a :href="route('plantillas.show', plantilla.id)" class="text-blue-500 hover:text-blue-700">{{ plantilla.nombre_plantilla }}</a></td>
+                                            <td class="px-6 py-1 whitespace-nowrap">{{ plantilla.created_at }}</td>
+                                            <td class="px-6 py-1 whitespace-nowrap">{{ plantilla.updated_at }}</td>
                                         </tr>
                                     </tbody>
                                 </table>

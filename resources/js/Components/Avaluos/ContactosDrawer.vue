@@ -5,11 +5,14 @@ import vSelect from 'vue-select';
 import 'vue-select/dist/vue-select.css';
 import { computed } from 'vue';
 
+
 const props = defineProps({
     avaluoId: String,
-    generos: Array // Recibimos desde el padre
+    generos: Array, // Recibimos desde el padre
+    contactosDisponibles: Array // 👈 aquí
 })
 const emit = defineEmits(['contacto-agregado'])
+const selectedContacto = ref(null)
 
 const open = ref(false)
 
@@ -22,6 +25,7 @@ const form = useForm({
     observaciones: ''
 })
 console.log('Generos recibidos:', props.generos)
+console.log('Contactos disponibles recibidos:', props.contactosDisponibles)
 const generosArray = computed(() =>
     Object.entries(props.generos).map(([value, label]) => ({ value, label }))
 );
@@ -39,22 +43,43 @@ function submit() {
             //router.reload({ only: ['contactos'] }) // Recarga solo lista de contactos
         }
     })
-
-    
-
 }
+
+function vincularContacto() {
+  if (!selectedContacto.value) return;
+
+  router.post(
+    route('avaluos.contactos.attach', {
+      avaluo: props.avaluoId,
+      contacto: selectedContacto.value.id,
+    }),
+    {
+      fecha_asignacion: new Date().toISOString().slice(0, 10),
+      observaciones: 'Contacto vinculado desde el drawer',
+    },
+    {
+      preserveScroll: true,
+      onSuccess: () => {
+        //toast.success('Contacto vinculado correctamente.');
+        emit('contacto-agregado', selectedContacto.value);
+      },
+    }
+  );
+}
+
 </script>
 
 <template>
-    <div>
-        <button 
-            @click="open = true" 
-            class="flex items-center justify-center w-8 h-8 bg-blue-500 text-white rounded-full text-lg font-bold hover:bg-blue-600"
-            title="Agregar contacto"
-        >
+    <div class="flex items-center gap-2">
+        <div>
+            <button 
+                @click="open = true" 
+                class="flex items-center justify-center w-8 h-8 bg-blue-500 text-white rounded-full text-lg font-bold hover:bg-blue-600"
+                title="Agregar contacto"
+            >
             +
-        </button>
-
+            </button>
+        </div>
         <transition name="fade">
             <div v-if="open" class="fixed inset-0 bg-black bg-opacity-30 z-40" @click="open = false"></div>
         </transition>
@@ -110,7 +135,27 @@ function submit() {
                 </form>
             </div>
         </transition>
+
+        <div class="flex items-center gap-2 w-full">
+            <v-select
+                :options="props.contactosDisponibles"
+                label="nombre"
+                v-model="selectedContacto"
+                placeholder="Seleccione un contacto existente..."
+                class="custom-vselect"
+            />
+
+            <button
+                @click="vincularContacto"
+                class="flex items-center justify-center w-8 h-8 bg-blue-500 text-white rounded-full text-lg font-bold hover:bg-blue-600"
+                title="Vincular contacto existente"
+            >
+                +
+            </button>
+        </div>
     </div>
+
+    
 </template>
 
 <style scoped>
@@ -125,4 +170,9 @@ function submit() {
 .fade-leave-active { transition: opacity 0.3s ease; }
 .fade-enter-from,
 .fade-leave-to { opacity: 0; }
+.custom-vselect {
+    flex: 1; /* Permite que el v-select crezca */
+    max-width: 500px; /* Establece un ancho máximo */
+    min-width: 300px; /* Establece un ancho mínimo */
+}
 </style>

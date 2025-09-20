@@ -62,6 +62,33 @@ class AvaluoContactoController extends Controller
 
         return back()->with('nuevoContacto', $nuevoContacto);
 
+    }
 
+    public function attach(Request $request, Avaluos $avaluo, Contacto $contacto)
+    {
+        $validated = $request->validate([
+            'fecha_asignacion' => 'nullable|date',
+            'observaciones' => 'nullable|string|max:500',
+        ]);
+
+        // Evitar duplicados
+        if ($avaluo->contactos()->where('contactos.id', $contacto->id)->exists()) {
+            return back()->withErrors('El contacto ya está vinculado a este avalúo.');
+        }
+
+        // Usar el modelo pivote para crear
+        AvaluoContacto::create([
+            'avaluo_id' => $avaluo->id,
+            'contacto_id' => $contacto->id,
+            'fecha_asignacion' => $validated['fecha_asignacion'] ?? now(),
+            'observaciones' => $validated['observaciones'] ?? null,
+        ]);
+
+        // Traer contacto con datos pivote
+        $nuevoContacto = $avaluo->contactos()
+            ->where('contactos.id', $contacto->id)
+            ->first();
+
+        return back()->with('nuevoContacto', $nuevoContacto);
     }
 }

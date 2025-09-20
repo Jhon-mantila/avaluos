@@ -66,6 +66,8 @@ Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
     // routes/web.php
     Route::post('/avaluos/{avaluo}/contactos', [AvaluoContactoController::class, 'store'])
     ->name('avaluos.contactos.store');
+    Route::post('/avaluos/{avaluo}/contactos/{contacto}/attach', [AvaluoContactoController::class, 'attach'])
+    ->name('avaluos.contactos.attach');
 });
 
 // Rutas para visitadores

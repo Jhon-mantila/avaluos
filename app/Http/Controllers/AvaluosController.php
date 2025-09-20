@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\Avaluos;
 use App\Models\Clientes;
 use App\Models\Plantilla;
+use App\Models\Contacto;
 use Inertia\Inertia;
 use App\Services\DropdownService;
 use Illuminate\Http\Request;
@@ -69,13 +70,15 @@ class AvaluosController extends Controller
             $query->where('avaluo_id', $id);
         })->with('informacionVisita')->paginate(5);  
         
-        //dd($informacionPlantillas);
+        $contactosDisponibles = Contacto::whereNotIn('id', $avaluo->contactos->pluck('id'))->get();
+        //dd($contactosDisponibles);
         return Inertia::render('Avaluos/Show', [
             'avaluo' => $avaluo,
             'contactos' => $contactos, // <--- Ahora sí enviamos contactos
             'informacionVisitas' => $informacionVisitas,
             'informacionPlantillas' => $informacionPlantillas,
-            'generos' => $this->dropdownService->list_genero()
+            'generos' => $this->dropdownService->list_genero(),
+            'contactosDisponibles' => $contactosDisponibles,
         ]);
     }
 
