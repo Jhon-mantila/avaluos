@@ -110,6 +110,8 @@ const referer = ref(document.referrer.includes('clientes') ? document.referrer :
 
 const submit = async () => {
     console.log('Enviando formulario...', form.value);
+    console.log('selectedTipoDodumento actual:', selectedTipoDodumento.value);
+    form.value.tipo_documento = selectedTipoDodumento.value ? selectedTipoDodumento.value.value : '';
     const formData = new FormData();
     formData.append('_method', 'PUT'); // Simula una solicitud PUT
     formData.append('nombre', form.value.nombre);

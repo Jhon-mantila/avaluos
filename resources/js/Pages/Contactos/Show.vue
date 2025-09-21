@@ -12,7 +12,7 @@
 
                             <div class="flex items-center justify-between mb-4">
                                 <!-- Título a la izquierda -->
-                                <h3 class="text-lg font-semibold leading-tight text-gray-800">Información del Avalúo</h3>
+                                <h3 class="text-lg font-semibold leading-tight text-gray-800">Información del Contacto</h3>
                                 
                                 <!-- Botones a la derecha -->
                                 <div class="flex gap-2">
@@ -29,11 +29,11 @@
                                     <p class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">{{ contacto.nombre }}</p>
                                 </div>
                                 <div class="mb-4">
-                                    <label class="block text-sm font-medium text-gray-700">Email</label>
+                                    <label class="block text-sm font-medium text-gray-700">Género</label>
                                     <p class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">{{ contacto.genero }}</p>
                                 </div>
                                 <div class="mb-4">
-                                    <label class="block text-sm font-medium text-gray-700">Ciudad</label>
+                                    <label class="block text-sm font-medium text-gray-700">Celular</label>
                                     <p class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">{{ contacto.celular }}</p>
                                 </div>
                                 <div class="mb-4">
@@ -64,11 +64,11 @@
                                         </thead>
                                         <tbody class="bg-white divide-y divide-gray-200">
                                             <tr v-for="avaluo in avaluos.data" :key="avaluo.id">
-                                                <td class="px-6 py-4 whitespace-nowrap"><a :href="route('avaluos.show', avaluo.id)" class="text-blue-500 hover:text-blue-700">{{ avaluo.numero_avaluo }}</a></td>
-                                                <td class="px-6 py-4 whitespace-nowrap">{{ avaluo.estado }}</td>
-                                                <td class="px-6 py-4 whitespace-nowrap">{{ avaluo.fecha_entrega_avaluo }}</td>
-                                                <td class="px-6 py-4 whitespace-nowrap">{{ avaluo.pivot?.fecha_asignacion ?? '' }}</td>
-                                                <td class="px-6 py-4 whitespace-nowrap">{{ avaluo.pivot?.observaciones ?? '' }}</td>
+                                                <td class="px-6 py-1 whitespace-nowrap"><a :href="route('avaluos.show', avaluo.id)" class="text-blue-500 hover:text-blue-700">{{ avaluo.numero_avaluo }}</a></td>
+                                                <td class="px-6 py-1 whitespace-nowrap">{{ avaluo.estado }}</td>
+                                                <td class="px-6 py-1 whitespace-nowrap">{{ avaluo.fecha_entrega_avaluo }}</td>
+                                                <td class="px-6 py-1 whitespace-nowrap">{{ avaluo.pivot?.fecha_asignacion ?? '' }}</td>
+                                                <td class="px-6 py-1 whitespace-nowrap">{{ avaluo.pivot?.observaciones ?? '' }}</td>
                                             </tr>
                                         </tbody>
                                     </table>
