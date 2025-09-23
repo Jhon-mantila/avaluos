@@ -141,10 +141,12 @@ class ClientesController extends Controller
     {
         $cliente = Clientes::findOrFail($id);
         $avaluos = $cliente->avaluo()->paginate(5);
+        $list_tipo_documento = $this->dropdownService->list_tipo_documento();
 
         return Inertia::render('Clientes/Show', [
             'cliente' => $cliente,
             'avaluos' => $avaluos,
+            'tipo_documento' => $list_tipo_documento,
         ]);
     }
 }

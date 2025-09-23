@@ -116,7 +116,7 @@ function vincularContacto() {
 
                     <div class="mb-4">
                         <label class="block text-sm font-medium">Fecha Asignación</label>
-                        <input type="date" v-model="form.fecha_asignacion" class="w-full border rounded px-3 py-2" />
+                        <input type="datetime-local" v-model="form.fecha_asignacion" class="w-full border rounded px-3 py-2" />
                         <div v-if="form.errors.fecha_asignacion" class="text-red-500 text-sm">{{ form.errors.fecha_asignacion }}</div>
                     </div>
 

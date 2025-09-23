@@ -10,6 +10,24 @@
                 <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                     <div class="p-6 text-gray-900">
                         <form @submit.prevent="submit"  enctype="multipart/form-data">
+                            
+                            <!-- Encabezado con botones -->
+                            <div class="flex items-center justify-between mb-4">
+                                <!-- Título a la izquierda -->
+                                <h3 class="text-lg font-semibold leading-tight text-gray-800"></h3>
+                                
+                                <!-- Botones a la derecha -->
+                                <div class="flex gap-2">
+                                    <a :href="referer" class="inline-flex items-center px-4 py-2 bg-gray-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150">
+                                        Regresar
+                                    </a>
+                                    <button type="submit" class="inline-flex items-center px-4 py-2 bg-blue-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 active:bg-blue-900 focus:outline-none focus:border-blue-900 focus:ring ring-blue-300 disabled:opacity-25 transition ease-in-out duration-150">
+                                        Guardar
+                                    </button>
+                                </div>
+                            </div>
+
+                        
                             <div class="mb-4">
                                 <label for="nombre" class="block text-sm font-medium text-gray-700">Nombre</label>
                                 <input type="text" v-model="form.nombre" id="nombre" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
@@ -43,14 +61,6 @@
                                 <label for="logo" class="block text-sm font-medium text-gray-700">Logo</label>
                                 <input type="file" @change="handleFileChange2" id="logo" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
                                 <img v-if="form.logo" :src="form.logo" alt="Logo del Cliente" class="mt-2 max-w-xs">
-                            </div>
-                            <div class="flex items-center justify-between mt-4">
-                                <a :href="referer" class="inline-flex items-center px-4 py-2 bg-gray-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150">
-                                    Regresar
-                                </a>
-                                <button type="submit" class="inline-flex items-center px-4 py-2 bg-blue-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 active:bg-blue-900 focus:outline-none focus:border-blue-900 focus:ring ring-blue-300 disabled:opacity-25 transition ease-in-out duration-150">
-                                    Guardar
-                                </button>
                             </div>
                         </form>
                     </div>

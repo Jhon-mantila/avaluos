@@ -10,15 +10,34 @@
             <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
                 <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                     <div class="p-6 text-gray-900">
+
                         <div class="flex items-center justify-between mb-4">
+                             <!-- Título a la izquierda -->
                             <h3 class="text-lg font-semibold leading-tight text-gray-800">Información del Cliente</h3>
-                            <a :href="route('clientes.edit', cliente.id)" class="inline-flex items-center px-4 py-2 bg-blue-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 active:bg-blue-900 focus:outline-none focus:border-blue-900 focus:ring ring-blue-300 disabled:opacity-25 transition ease-in-out duration-150">
-                                Editar
-                            </a>
+                            
+                            <!-- Botones a la derecha -->
+                            <div class="flex gap-2">
+                                <a :href="route('clientes.edit', cliente.id)" class="inline-flex items-center px-4 py-2 bg-blue-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 active:bg-blue-900 focus:outline-none focus:border-blue-900 focus:ring ring-blue-300 disabled:opacity-25 transition ease-in-out duration-150">
+                                    Editar
+                                </a>
+                                <a :href="referer" class="inline-flex items-center px-4 py-2 bg-gray-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150">
+                                    Regresar
+                                </a>
+                            </div>
                         </div>
+
+
                         <div class="mb-4">
                             <label class="block text-sm font-medium text-gray-700">Nombre</label>
                             <p class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">{{ cliente.nombre }}</p>
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700">Tipo documento</label>
+                            <p class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">{{ props.tipo_documento[cliente.tipo_documento] }}</p>
+                        </div>
+                                                <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700">Numero documento</label>
+                            <p class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">{{ cliente.documento }}</p>
                         </div>
                         <div class="mb-4">
                             <label class="block text-sm font-medium text-gray-700">Email</label>
@@ -37,11 +56,6 @@
                             <span>{{cliente.logo}}</span>
                             
                             <img :src="`/storage/${cliente.logo}`" alt="Logo del Cliente" class="mt-1 block w-full max-w-xs border-gray-300 rounded-md shadow-sm">
-                        </div>
-                        <div class="flex items-center justify-between mt-4">
-                            <a :href="referer" class="inline-flex items-center px-4 py-2 bg-gray-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150">
-                                Regresar
-                            </a>
                         </div>
 
                         <div class="mt-8">
@@ -83,12 +97,14 @@ import Pagination from '@/Components/Pagination.vue';
 const props = defineProps({
     cliente: Object,
     avaluos: Object,
+    tipo_documento: Array,
 });
 
 // Imprimir la data de cliente y avaluos en la consola
 onMounted(() => {
     console.log('Cliente:', props.cliente);
     console.log('Avaluos:', props.avaluos);
+    console.log('Tipo Documento:', props.tipo_documento);
 });
 
 // Determinar la URL de referencia
